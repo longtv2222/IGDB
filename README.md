@@ -9,5 +9,5 @@
 - npm install sqlite3
 - npm install md5
 
-3. Run the program by the following command:
+3.cd inside folder backend and run the program by the following command:
 - npm start
