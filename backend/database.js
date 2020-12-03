@@ -1,7 +1,7 @@
 var sqlite3 = require('sqlite3').verbose()
 var md5 = require('md5')
 
-const DBSOURCE = "D.sqlite"
+const DBSOURCE = "IGDB.sqlite"
 
 let db = new sqlite3.Database(DBSOURCE, (err) => {
     if (err) {
@@ -10,13 +10,16 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         throw err
     } else {
         console.log('Connected to the SQLite database.')
+
+        db.run('PRAGMA foreign_keys = ON;'); //Turn on foreign key checking
+        
         db.run(`CREATE TABLE DEVELOPER(DNAME CHAR PRIMARY KEY);`);
 
-        db.run(`CREATE TABLE DLOCATION_TABLE(DNAME CHAR PRIMARY KEY REFERENCES DEVELOPER(DNAME), LOCATION CHAR);`);
+        db.run(`CREATE TABLE DLOCATION_TABLE(DNAME CHAR REFERENCES DEVELOPER(DNAME), LOCATION CHAR, PRIMARY KEY(DNAME, LOCATION));`);
         
         db.run(`CREATE TABLE PUBLISHER(PNAME CHAR PRIMARY KEY);`);
         
-        db.run(`CREATE TABLE PLOCATION_TABLE(PNAME CHAR PRIMARY KEY REFERENCES PUBLISHER(PNAME), LOCATION CHAR);`);
+        db.run(`CREATE TABLE PLOCATION_TABLE(PNAME CHAR REFERENCES PUBLISHER(PNAME), LOCATION CHAR, PRIMARY KEY(PNAME, LOCATION));`);
         
         db.run(`CREATE TABLE VIDEO_GAME(V_ID INT, DESCRIPTION CHAR, VNAME CHAR, RELEASE_STATUS INT, 
                                 DNAME CHAR REFERENCES DEVELOPER(DNAME),
@@ -55,13 +58,13 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         
         db.run(`CREATE TABLE COMPETITION(CNAME CHAR, DESCRIPTION CHAR, LEAGUE CHAR REFERENCES ESPORT(LEAGUE), PRIMARY KEY(CNAME,LEAGUE));`);
         
-        db.run(`CREATE TABLE PARTICIPATE (CNAME CHAR REFERENCES COMPETITION(CNAME), PLAYERNAME CHAR REFERENCES PLAYER(PLAYERNAME),
-                                  PRIMARY KEY(CNAME,PLAYERNAME));`);
+        db.run(`CREATE TABLE PARTICIPATE (CNAME CHAR REFERENCES COMPETITION(CNAME), PLAYERNAME CHAR REFERENCES PLAYER(PLAYERNAME), LEAGUE CHAR REFERENCES ESPORT(LEAGUE),
+                                  PRIMARY KEY(CNAME,PLAYERNAME,LEAGUE));`);
                         
-        db.run(`CREATE TABLE CLOCATION_TABLE(LOCATION CHAR, CNAME CHAR REFERENCES COMPETITION(CNAME), 
-                                     PRIMARY KEY(LOCATION,CNAME));`);
+        db.run(`CREATE TABLE CLOCATION_TABLE(LOCATION CHAR, CNAME CHAR REFERENCES COMPETITION(CNAME), LEAGUE CHAR REFERENCES ESPORT(LEAGUE),
+                                     PRIMARY KEY(LOCATION,CNAME,LEAGUE));`);
                                 
-        db.run(`CREATE TABLE TIME_TABLE (TIME CHAR, CNAME CHAR REFERENCES COMPETITION(CNAME));`);
+        db.run(`CREATE TABLE TIME_TABLE (TIME CHAR, CNAME CHAR REFERENCES COMPETITION(CNAME), LEAGUE CHAR REFERENCES ESPORT(LEAGUE));`);
             (err) => {
                 if (err) {
                     // Table already created
@@ -79,6 +82,3 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
 module.exports = db;
 
 
-function createTable() {
-    console.log("alo");
-}
