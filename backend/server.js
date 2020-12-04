@@ -125,6 +125,82 @@ app.delete("/api/user/:id", (req, res, next) => {
 })
 */ 
 
+
+/* ******************* PAID USER OPERATIONS  ******************* */
+app.post("/client/paid_user/", (req, res, next) => {
+    var errors=[]
+    if (!req.body.id){
+        errors.push("No user id specified");
+    }
+    var data = {
+        u_id : req.body.id,
+        username : req.body.username,
+        password : md5(req.body.password) //md5 to hash the password
+    }
+
+    var sql ='INSERT INTO PAID_USER(U_ID, USER_NAME, PASSWORD) VALUES (?, ?, ?);'
+    var params = [data.u_id, data.username, data.password] 
+    db.run(sql, params, function (err, result) {
+        if (err){
+            res.status(400).json({"error": err.message})
+            return;
+        }
+        res.json({
+            "message": "success",
+            "id" : this.lastID,
+            "data": data
+        })
+    });
+})
+
+app.get("/client/paid_user/:id", (req, res, next) => {
+    var sql = "SELECT * FROM PAID_USER WHERE U_ID = ?;"
+
+    db.get(sql, req.params.id, (err, row) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "data":row
+        })
+      });
+});
+
+app.get("/client/paid_user", (req, res, next) => {
+    var sql = "SELECT * FROM PAID_USER;"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "message":"success",
+            "data":rows
+        })
+      });
+});
+
+app.delete("/client/paid_user/:id", (req, res, next) => {
+    db.run(
+        'DELETE FROM PAID_USER WHERE U_ID = ?',
+        req.params.id,
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            res.json({"message":"deleted", rows: this.changes})
+    });
+})
+
+
+
+
+
+
+/* ******************* CLIENT OPERATIONS  ******************* */
 app.get("/client", (req, res, next) => {
     var sql = "SELECT * FROM CLIENT;"
     var params = []
@@ -140,7 +216,7 @@ app.get("/client", (req, res, next) => {
       });
 });
 
-app.get("/client/:id/:asd", (req, res, next) => {
+app.get("/client/:id", (req, res, next) => {
     var sql = "SELECT * FROM CLIENT WHERE U_ID = ?;"
     var params = [req.params.id]
     db.get(sql, params, (err, row) => {
@@ -171,7 +247,7 @@ app.post("/client/", (req, res, next) => {
             return;
         }
         res.json({
-            "message": "success",
+            
             "U_ID" : this.lastID
         })
     });
@@ -189,7 +265,5 @@ app.delete("/client/:id", (req, res, next) => {
             res.json({"message":"deleted", rows: this.changes})
     });
 })
-// Root path
-app.get("/", (req, res, next) => {
-    res.json({"message":"Ok"})
-});
+
+
