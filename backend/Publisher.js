@@ -31,9 +31,9 @@ app.get("/plocation_table", (req, res, next) => {
       });
 });
 
-/////////////////////THIS
+/////////THIS NEEDS MULTIPLE VALUES IN THE ARGUMENT
 app.get("/plocation_table/:PName", (req, res, next) => {
-    var sql = "SELECT * FROM CLIENT WHERE U_ID = ?;"
+    var sql = "SELECT * FROM PLOCATION_TABLE WHERE PName = ?;"
     var params = [req.params.id]
     db.get(sql, params, (err, row) => {
         if (err) {
@@ -41,6 +41,7 @@ app.get("/plocation_table/:PName", (req, res, next) => {
           return;
         }
         res.json({
+			"message":"success",
             "data":row
         })
       });
@@ -48,18 +49,19 @@ app.get("/plocation_table/:PName", (req, res, next) => {
 
 
 
-///THIS/////////////////////////////NEEDS HELP
-app.post("/plocation_table/:CName/:Location", (req, res, next) => {
+
+app.post("/plocation_table/", (req, res, next) => {
     var errors=[]
-    if (!req.body.id){
-        errors.push("No plocation key specified");
+    if (!req.body.name){
+        errors.push("No pName key specified");
     }
     var data = {
-        id : req.body.id
+		PName : req.body.name
+        Location : req.body.Location,
     }
 
     var sql ='INSERT INTO plocation_table VALUES (?, ?);'
-    var params =[data.id]
+    var params =[data.PName, data.Location]
     db.run(sql, params, function (err, result) {
         if (err){
             res.status(400).json({"error": err.message})
@@ -67,13 +69,13 @@ app.post("/plocation_table/:CName/:Location", (req, res, next) => {
         }
         res.json({
             "message": "success",
-            "CName" : this.lastID
-			/////NEED TO ONE MORE ADD HERE FOR LOCATION
+            "id" : this.lastID
+			"data" : data
         })
     });
 })
 
-////THIS//////////////
+////THIS//////////////NEEDS TO TAKE MULTIPLE VALUES INTO ARGUMENT
 app.delete("/plocation_table/:CName/:Location", (req, res, next) => {
     db.run(
         'DELETE FROM plocation_table WHERE CNAME = ? AND Location = ?',
@@ -90,14 +92,12 @@ app.delete("/plocation_table/:CName/:Location", (req, res, next) => {
 
 
 
-///////////////////////////////////////////////////////////
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 app.get("/publisher", (req, res, next) => {
-    var sql = "SELECT * FROM publisher;"
+    var sql = "SELECT * FROM PUBLISHER;"
     var params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -112,10 +112,10 @@ app.get("/publisher", (req, res, next) => {
 });
 
 
-app.get("/publisher/:PName/:asd", (req, res, next) => {
-    var sql = "SELECT * FROM CLIENT WHERE PName = ?;"
-    var params = [req.params.id]
-    db.get(sql, params, (err, row) => {
+app.get("/publisher/:PName/", (req, res, next) => {
+    var sql = "SELECT * FROM PUBLISHER WHERE PName = ?;"
+ 
+    db.get(sql, req.params.id, (err, row) => {
         if (err) {
           res.status(400).json({"error":err.message});
           return;
@@ -126,18 +126,18 @@ app.get("/publisher/:PName/:asd", (req, res, next) => {
       });
 });
 
-//THIS/////////////////
+
 app.post("/Publisher/", (req, res, next) => {
     var errors=[]
     if (!req.body.id){
-        errors.push("No user id specified");
+        errors.push("No PName specified");
     }
     var data = {
-        id : req.body.id
+        Pname : req.body.id
     }
 
-    var sql ='INSERT INTO CLIENT VALUES (?);'
-    var params =[data.id]
+    var sql ='INSERT INTO PUBLISHER VALUES (?);'
+    var params =[data.PName]
     db.run(sql, params, function (err, result) {
         if (err){
             res.status(400).json({"error": err.message})
@@ -145,15 +145,15 @@ app.post("/Publisher/", (req, res, next) => {
         }
         res.json({
             "message": "success",
-            "U_ID" : this.lastID
+            "id" : this.lastID
+			"data" : data
         })
     });
 })
 
-//THIS//////////////////////////////
 app.delete("/Publish/:PName", (req, res, next) => {
     db.run(
-        'DELETE FROM CLIENT WHERE PName = ?',
+        'DELETE FROM PUBLISHER WHERE PName = ?',
         req.params.id,
         function (err, result) {
             if (err){
