@@ -17,7 +17,7 @@ app.listen(HTTP_PORT, () => {
 
 
 app.get("/Player", (req, res, next) => {
-    var sql = "SELECT * FROM player;"
+    var sql = "SELECT * FROM PLAYER;"
     var params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -30,11 +30,11 @@ app.get("/Player", (req, res, next) => {
         })
       });
 });
-/////////////////////THIS
-app.get("/Player/:PlayerName/:asd", (req, res, next) => {
-    var sql = "SELECT * FROM PLAYER WHERE PlayerName = ?;"
-    var params = [req.params.id]
-    db.get(sql, params, (err, row) => {
+
+app.get("/Player/:PlayerName", (req, res, next) => {
+    var sql = "SELECT * FROM PLAYER WHERE PLAYERNAME = ?;"
+  
+    db.get(sql, req.params.id, (err, row) => {
         if (err) {
           res.status(400).json({"error":err.message});
           return;
@@ -45,17 +45,22 @@ app.get("/Player/:PlayerName/:asd", (req, res, next) => {
       });
 });
 
-///THIS/////////////////////////////
+
 app.post("/Player/", (req, res, next) => {
     var errors=[]
     if (!req.body.id){
-        errors.push("No plocation key specified");
+        errors.push("No PlayerName key specified");
     }
     var data = {
-        id : req.body.id
+        PlayerName : req.body.id
+		age : req.body.age,
+		natonality: req.body.nationality,
+		description: req.body.description,
+		p_player_flag: req.body.p_player_flag,
+		org_less_flag: req.body.org_less_flag,
     }
 
-    var sql ='INSERT INTO Player VALUES (?);'
+    var sql ='INSERT INTO PLAYER (PLAYERNAME, AGE, NATIONALITY, DESCRIPTION, P_PLAYER_FLAG, ORG_LESS_FLAG) VALUES (?, ?, ?, ?, ?, ?);'
     var params =[data.id]
     db.run(sql, params, function (err, result) {
         if (err){
@@ -64,15 +69,16 @@ app.post("/Player/", (req, res, next) => {
         }
         res.json({
             "message": "success",
-            "PlayerName" : this.lastID
+            "id" : this.lastID
+			"data": data
         })
     });
 })
 
-////THIS//////////////
+
 app.delete("/Player/:PlayerName", (req, res, next) => {
     db.run(
-        'DELETE FROM CLIENT WHERE CNAME = ?',
+        'DELETE FROM PLAYER WHERE PLAYERNAME = ?',
         req.params.id,
         function (err, result) {
             if (err){
