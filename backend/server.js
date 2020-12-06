@@ -11,7 +11,7 @@ var HTTP_PORT = 8000
 
 // Start server
 app.listen(HTTP_PORT, () => {
-    console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
+    console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT))
 });
 
 
@@ -123,48 +123,58 @@ app.delete("/api/user/:id", (req, res, next) => {
             res.json({"message":"deleted", rows: this.changes})
     });
 })
-*/ 
+*/
 
 
 /* ******************* PAID USER OPERATIONS  ******************* */
-app.post("/client/paid_user/", (req, res, next) => {
-    var errors=[]
-    if (!req.body.id){
+app.post("/client/paid_user/", (req, res) => {
+    var errors = []
+    if (!req.body.id) {
         errors.push("No user id specified");
     }
-    var data = {
-        u_id : req.body.id,
-        username : req.body.username,
-        password : md5(req.body.password) //md5 to hash the password
+
+    if (!req.body.username) {
+        errors.push("No username specified");
     }
 
-    var sql ='INSERT INTO PAID_USER(U_ID, USER_NAME, PASSWORD) VALUES (?, ?, ?);'
-    var params = [data.u_id, data.username, data.password] 
+    if (!req.body.password) {
+        errors.push("No user password specified");
+    }
+
+    var data = {
+        u_id: req.body.id,
+        username: req.body.username,
+        password: md5(req.body.password) //md5 to hash the password
+    }
+
+
+    var sql = 'INSERT INTO PAID_USER(U_ID, USER_NAME, PASSWORD) VALUES (?, ?, ?);'
+    var params = [data.u_id, data.username, data.password]
     db.run(sql, params, function (err, result) {
-        if (err){
-            res.status(400).json({"error": err.message})
+        if (err) {
+            res.status(400).json({ "error": err.message })
             return;
         }
         res.json({
             "message": "success",
-            "id" : this.lastID,
+            "id": this.lastID,
             "data": data
         })
     });
 })
 
-app.get("/client/paid_user/:id", (req, res, next) => {
+app.get("/client/paid_user/:id", (req, res) => {
     var sql = "SELECT * FROM PAID_USER WHERE U_ID = ?;"
 
     db.get(sql, req.params.id, (err, row) => {
         if (err) {
-          res.status(400).json({"error":err.message});
-          return;
+            res.status(400).json({ "error": err.message });
+            return;
         }
         res.json({
-            "data":row
+            "data": row
         })
-      });
+    });
 });
 
 app.get("/client/paid_user", (req, res, next) => {
@@ -172,14 +182,14 @@ app.get("/client/paid_user", (req, res, next) => {
     var params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
-          res.status(400).json({"error":err.message});
-          return;
+            res.status(400).json({ "error": err.message });
+            return;
         }
         res.json({
-            "message":"success",
-            "data":rows
+            "message": "success",
+            "data": rows
         })
-      });
+    });
 });
 
 app.delete("/client/paid_user/:id", (req, res, next) => {
@@ -187,18 +197,13 @@ app.delete("/client/paid_user/:id", (req, res, next) => {
         'DELETE FROM PAID_USER WHERE U_ID = ?',
         req.params.id,
         function (err, result) {
-            if (err){
-                res.status(400).json({"error": res.message})
+            if (err) {
+                res.status(400).json({ "error": res.message })
                 return;
             }
-            res.json({"message":"deleted", rows: this.changes})
-    });
+            res.json({ "message": "deleted", rows: this.changes })
+        });
 })
-
-
-
-
-
 
 /* ******************* CLIENT OPERATIONS  ******************* */
 app.get("/client", (req, res, next) => {
@@ -206,14 +211,14 @@ app.get("/client", (req, res, next) => {
     var params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
-          res.status(400).json({"error":err.message});
-          return;
+            res.status(400).json({ "error": err.message });
+            return;
         }
         res.json({
-            "message":"success",
-            "data":rows
+            "message": "success",
+            "data": rows
         })
-      });
+    });
 });
 
 app.get("/client/:id", (req, res, next) => {
@@ -221,34 +226,34 @@ app.get("/client/:id", (req, res, next) => {
     var params = [req.params.id]
     db.get(sql, params, (err, row) => {
         if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "data":row
-        })
-      });
-});
-
-app.post("/client/", (req, res, next) => {
-    var errors=[]
-    if (!req.body.id){
-        errors.push("No user id specified");
-    }
-    var data = {
-        id : req.body.id
-    }
-
-    var sql ='INSERT INTO CLIENT VALUES (?);'
-    var params =[data.id]
-    db.run(sql, params, function (err, result) {
-        if (err){
-            res.status(400).json({"error": err.message})
+            res.status(400).json({ "error": err.message });
             return;
         }
         res.json({
-            
-            "U_ID" : this.lastID
+            "data": row
+        })
+    });
+});
+
+app.post("/client/", (req, res, next) => {
+    var errors = []
+    if (!req.body.id) {
+        errors.push("No user id specified");
+    }
+    var data = {
+        id: req.body.id
+    }
+
+    var sql = 'INSERT INTO CLIENT VALUES (?);'
+    var params = [data.id]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+
+            "U_ID": this.lastID
         })
     });
 })
@@ -258,12 +263,175 @@ app.delete("/client/:id", (req, res, next) => {
         'DELETE FROM CLIENT WHERE U_ID = ?',
         req.params.id,
         function (err, result) {
-            if (err){
-                res.status(400).json({"error": res.message})
+            if (err) {
+                res.status(400).json({ "error": res.message })
                 return;
             }
-            res.json({"message":"deleted", rows: this.changes})
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+
+
+app.get("/developer/:name", (req, res, next) => {
+    var sql = "SELECT * FROM DEVELOPER WHERE DName = ?;"
+    var params = [req.params.name]
+    db.get(sql, params, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.post("/developer/", (req, res, next) => {
+    var errors = []
+    if (!req.body.id) {
+        errors.push("No Developer info specified");
+    }
+    var data = {
+        id: req.body.id
+    }
+
+    var sql = 'INSERT INTO DEVELOPER VALUES (?);'
+    var params = [data.id]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "U_ID": this.lastID
+        })
     });
 })
+
+app.delete("/developer/:DName", (req, res, next) => {
+    db.run(
+        'DELETE FROM DEVELOPER WHERE DName = ?',
+        req.params.id,
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+//////////////////////////DLOCATION_TABLE/////////////////////////////////////////
+
+app.get("/dlocation_table/:name", (req, res, next) => {
+    var sql = "SELECT * FROM DLOCATION_TABLE WHERE DName = ?;"
+    var params = [req.params.name]
+    db.get(sql, params, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.post("/developer/", (req, res, next) => {
+    var errors = []
+    if (!req.body.id) {
+        errors.push("No Developer info specified");
+    }
+    var data = {
+        id: req.body.id
+    }
+
+    var sql = 'INSERT INTO DLOCATION_TABLE VALUES (?,?);'
+    var params = [data.id]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "U_ID": this.lastID
+        })
+    });
+})
+
+app.delete("/dlocation_table/:name", (req, res, next) => {
+    db.run(
+        'DELETE FROM DLOCATION_TABLE WHERE DName = ?',
+        req.params.id,
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+
+
+//////////////////////////DEVELOPS/////////////////////////////////////////
+
+// app.get("/develops/:dname/:v_id", (req, res, next) => {
+//     var sql = "SELECT * FROM DEVELOPS WHERE DName = ? AND V_ID = ?;"
+//     var params = [req.params.name]
+
+//     db.get(sql, params, (err, row) => {
+//         if (err) {
+//           res.status(400).json({"error":err.message});
+//           return;
+//         }
+//         res.json({
+//             "data":row
+//         })
+//       });
+// });
+
+// app.post("/develops/", (req, res, next) => {
+//     var errors=[]
+//     if (!req.body.id){
+//         errors.push("No Developer/video game info specified");
+//     }
+//     var data = {
+//         id : req.body.id
+//     }
+
+//     var sql ='INSERT INTO DEVELOPS VALUES (?,?);'
+//     var params =[data.id]
+//     db.run(sql, params, function (err, result) {
+//         if (err){
+//             res.status(400).json({"error": err.message})
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "U_ID" : this.lastID
+//         })
+//     });
+// })
+
+// app.delete("/dlocation_table/:name", (req, res, next) => {
+//     db.run(
+//         'DELETE FROM DEVELOPS WHERE DName = ? AND V_ID=?',
+//         req.params.id,
+//         function (err, result) {
+//             if (err){
+//                 res.status(400).json({"error": res.message})
+//                 return;
+//             }
+//             res.json({"message":"deleted", rows: this.changes})
+//     });
+// })
+
+
+
+
 
 
