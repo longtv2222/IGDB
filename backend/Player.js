@@ -52,12 +52,12 @@ app.post("/Player/", (req, res, next) => {
         errors.push("No PlayerName key specified");
     }
     var data = {
-        PlayerName : req.body.id
+        PlayerName : req.body.id,
 		age : req.body.age,
 		natonality: req.body.nationality,
 		description: req.body.description,
 		p_player_flag: req.body.p_player_flag,
-		org_less_flag: req.body.org_less_flag,
+		org_less_flag: req.body.org_less_flag
     }
 
     var sql ='INSERT INTO PLAYER (PLAYERNAME, AGE, NATIONALITY, DESCRIPTION, P_PLAYER_FLAG, ORG_LESS_FLAG) VALUES (?, ?, ?, ?, ?, ?);'
@@ -69,7 +69,7 @@ app.post("/Player/", (req, res, next) => {
         }
         res.json({
             "message": "success",
-            "id" : this.lastID
+            "id" : this.lastID,
 			"data": data
         })
     });
@@ -89,13 +89,3 @@ app.delete("/Player/:PlayerName", (req, res, next) => {
     });
 })
 
-
-
-
-///////////////////////////////////////////////////////////
-
-
-// Root path
-app.get("/", (req, res, next) => {
-    res.json({"message":"Ok"})
-});

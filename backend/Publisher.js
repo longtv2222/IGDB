@@ -145,7 +145,7 @@ app.post("/Publisher/", (req, res, next) => {
         }
         res.json({
             "message": "success",
-            "id" : this.lastID
+            "id" : this.lastID,
 			"data" : data
         })
     });
