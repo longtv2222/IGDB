@@ -54,7 +54,7 @@ app.post("/Competition/", (req, res, next) => {
     var data = {
         CName : req.body.id
 		Description : req.body.Description
-		League : req.body.LEAGUE
+		League : req.body.League
     }
 
     var sql ='INSERT INTO COMPETITION(CNAME, DESCRIPTION, LEAGUE) VALUES (?, ?, ?);'
