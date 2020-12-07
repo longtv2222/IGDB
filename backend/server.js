@@ -4,6 +4,7 @@ var db = require("./database.js")
 var md5 = require("md5")
 
 var bodyParser = require("body-parser");
+const { Statement } = require("sqlite3");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -129,11 +130,11 @@ app.delete("/api/user/:id", (req, res, next) => {
 /* ******************* PAID USER OPERATIONS  ******************* */
 app.post("/client/paid_user/", (req, res) => {
     var errors = []
-    if (!req.body.id) {
+    if (Object.keys(req.body.id).length == 0) {
         errors.push("No user id specified");
     }
 
-    if (!req.body.username) {
+    if (Object.keys(req.body.username).length == 0) {
         errors.push("No username specified");
     }
 
@@ -252,8 +253,7 @@ app.post("/client/", (req, res, next) => {
             return;
         }
         res.json({
-
-            "U_ID": this.lastID
+            "U_ID": this.changes
         })
     });
 })
@@ -271,12 +271,11 @@ app.delete("/client/:id", (req, res, next) => {
         });
 })
 
+/* **************************DEVELOPER************************************ */
 
-
-app.get("/developer/:name", (req, res, next) => {
-    var sql = "SELECT * FROM DEVELOPER WHERE DName = ?;"
-    var params = [req.params.name]
-    db.get(sql, params, (err, row) => {
+app.get("/developer/:dname", (req, res) => {
+    var sql = "SELECT * FROM DEVELOPER WHERE DNAME = ?;"
+    db.get(sql, req.params.dname, (err, row) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
@@ -289,46 +288,26 @@ app.get("/developer/:name", (req, res, next) => {
 
 app.post("/developer/", (req, res, next) => {
     var errors = []
-    if (!req.body.id) {
-        errors.push("No Developer info specified");
-    }
-    var data = {
-        id: req.body.id
+    if (!req.body.DName) {
+        errors.push("No developer name is specified");
     }
 
     var sql = 'INSERT INTO DEVELOPER VALUES (?);'
-    var params = [data.id]
-    db.run(sql, params, function (err, result) {
+    var data = req.body.DName
+    db.run(sql, data, (err, result) => {
         if (err) {
             res.status(400).json({ "error": err.message })
             return;
         }
         res.json({
-            "message": "success",
-            "U_ID": this.lastID
+            "DName": data
         })
     });
 })
 
-app.delete("/developer/:DName", (req, res, next) => {
-    db.run(
-        'DELETE FROM DEVELOPER WHERE DName = ?',
-        req.params.id,
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
-})
-
-//////////////////////////DLOCATION_TABLE/////////////////////////////////////////
-
-app.get("/dlocation_table/:name", (req, res, next) => {
-    var sql = "SELECT * FROM DLOCATION_TABLE WHERE DName = ?;"
-    var params = [req.params.name]
-    db.get(sql, params, (err, row) => {
+app.get("/developer/", (req, res, next) => {
+    var sql = "SELECT * FROM DEVELOPER;"
+    db.all(sql, (err, row) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
@@ -339,33 +318,10 @@ app.get("/dlocation_table/:name", (req, res, next) => {
     });
 });
 
-app.post("/developer/", (req, res, next) => {
-    var errors = []
-    if (!req.body.id) {
-        errors.push("No Developer info specified");
-    }
-    var data = {
-        id: req.body.id
-    }
-
-    var sql = 'INSERT INTO DLOCATION_TABLE VALUES (?,?);'
-    var params = [data.id]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "U_ID": this.lastID
-        })
-    });
-})
-
-app.delete("/dlocation_table/:name", (req, res, next) => {
+app.delete("/developer/:dname", (req, res, next) => {
     db.run(
-        'DELETE FROM DLOCATION_TABLE WHERE DName = ?',
-        req.params.id,
+        'DELETE FROM DEVELOPER WHERE DName = ?;',
+        req.params.dname,
         function (err, result) {
             if (err) {
                 res.status(400).json({ "error": res.message })
@@ -375,9 +331,60 @@ app.delete("/dlocation_table/:name", (req, res, next) => {
         });
 })
 
+// //////////////////////////DLOCATION_TABLE/////////////////////////////////////////
+
+// app.get("/developer/:dname/dlocation_table/", (req, res, next) => {
+//     var sql = "SELECT * FROM DLOCATION_TABLE WHERE DName = ?;"
+//     var params = [req.params.name]
+//     db.get(sql, params, (err, row) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "data": row
+//         })
+//     });
+// });
+
+// app.post("/developer/:dname/dlocation_table/", (req, res, next) => {
+//     var errors = []
+//     if (!req.body.dname) {
+//         errors.push("No developer name is specified");
+//     }
+
+//     var sql = 'INSERT INTO DLOCATION_TABLE VALUES(?,?);'
+//     var data = {
+//         u_id: req.body.dname,
+//         location: req.body.location
+//     }
+//     db.run(sql, data, (err, result) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message })
+//             return;
+//         }
+//         res.json({
+//             data
+//         })
+//     });
+// })
+
+// app.delete("/dlocation_table/:name", (req, res, next) => {
+//     db.run(
+//         'DELETE FROM DLOCATION_TABLE WHERE DName = ?',
+//         req.params.id,
+//         function (err, result) {
+//             if (err) {
+//                 res.status(400).json({ "error": res.message })
+//                 return;
+//             }
+//             res.json({ "message": "deleted", rows: this.changes })
+//         });
+// })
 
 
-//////////////////////////DEVELOPS/////////////////////////////////////////
+
+// //////////////////////////DEVELOPS/////////////////////////////////////////
 
 // app.get("/develops/:dname/:v_id", (req, res, next) => {
 //     var sql = "SELECT * FROM DEVELOPS WHERE DName = ? AND V_ID = ?;"
@@ -430,6 +437,362 @@ app.delete("/dlocation_table/:name", (req, res, next) => {
 //     });
 // })
 
+// /********************COMPETITION******************** */
+// app.get("/CLocation_Table", (req, res, next) => {
+//     var sql = "SELECT * FROM CLOCATION_TABLE;"
+//     var params = []
+//     db.all(sql, params, (err, rows) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "data": rows
+//         })
+//     });
+// });
+// /////////////////////THIS NEEDS REVIEW
+// app.get("/CLocation_Table/:CName/:League", (req, res, next) => {
+//     var sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = ? AND LEAGUE = ?;"
+//     var params = [req.params.id]
+//     db.get(sql, params, (err, row) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "data": row
+//         })
+//     });
+// });
+
+// ///THIS/////////////////////////////NEEDS REVIEW
+// app.post("/Competition/", (req, res, next) => {
+//     var errors = []
+//     if (!req.body.id) {
+//         errors.push("No CName key specified");
+//     }
+//     var data = {
+//         CName: req.body.id,
+//         Location: req.body.Location,
+//         League: req.body.League
+//     }
+
+//     var sql = 'INSERT INTO COMPETITION(LOCATION, CNAME, LEAGUE) VALUES (?, ?, ?);'
+//     var params = [data.Location, data.CName, data.League]
+//     db.run(sql, params, function (err, result) {
+//         if (err) {
+//             res.status(400).json({ "error": err.message })
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "id": this.lastID,
+//             "data": data
+//         })
+//     });
+// })
+
+// ////THIS//////////////NEEDS REVIEW
+// app.delete("/CLocation_Table/:CName/:League", (req, res, next) => {
+//     db.run(
+//         'DELETE FROM CLOCATION_TABLE WHERE CNAME = ? AND LEAGUE = ?',
+//         req.params.id,
+//         function (err, result) {
+//             if (err) {
+//                 res.status(400).json({ "error": res.message })
+//                 return;
+//             }
+//             res.json({ "message": "deleted", rows: this.changes })
+//         });
+// })
+
+// /************ VIDEO_GAME **************** */
+
+// app.get("/Video_Game", (req, res, next) => {
+//     var sql = "SELECT * FROM VIDEO_GAME;"
+//     var params = []
+//     db.all(sql, params, (err, rows) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "data": rows
+//         })
+//     });
+// });
+
+// app.get("/Video_Game/:V_ID", (req, res, next) => {
+//     var sql = "SELECT * FROM VIDEO_GAME WHERE V_ID = ?;"
+
+//     db.get(sql, params, (err, row) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "data": row
+//         })
+//     });
+// });
+
+// app.post("/Video_Game/", (req, res, next) => {
+//     var errors = []
+//     if (!req.body.id) {
+//         errors.push("No V_ID specified");
+//     }
+//     var data = {
+//         vid: req.body.id,
+//         desc: req.body.desc,
+//         VName: req.body.VName,
+//         RD: req.body.RD,
+//     }
+
+//     var sql = 'INSERT INTO VIDEO_GAME (V_ID, DESCRIPTION, VNAME, RELEASE_STATUS)VALUES (?, ?, ?, ?);'
+//     var params = [data.vid, data.desc, data.VName, data.RD]
+//     db.run(sql, params, function (err, result) {
+//         if (err) {
+//             res.status(400).json({ "error": err.message })
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "id": this.lastID,
+//             "data": data
+//         })
+//     });
+// })
+
+// app.delete("/Video_Game/:V_ID", (req, res, next) => {
+//     db.run(
+//         'DELETE FROM VIDEO_GAME WHERE V_ID = ?',
+//         req.params.id,
+//         function (err, result) {
+//             if (err) {
+//                 res.status(400).json({ "error": res.message })
+//                 return;
+//             }
+//             res.json({ "message": "deleted", rows: this.changes })
+//         });
+// })
+
+// app.get("/plocation_table", (req, res, next) => {
+//     var sql = "SELECT * FROM plocation_table;"
+//     var params = []
+//     db.all(sql, params, (err, rows) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "data": rows
+//         })
+//     });
+// });
+
+// /////////THIS NEEDS MULTIPLE VALUES IN THE ARGUMENT
+// app.get("/plocation_table/:PName", (req, res, next) => {
+//     var sql = "SELECT * FROM PLOCATION_TABLE WHERE PName = ?;"
+//     var params = [req.params.id]
+//     db.get(sql, params, (err, row) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "data": row
+//         })
+//     });
+// });
+
+// app.post("/plocation_table/", (req, res, next) => {
+//     var errors = []
+//     if (!req.body.name) {
+//         errors.push("No pName key specified");
+//     }
+//     var data = {
+//         PName: req.body.name
+//         Location: req.body.Location,
+//     }
+
+//     var sql = 'INSERT INTO plocation_table VALUES (?, ?);'
+//     var params = [data.PName, data.Location]
+//     db.run(sql, params, function (err, result) {
+//         if (err) {
+//             res.status(400).json({ "error": err.message })
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "id": this.lastID
+// 			"data": data
+//         })
+//     });
+// })
+
+// ////THIS//////////////NEEDS TO TAKE MULTIPLE VALUES INTO ARGUMENT
+// app.delete("/plocation_table/:CName/:Location", (req, res, next) => {
+//     db.run(
+//         'DELETE FROM plocation_table WHERE CNAME = ? AND Location = ?',
+//         req.params.id,
+//         function (err, result) {
+//             if (err) {
+//                 res.status(400).json({ "error": res.message })
+//                 return;
+//             }
+//             res.json({ "message": "deleted", rows: this.changes })
+//         });
+// })
+
+// //////////////////////////////////PUBLISHER////////////////////////////////////////////////////////////////////////
+// app.get("/publisher", (req, res, next) => {
+//     var sql = "SELECT * FROM PUBLISHER;"
+//     var params = []
+//     db.all(sql, params, (err, rows) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "data": rows
+//         })
+//     });
+// });
+
+
+// app.get("/publisher/:PName/", (req, res, next) => {
+//     var sql = "SELECT * FROM PUBLISHER WHERE PName = ?;"
+
+//     db.get(sql, req.params.id, (err, row) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "data": row
+//         })
+//     });
+// });
+
+
+// app.post("/Publisher/", (req, res, next) => {
+//     var errors = []
+//     if (!req.body.id) {
+//         errors.push("No PName specified");
+//     }
+//     var data = {
+//         Pname: req.body.id
+//     }
+
+//     var sql = 'INSERT INTO PUBLISHER VALUES (?);'
+//     var params = [data.PName]
+//     db.run(sql, params, function (err, result) {
+//         if (err) {
+//             res.status(400).json({ "error": err.message })
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "id": this.lastID,
+//             "data": data
+//         })
+//     });
+// })
+
+// app.delete("/Publish/:PName", (req, res, next) => {
+//     db.run(
+//         'DELETE FROM PUBLISHER WHERE PName = ?',
+//         req.params.id,
+//         function (err, result) {
+//             if (err) {
+//                 res.status(400).json({ "error": res.message })
+//                 return;
+//             }
+//             res.json({ "message": "deleted", rows: this.changes })
+//         });
+// })
+
+// app.get("/Player", (req, res, next) => {
+//     var sql = "SELECT * FROM PLAYER;"
+//     var params = []
+//     db.all(sql, params, (err, rows) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "data": rows
+//         })
+//     });
+// });
+
+// app.get("/Player/:PlayerName", (req, res, next) => {
+//     var sql = "SELECT * FROM PLAYER WHERE PLAYERNAME = ?;"
+
+//     db.get(sql, req.params.id, (err, row) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({
+//             "data": row
+//         })
+//     });
+// });
+
+
+
+
+// /***********************PLAYER***********************/
+// app.post("/Player/", (req, res, next) => {
+//     var errors = []
+//     if (!req.body.id) {
+//         errors.push("No PlayerName key specified");
+//     }
+//     var data = {
+//         PlayerName: req.body.id,
+//         age: req.body.age,
+//         natonality: req.body.nationality,
+//         description: req.body.description,
+//         p_player_flag: req.body.p_player_flag,
+//         org_less_flag: req.body.org_less_flag
+//     }
+
+//     var sql = 'INSERT INTO PLAYER (PLAYERNAME, AGE, NATIONALITY, DESCRIPTION, P_PLAYER_FLAG, ORG_LESS_FLAG) VALUES (?, ?, ?, ?, ?, ?);'
+//     var params = [data.id]
+//     db.run(sql, params, function (err, result) {
+//         if (err) {
+//             res.status(400).json({ "error": err.message })
+//             return;
+//         }
+//         res.json({
+//             "message": "success",
+//             "id": this.lastID,
+//             "data": data
+//         })
+//     });
+// })
+
+
+// app.delete("/Player/:PlayerName", (req, res, next) => {
+//     db.run(
+//         'DELETE FROM PLAYER WHERE PLAYERNAME = ?',
+//         req.params.id,
+//         function (err, result) {
+//             if (err) {
+//                 res.status(400).json({ "error": res.message })
+//                 return;
+//             }
+//             res.json({ "message": "deleted", rows: this.changes })
+//         });
+// })
 
 
 
