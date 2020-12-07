@@ -435,10 +435,7 @@ app.delete("/Video_Game/:v_id", (req, res, next) => {
     });
 })
 
-
 app.post("/Video_Game/", (req, res, next) => {
-    var errors = []
-
     var data = {
         description: req.body.description,
         vname: req.body.vname,
@@ -446,7 +443,7 @@ app.post("/Video_Game/", (req, res, next) => {
     }
 
     var sql = 'INSERT INTO VIDEO_GAME(DESCRIPTION, VNAME, RELEASE_STATUS) VALUES(?, ?, ?);'
-    var params = [data.desc, data.vname, data.rs]
+    var params = [data.description, data.vname, data.rs]
     db.run(sql, params, function (err, result) {
         if (err) {
             res.status(400).json({ "error": err.message })
@@ -463,56 +460,58 @@ app.post("/Video_Game/", (req, res, next) => {
 
 // //////////////////////////DEVELOPS/////////////////////////////////////////
 
-// app.get("/develops/:dname/:v_id", (req, res, next) => {
-//     var sql = "SELECT * FROM DEVELOPS WHERE DName = ? AND V_ID = ?;"
-//     var params = [req.params.dname, req.params.v_id]
+app.get("/developer/:dname/develops", (req, res, next) => { //All video games this developer develops
+    var sql = "SELECT * FROM DEVELOPS AS D NATURAL JOIN VIDEO_GAME WHERE D.DNAME = ?;"
+    var params = [req.params.dname]
 
-//     db.get(sql, params, (err, row) => {
-//         if (err) {
-//           res.status(400).json({"error":err.message});
-//           return;
-//         }
-//         res.json({
-//             "data":row
-//         })
-//       });
-// });
+    db.get(sql, params, (err, row) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "data":row
+        })
+      });
+});
 
-// app.post("/develops/", (req, res, next) => {
-//     var errors=[]
-//     if (!req.body.id){
-//         errors.push("No Developer/video game info specified");
-//     }
-//     var data = {
-//         id : req.body.id
-//     }
+app.post("/developer/:dname/develops/", (req, res, next) => {
+    var data = {
+        v_id : req.body.v_id,
+        dname : req.params.dname
+    }
 
-//     var sql ='INSERT INTO DEVELOPS VALUES (?,?);'
-//     var params =[data.id]
-//     db.run(sql, params, function (err, result) {
-//         if (err){
-//             res.status(400).json({"error": err.message})
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "U_ID" : this.lastID
-//         })
-//     });
-// })
+    var sql ='INSERT INTO DEVELOPS VALUES (?,?);'
+    var params =[data.v_id, data.dname]
+    db.run(sql, params, function (err, result) {
+        if (err){ 
+            res.status(400).json({"error": err.message})
+            return;
+        }
+        res.json({
+            "message": "success",
+            "U_ID" : data
+        })
+    });
+})
 
-// app.delete("/dlocation_table/:name", (req, res, next) => {
-//     db.run(
-//         'DELETE FROM DEVELOPS WHERE DName = ? AND V_ID=?',
-//         req.params.id,
-//         function (err, result) {
-//             if (err){
-//                 res.status(400).json({"error": res.message})
-//                 return;
-//             }
-//             res.json({"message":"deleted", rows: this.changes})
-//     });
-// })
+app.delete("/developer/:dname/develops/", (req, res, next) => {
+    var data = {
+        v_id : req.body.v_id,
+        dname : req.params.dname
+    }
+    var params =[data.v_id, data.dname]
+    db.run(
+        'DELETE FROM DEVELOPS WHERE V_ID = ? AND DNAME = ?',
+        params,
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            res.json({"message":"deleted", rows: this.changes})
+    });
+})
 
 // /********************COMPETITION******************** */
 // app.get("/CLocation_Table", (req, res, next) => {
