@@ -333,54 +333,62 @@ app.delete("/developer/:dname", (req, res, next) => {
 
 // //////////////////////////DLOCATION_TABLE/////////////////////////////////////////
 
-// app.get("/developer/:dname/dlocation_table/", (req, res, next) => {
-//     var sql = "SELECT * FROM DLOCATION_TABLE WHERE DName = ?;"
-//     var params = [req.params.name]
-//     db.get(sql, params, (err, row) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "data": row
-//         })
-//     });
-// });
+app.get("/developer/:dname/dlocation_table/", (req, res, next) => {
+    var sql = "SELECT * FROM DLOCATION_TABLE WHERE DName = ?;"
+    var params = [req.params.dname]
+    db.all(sql, params, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
 
-// app.post("/developer/:dname/dlocation_table/", (req, res, next) => {
-//     var errors = []
-//     if (!req.body.dname) {
-//         errors.push("No developer name is specified");
-//     }
+app.post("/developer/:dname/dlocation_table/", (req, res, next) => {
+    var errors = []
+    if (!req.body.dname) {
+        errors.push("No developer name is specified");
+    }
 
-//     var sql = 'INSERT INTO DLOCATION_TABLE VALUES(?,?);'
-//     var data = {
-//         u_id: req.body.dname,
-//         location: req.body.location
-//     }
-//     db.run(sql, data, (err, result) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message })
-//             return;
-//         }
-//         res.json({
-//             data
-//         })
-//     });
-// })
+    var sql = 'INSERT INTO DLOCATION_TABLE VALUES(?,?);'
+    var data = {
+        u_id: req.params.dname,
+        location: req.body.location
+    }
 
-// app.delete("/dlocation_table/:name", (req, res, next) => {
-//     db.run(
-//         'DELETE FROM DLOCATION_TABLE WHERE DName = ?',
-//         req.params.id,
-//         function (err, result) {
-//             if (err) {
-//                 res.status(400).json({ "error": res.message })
-//                 return;
-//             }
-//             res.json({ "message": "deleted", rows: this.changes })
-//         });
-// })
+    var params = [data.u_id, data.location]
+    db.run(sql, params, (err, result) => {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            data
+        })
+    });
+})
+
+app.delete("/developer/:dname/dlocation_table/:location", (req, res, next) => {
+    var data = {
+        dname: req.params.dname,
+        location: req.params.location
+    }
+    
+    var params = [data.dname, data.location]
+    db.run(
+        'DELETE FROM DLOCATION_TABLE WHERE DName = ? AND LOCATION = ?;',
+        params,
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
 
 
 
