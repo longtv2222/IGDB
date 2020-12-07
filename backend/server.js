@@ -278,6 +278,74 @@ app.delete("/developer/:dname/dlocation_table/:location", (req, res, next) => {
         });
 })
 
+/******************OPERATING PLATFORM ****************************/
+
+app.get("/Video_Game/operating_platform", (req, res) => {
+    var sql = "SELECT * FROM OPERATING_PLATFORM;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/Video_Game/:v_id/operating_platform", (req, res) => {
+    var sql = "SELECT * FROM OPERATING_PLATFORM WHERE V_ID = ?;"
+    db.all(sql, req.params.v_id,(err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.post("/Video_Game/:v_id/operating_platform", (req, res) => {
+    var data = {
+        v_id: req.params.v_id,
+        platform: req.body.platform
+    }
+
+    var sql = 'INSERT INTO OPERATING_PLATFORM VALUES (?, ?);'
+    var params = [data.v_id, data.platform]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+app.delete("/Video_Game/:v_id/operating_platform", (req, res) => {
+    var data = {
+        v_id: req.params.v_id,
+        platform: req.body.platform
+    }
+
+    var params = [data.v_id, data.platform]
+    db.run(
+        'DELETE FROM OPERATING_PLATFORM WHERE V_ID = ? AND PLATFORM = ?',
+        params,
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
 
 // /************ VIDEO_GAME **************** */
 app.get("/Video_Game/", (req, res) => {
@@ -343,8 +411,6 @@ app.post("/Video_Game/", (req, res) => {
         })
     });
 })
-
-
 
 // //////////////////////////DEVELOPS/////////////////////////////////////////
 
@@ -538,7 +604,7 @@ app.delete("/publisher/:pname/publishes", (req, res) => {
 })
 
 // //////////////////////////////////PUBLISHER////////////////////////////////////////////////////////////////////////
-app.get("/publisherS", (req, res) => {
+app.get("/publisher", (req, res) => {
     var sql = "SELECT * FROM PUBLISHER;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -605,9 +671,6 @@ app.delete("/publisher/:pname", (req, res) => {
 
 
 
-
-
-
 // /********************COMPETITION******************** */
 // app.get("/CLocation_Table", (req, res, next) => {
 //     var sql = "SELECT * FROM CLOCATION_TABLE;"
@@ -623,6 +686,7 @@ app.delete("/publisher/:pname", (req, res) => {
 //         })
 //     });
 // });
+
 // /////////////////////THIS NEEDS REVIEW
 // app.get("/CLocation_Table/:CName/:League", (req, res, next) => {
 //     var sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = ? AND LEAGUE = ?;"
