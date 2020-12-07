@@ -178,7 +178,7 @@ app.get("/client/paid_user/:id", (req, res) => {
     });
 });
 
-app.get("/client/paid_user", (req, res, next) => {
+app.get("/client/paid_user", (req, res) => {
     var sql = "SELECT * FROM PAID_USER;"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -193,7 +193,7 @@ app.get("/client/paid_user", (req, res, next) => {
     });
 });
 
-app.delete("/client/paid_user/:id", (req, res, next) => {
+app.delete("/client/paid_user/:id", (req, res) => {
     db.run(
         'DELETE FROM PAID_USER WHERE U_ID = ?',
         req.params.id,
@@ -207,7 +207,7 @@ app.delete("/client/paid_user/:id", (req, res, next) => {
 })
 
 /* ******************* CLIENT OPERATIONS  ******************* */
-app.get("/client", (req, res, next) => {
+app.get("/client", (req, res) => {
     var sql = "SELECT * FROM CLIENT;"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -222,7 +222,7 @@ app.get("/client", (req, res, next) => {
     });
 });
 
-app.get("/client/:id", (req, res, next) => {
+app.get("/client/:id", (req, res) => {
     var sql = "SELECT * FROM CLIENT WHERE U_ID = ?;"
     var params = [req.params.id]
     db.get(sql, params, (err, row) => {
@@ -236,7 +236,7 @@ app.get("/client/:id", (req, res, next) => {
     });
 });
 
-app.post("/client/", (req, res, next) => {
+app.post("/client/", (req, res) => {
     var errors = []
     if (!req.body.id) {
         errors.push("No user id specified");
@@ -258,7 +258,7 @@ app.post("/client/", (req, res, next) => {
     });
 })
 
-app.delete("/client/:id", (req, res, next) => {
+app.delete("/client/:id", (req, res) => {
     db.run(
         'DELETE FROM CLIENT WHERE U_ID = ?',
         req.params.id,
@@ -286,7 +286,7 @@ app.get("/developer/:dname", (req, res) => {
     });
 });
 
-app.post("/developer/", (req, res, next) => {
+app.post("/developer/", (req, res) => {
     var errors = []
     if (!req.body.DName) {
         errors.push("No developer name is specified");
@@ -305,7 +305,7 @@ app.post("/developer/", (req, res, next) => {
     });
 })
 
-app.get("/developer/", (req, res, next) => {
+app.get("/developer/", (req, res) => {
     var sql = "SELECT * FROM DEVELOPER;"
     db.all(sql, (err, row) => {
         if (err) {
@@ -318,7 +318,7 @@ app.get("/developer/", (req, res, next) => {
     });
 });
 
-app.delete("/developer/:dname", (req, res, next) => {
+app.delete("/developer/:dname", (req, res) => {
     db.run(
         'DELETE FROM DEVELOPER WHERE DName = ?;',
         req.params.dname,
@@ -392,7 +392,7 @@ app.delete("/developer/:dname/dlocation_table/:location", (req, res, next) => {
 
 
 // /************ VIDEO_GAME **************** */
-app.get("/Video_Game/", (req, res, next) => {
+app.get("/Video_Game/", (req, res) => {
     var sql = "SELECT * FROM VIDEO_GAME;"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -407,7 +407,7 @@ app.get("/Video_Game/", (req, res, next) => {
     });
 });
 
-app.get("/Video_Game/:v_id", (req, res, next) => {
+app.get("/Video_Game/:v_id", (req, res) => {
     var sql = "SELECT * FROM VIDEO_GAME WHERE V_ID = ?;"
 
 
@@ -422,20 +422,20 @@ app.get("/Video_Game/:v_id", (req, res, next) => {
     });
 });
 
-app.delete("/Video_Game/:v_id", (req, res, next) => {
+app.delete("/Video_Game/:v_id", (req, res) => {
     db.run(
         'DELETE FROM VIDEO_GAME WHERE V_ID = ?',
         req.params.v_id,
         function (err, result) {
-            if (err){
-                res.status(400).json({"error": res.message})
+            if (err) {
+                res.status(400).json({ "error": res.message })
                 return;
             }
-            res.json({"message":"deleted", rows: this.changes})
-    });
+            res.json({ "message": "deleted", rows: this.changes })
+        });
 })
 
-app.post("/Video_Game/", (req, res, next) => {
+app.post("/Video_Game/", (req, res) => {
     var data = {
         description: req.body.description,
         vname: req.body.vname,
@@ -460,58 +460,195 @@ app.post("/Video_Game/", (req, res, next) => {
 
 // //////////////////////////DEVELOPS/////////////////////////////////////////
 
-app.get("/developer/:dname/develops", (req, res, next) => { //All video games this developer develops
+app.get("/developer/:dname/develops", (req, res) => { //All video games this developer develops
     var sql = "SELECT * FROM DEVELOPS AS D NATURAL JOIN VIDEO_GAME WHERE D.DNAME = ?;"
     var params = [req.params.dname]
 
     db.get(sql, params, (err, row) => {
         if (err) {
-          res.status(400).json({"error":err.message});
-          return;
+            res.status(400).json({ "error": err.message });
+            return;
         }
         res.json({
-            "data":row
+            "data": row
         })
-      });
+    });
 });
 
-app.post("/developer/:dname/develops/", (req, res, next) => {
+app.post("/developer/:dname/develops/", (req, res) => {
     var data = {
-        v_id : req.body.v_id,
-        dname : req.params.dname
+        v_id: req.body.v_id,
+        dname: req.params.dname
     }
 
-    var sql ='INSERT INTO DEVELOPS VALUES (?,?);'
-    var params =[data.v_id, data.dname]
+    var sql = 'INSERT INTO DEVELOPS VALUES (?,?);'
+    var params = [data.v_id, data.dname]
     db.run(sql, params, function (err, result) {
-        if (err){ 
-            res.status(400).json({"error": err.message})
+        if (err) {
+            res.status(400).json({ "error": err.message })
             return;
         }
         res.json({
             "message": "success",
-            "U_ID" : data
+            "U_ID": data
         })
     });
 })
 
-app.delete("/developer/:dname/develops/", (req, res, next) => {
+app.delete("/developer/:dname/develops/", (req, res) => {
     var data = {
-        v_id : req.body.v_id,
-        dname : req.params.dname
+        v_id: req.body.v_id,
+        dname: req.params.dname
     }
-    var params =[data.v_id, data.dname]
+    var params = [data.v_id, data.dname]
     db.run(
         'DELETE FROM DEVELOPS WHERE V_ID = ? AND DNAME = ?',
         params,
         function (err, result) {
-            if (err){
-                res.status(400).json({"error": res.message})
+            if (err) {
+                res.status(400).json({ "error": res.message })
                 return;
             }
-            res.json({"message":"deleted", rows: this.changes})
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+/******************************PLOCATION*********************************/
+app.get("/publisher/plocation_table/", (req, res) => {
+    var sql = "SELECT * FROM PLOCATION_TABLE;"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/publisher/:pname/plocation_table/", (req, res) => {
+    var sql = "SELECT * FROM PLOCATION_TABLE WHERE PNAME = ? COLLATE NOCASE;"
+    db.get(sql, req.params.pname, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": row
+        })
+    });
+});
+
+app.post("/publisher/:pname/plocation_table/", (req, res) => {
+    var data = {
+        pname: req.params.pname,
+        location: req.body.location
+    }
+
+    var sql = 'INSERT INTO plocation_table VALUES (?, ?);'
+    var params = [data.pname, data.location]
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
     });
 })
+
+app.delete("/publisher/:pname/plocation_table/", (req, res, next) => {
+    var data = {
+        pname : req.params.pname,
+        location : req.body.location
+    }
+
+    var params = [data.pname, data.location]
+    db.run(
+        'DELETE FROM PLOCATION_TABLE WHERE PNAME = ? AND LOCATION = ?',
+        params,
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+// //////////////////////////////////PUBLISHER////////////////////////////////////////////////////////////////////////
+app.get("/publisher", (req, res) => {
+    var sql = "SELECT * FROM PUBLISHER;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/publisher/:pname/", (req, res) => {
+    var sql = "SELECT * FROM PUBLISHER WHERE PNAME = ?;"
+
+    db.get(sql, req.params.pname, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.post("/publisher/", (req, res) => {
+    var errors = []
+    if (!req.body.id) {
+        errors.push("No PName specified");
+    }
+    var data = {
+        pname: req.body.pname
+    }
+
+    var sql = 'INSERT INTO PUBLISHER VALUES (?);'
+    var params = [data.pname]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+app.delete("/publisher/:pname", (req, res) => {
+    db.run(
+        'DELETE FROM PUBLISHER WHERE pname = ?',
+        req.params.pname,
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+
+
 
 // /********************COMPETITION******************** */
 // app.get("/CLocation_Table", (req, res, next) => {
@@ -585,146 +722,6 @@ app.delete("/developer/:dname/develops/", (req, res, next) => {
 // })
 
 
-
-/*PLOCATION*/
-// app.get("/plocation_table", (req, res, next) => {
-//     var sql = "SELECT * FROM plocation_table;"
-//     var params = []
-//     db.all(sql, params, (err, rows) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "data": rows
-//         })
-//     });
-// });
-
-// /////////THIS NEEDS MULTIPLE VALUES IN THE ARGUMENT
-// app.get("/plocation_table/:PName", (req, res, next) => {
-//     var sql = "SELECT * FROM PLOCATION_TABLE WHERE PName = ?;"
-//     var params = [req.params.id]
-//     db.get(sql, params, (err, row) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "data": row
-//         })
-//     });
-// });
-
-// app.post("/plocation_table/", (req, res, next) => {
-//     var errors = []
-//     if (!req.body.name) {
-//         errors.push("No pName key specified");
-//     }
-//     var data = {
-//         PName: req.body.name
-//         Location: req.body.Location,
-//     }
-
-//     var sql = 'INSERT INTO plocation_table VALUES (?, ?);'
-//     var params = [data.PName, data.Location]
-//     db.run(sql, params, function (err, result) {
-//         if (err) {
-//             res.status(400).json({ "error": err.message })
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "id": this.lastID
-// 			"data": data
-//         })
-//     });
-// })
-
-// ////THIS//////////////NEEDS TO TAKE MULTIPLE VALUES INTO ARGUMENT
-// app.delete("/plocation_table/:CName/:Location", (req, res, next) => {
-//     db.run(
-//         'DELETE FROM plocation_table WHERE CNAME = ? AND Location = ?',
-//         req.params.id,
-//         function (err, result) {
-//             if (err) {
-//                 res.status(400).json({ "error": res.message })
-//                 return;
-//             }
-//             res.json({ "message": "deleted", rows: this.changes })
-//         });
-// })
-
-// //////////////////////////////////PUBLISHER////////////////////////////////////////////////////////////////////////
-// app.get("/publisher", (req, res, next) => {
-//     var sql = "SELECT * FROM PUBLISHER;"
-//     var params = []
-//     db.all(sql, params, (err, rows) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "data": rows
-//         })
-//     });
-// });
-
-
-// app.get("/publisher/:PName/", (req, res, next) => {
-//     var sql = "SELECT * FROM PUBLISHER WHERE PName = ?;"
-
-//     db.get(sql, req.params.id, (err, row) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "data": row
-//         })
-//     });
-// });
-
-
-// app.post("/Publisher/", (req, res, next) => {
-//     var errors = []
-//     if (!req.body.id) {
-//         errors.push("No PName specified");
-//     }
-//     var data = {
-//         Pname: req.body.id
-//     }
-
-//     var sql = 'INSERT INTO PUBLISHER VALUES (?);'
-//     var params = [data.PName]
-//     db.run(sql, params, function (err, result) {
-//         if (err) {
-//             res.status(400).json({ "error": err.message })
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "id": this.lastID,
-//             "data": data
-//         })
-//     });
-// })
-
-// app.delete("/Publish/:PName", (req, res, next) => {
-//     db.run(
-//         'DELETE FROM PUBLISHER WHERE PName = ?',
-//         req.params.id,
-//         function (err, result) {
-//             if (err) {
-//                 res.status(400).json({ "error": res.message })
-//                 return;
-//             }
-//             res.json({ "message": "deleted", rows: this.changes })
-//         });
-// })
 
 // app.get("/Player", (req, res, next) => {
 //     var sql = "SELECT * FROM PLAYER;"
