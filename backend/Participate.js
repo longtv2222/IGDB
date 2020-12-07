@@ -16,7 +16,7 @@ app.listen(HTTP_PORT, () => {
 
 
 
-app.get("/Participate", (req, res, next) => {
+app.get("/Competition/Participate", (req, res, next) => {
     var sql = "SELECT * FROM PARTICIPATE;"
     var params = []
     db.all(sql, params, (err, rows) => {
