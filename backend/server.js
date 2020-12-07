@@ -376,7 +376,7 @@ app.delete("/developer/:dname/dlocation_table/:location", (req, res, next) => {
         dname: req.params.dname,
         location: req.params.location
     }
-    
+
     var params = [data.dname, data.location]
     db.run(
         'DELETE FROM DLOCATION_TABLE WHERE DName = ? AND LOCATION = ?;',
@@ -391,12 +391,81 @@ app.delete("/developer/:dname/dlocation_table/:location", (req, res, next) => {
 })
 
 
+// /************ VIDEO_GAME **************** */
+app.get("/Video_Game/", (req, res, next) => {
+    var sql = "SELECT * FROM VIDEO_GAME;"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/Video_Game/:v_id", (req, res, next) => {
+    var sql = "SELECT * FROM VIDEO_GAME WHERE V_ID = ?;"
+
+
+    db.get(sql, req.params.v_id, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.delete("/Video_Game/:v_id", (req, res, next) => {
+    db.run(
+        'DELETE FROM VIDEO_GAME WHERE V_ID = ?',
+        req.params.v_id,
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            res.json({"message":"deleted", rows: this.changes})
+    });
+})
+
+
+app.post("/Video_Game/", (req, res, next) => {
+    var errors = []
+
+    var data = {
+        description: req.body.description,
+        vname: req.body.vname,
+        rs: req.body.rs,
+    }
+
+    var sql = 'INSERT INTO VIDEO_GAME(DESCRIPTION, VNAME, RELEASE_STATUS) VALUES(?, ?, ?);'
+    var params = [data.desc, data.vname, data.rs]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+
 
 // //////////////////////////DEVELOPS/////////////////////////////////////////
 
 // app.get("/develops/:dname/:v_id", (req, res, next) => {
 //     var sql = "SELECT * FROM DEVELOPS WHERE DName = ? AND V_ID = ?;"
-//     var params = [req.params.name]
+//     var params = [req.params.dname, req.params.v_id]
 
 //     db.get(sql, params, (err, row) => {
 //         if (err) {
@@ -516,77 +585,9 @@ app.delete("/developer/:dname/dlocation_table/:location", (req, res, next) => {
 //         });
 // })
 
-// /************ VIDEO_GAME **************** */
 
-// app.get("/Video_Game", (req, res, next) => {
-//     var sql = "SELECT * FROM VIDEO_GAME;"
-//     var params = []
-//     db.all(sql, params, (err, rows) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "data": rows
-//         })
-//     });
-// });
 
-// app.get("/Video_Game/:V_ID", (req, res, next) => {
-//     var sql = "SELECT * FROM VIDEO_GAME WHERE V_ID = ?;"
-
-//     db.get(sql, params, (err, row) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "data": row
-//         })
-//     });
-// });
-
-// app.post("/Video_Game/", (req, res, next) => {
-//     var errors = []
-//     if (!req.body.id) {
-//         errors.push("No V_ID specified");
-//     }
-//     var data = {
-//         vid: req.body.id,
-//         desc: req.body.desc,
-//         VName: req.body.VName,
-//         RD: req.body.RD,
-//     }
-
-//     var sql = 'INSERT INTO VIDEO_GAME (V_ID, DESCRIPTION, VNAME, RELEASE_STATUS)VALUES (?, ?, ?, ?);'
-//     var params = [data.vid, data.desc, data.VName, data.RD]
-//     db.run(sql, params, function (err, result) {
-//         if (err) {
-//             res.status(400).json({ "error": err.message })
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "id": this.lastID,
-//             "data": data
-//         })
-//     });
-// })
-
-// app.delete("/Video_Game/:V_ID", (req, res, next) => {
-//     db.run(
-//         'DELETE FROM VIDEO_GAME WHERE V_ID = ?',
-//         req.params.id,
-//         function (err, result) {
-//             if (err) {
-//                 res.status(400).json({ "error": res.message })
-//                 return;
-//             }
-//             res.json({ "message": "deleted", rows: this.changes })
-//         });
-// })
-
+/*PLOCATION*/
 // app.get("/plocation_table", (req, res, next) => {
 //     var sql = "SELECT * FROM plocation_table;"
 //     var params = []
