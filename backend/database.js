@@ -39,6 +39,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         //Done
         db.run(`CREATE TABLE IF NOT EXISTS CLIENT(U_ID INT PRIMARY KEY);`);
 
+        
         db.run(`CREATE TABLE IF NOT EXISTS F2PCLIENT(U_ID INT REFERENCES CLIENT(U_ID) ON DELETE CASCADE, PRIMARY KEY(U_ID));`);
 
         //Done
@@ -47,6 +48,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
 
         db.run(`CREATE TABLE IF NOT EXISTS REVIEW(U_ID INT REFERENCES CLIENT(U_ID), V_ID INT REFERENCES VIDEO_GAME(V_ID),
                             RATING INT, PRIMARY KEY(U_ID, V_ID));`);
+
         //Done
         db.run(`CREATE TABLE IF NOT EXISTS OPERATING_PLATFORM(V_ID INT REFERENCES VIDEO_GAME(V_ID), PLATFORM CHAR,
                                         PRIMARY KEY(V_ID, PLATFORM));`);
