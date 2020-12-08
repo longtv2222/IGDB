@@ -18,7 +18,7 @@ app.get("/Competition/clocation_table/", (req, res) => {
 
 app.get("/Competition/:cname/clocation_table/", (req, res) => {
     var sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = ? COLLATE NOCASE;"
-    db.get(sql, req.params.cname, (err, row) => {
+    db.all(sql, req.params.cname, (err, row) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
