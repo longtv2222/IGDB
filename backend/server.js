@@ -94,6 +94,49 @@ app.delete("/client/paid_user/:id", (req, res) => {
         });
 })
 
+/* ********************** F2P CLIENT *********************** */
+
+app.get("/client/f2pclient", (req, res) => {
+    var sql = "SELECT * FROM F2PClient;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.delete("/client/f2pclient/:u_id", (req, res) => {
+    db.run(
+        'DELETE FROM F2PCLIENT WHERE U_ID = ?',
+        req.params.u_id,
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+app.post("/client/f2pclient/", (req, res) => {
+    var sql = "INSERT INTO F2PCLIENT VALUES (?);"
+    var params = [req.body.u_id]
+    db.run(sql, params, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": params
+        })
+    });
+});
 /* ******************* CLIENT OPERATIONS  ******************* */
 app.get("/client", (req, res) => {
     var sql = "SELECT * FROM CLIENT;"
@@ -141,7 +184,7 @@ app.post("/client/", (req, res) => {
             return;
         }
         res.json({
-            "U_ID": this.changes
+            "U_ID": data
         })
     });
 })
@@ -669,159 +712,146 @@ app.delete("/publisher/:pname", (req, res) => {
 })
 
 
+/************************ESPORT******************** */
+app.get("/esport", (req, res) => {
+    var sql = "SELECT * FROM ESPORT;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.post("/esport/", (req, res) => {
+    var sql = 'INSERT INTO ESPORT VALUES (?);'
+    var league = req.body.league
+    db.run(sql, league, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": league
+        })
+    });
+})
+
+app.delete("/esport/:league", (req, res) => {
+    db.run(
+        'DELETE FROM ESPORT WHERE league = ?',
+        req.params.league,
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
 
 
-// /********************COMPETITION******************** */
-// app.get("/CLocation_Table", (req, res, next) => {
-//     var sql = "SELECT * FROM CLOCATION_TABLE;"
-//     var params = []
-//     db.all(sql, params, (err, rows) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "data": rows
-//         })
-//     });
-// });
+/********************************PARTICIPATE************************ */ //NEED TO TEST
+app.get("/player/:playername/participate", (req, res) => {
+    var sql = "SELECT * FROM PLAYER NATURAL JOIN PARTICIPATE WHERE PLAYERNAME = ?;"
+    db.all(sql,req.params.playername, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
 
-// /////////////////////THIS NEEDS REVIEW
-// app.get("/CLocation_Table/:CName/:League", (req, res, next) => {
-//     var sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = ? AND LEAGUE = ?;"
-//     var params = [req.params.id]
-//     db.get(sql, params, (err, row) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "data": row
-//         })
-//     });
-// });
+app.delete("/player/:playername/participate/:competitionname", (req, res) => {
+    var data = {
+        playername : req.params.playername,
+        competitionname : req.params.competitionname
+    }
 
-// ///THIS/////////////////////////////NEEDS REVIEW
-// app.post("/Competition/", (req, res, next) => {
-//     var errors = []
-//     if (!req.body.id) {
-//         errors.push("No CName key specified");
-//     }
-//     var data = {
-//         CName: req.body.id,
-//         Location: req.body.Location,
-//         League: req.body.League
-//     }
+    var params = [data.playername, data.competitionname]
+    db.run(
+        'DELETE FROM PARTICIPATE WHERE PLAYERNAME = ? AND CNAME = ?',
+        params,
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
 
-//     var sql = 'INSERT INTO COMPETITION(LOCATION, CNAME, LEAGUE) VALUES (?, ?, ?);'
-//     var params = [data.Location, data.CName, data.League]
-//     db.run(sql, params, function (err, result) {
-//         if (err) {
-//             res.status(400).json({ "error": err.message })
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "id": this.lastID,
-//             "data": data
-//         })
-//     });
-// })
+/******************************PLAYER********************* */
+app.get("/player", (req, res) => {
+    var sql = "SELECT * FROM PLAYER;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
 
-// ////THIS//////////////NEEDS REVIEW
-// app.delete("/CLocation_Table/:CName/:League", (req, res, next) => {
-//     db.run(
-//         'DELETE FROM CLOCATION_TABLE WHERE CNAME = ? AND LEAGUE = ?',
-//         req.params.id,
-//         function (err, result) {
-//             if (err) {
-//                 res.status(400).json({ "error": res.message })
-//                 return;
-//             }
-//             res.json({ "message": "deleted", rows: this.changes })
-//         });
-// })
+app.get("/player/:playername", (req, res) => {
+    var sql = "SELECT * FROM PLAYER WHERE PLAYERNAME = ?;"
+    db.all(sql, req.params.playername, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
 
+app.delete("/player/:playername", (req, res) => {
+    var sql = "DELETE FROM PLAYER WHERE PLAYERNAME = ?;"
+    db.run(sql, req.params.playername, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({ "message": "deleted", rows: this.changes })
+    });
+});
 
+app.post("/player/", (req, res) => {
+    var sql = 'INSERT INTO PLAYER VALUES(?, ?, ?, ?, ?, ?);'
+    var data  = {
+        playername : req.body.playername,
+        age : req.body.age,
+        nationality: req.body.nationality,
+        description: req.body.description,
+        player_flag: req.body.playerflag,
+        org_less_flag : req.body.orglessflag
+    }
 
-// app.get("/Player", (req, res, next) => {
-//     var sql = "SELECT * FROM PLAYER;"
-//     var params = []
-//     db.all(sql, params, (err, rows) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "data": rows
-//         })
-//     });
-// });
-
-// app.get("/Player/:PlayerName", (req, res, next) => {
-//     var sql = "SELECT * FROM PLAYER WHERE PLAYERNAME = ?;"
-
-//     db.get(sql, req.params.id, (err, row) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({
-//             "data": row
-//         })
-//     });
-// });
-
-
-
-
-// /***********************PLAYER***********************/
-// app.post("/Player/", (req, res, next) => {
-//     var errors = []
-//     if (!req.body.id) {
-//         errors.push("No PlayerName key specified");
-//     }
-//     var data = {
-//         PlayerName: req.body.id,
-//         age: req.body.age,
-//         natonality: req.body.nationality,
-//         description: req.body.description,
-//         p_player_flag: req.body.p_player_flag,
-//         org_less_flag: req.body.org_less_flag
-//     }
-
-//     var sql = 'INSERT INTO PLAYER (PLAYERNAME, AGE, NATIONALITY, DESCRIPTION, P_PLAYER_FLAG, ORG_LESS_FLAG) VALUES (?, ?, ?, ?, ?, ?);'
-//     var params = [data.id]
-//     db.run(sql, params, function (err, result) {
-//         if (err) {
-//             res.status(400).json({ "error": err.message })
-//             return;
-//         }
-//         res.json({
-//             "message": "success",
-//             "id": this.lastID,
-//             "data": data
-//         })
-//     });
-// })
-
-
-// app.delete("/Player/:PlayerName", (req, res, next) => {
-//     db.run(
-//         'DELETE FROM PLAYER WHERE PLAYERNAME = ?',
-//         req.params.id,
-//         function (err, result) {
-//             if (err) {
-//                 res.status(400).json({ "error": res.message })
-//                 return;
-//             }
-//             res.json({ "message": "deleted", rows: this.changes })
-//         });
-// })
-
-
-
+    var params = [data.playername, data.age, data.nationality, data.description, data.player_flag, data.org_less_flag]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
 
 
