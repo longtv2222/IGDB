@@ -390,6 +390,60 @@ app.delete("/Video_Game/:v_id/operating_platform", (req, res) => {
         });
 })
 
+//**********************************************SIMILAR************************************************
+
+app.get("/Video_Game/Similar_To/:v_id", (req, res) => {
+    var sql = "SELECT * FROM SIMILAR_TO WHERE V_ID = ?;"
+    db.get(sql, req.params.v_id, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+// app.delete("/Video_Game/Similar_To/:v_id", (req, res) => {
+//     var data = {
+//         pname: req.params.v_id,
+//         location: req.body.sim_id
+//     }
+//     var params = [data.v_id, data.sim_id]
+
+//     db.run(
+//         'DELETE FROM SIMILAR_TO WHERE V_ID = ? AND SIM_ID = ?',
+//         params,
+//         function (err, result) {
+//             if (err) {
+//                 res.status(400).json({ "error": res.message })
+//                 return;
+//             }
+//             res.json({ "message": "deleted", rows: this.changes })
+//         });
+// })
+
+app.post("/Video_Game/Similar_To/:v_id", (req, res) => {
+    var data = {
+        v_id: req.params.v_id,
+        sim_id: req.body.sim_id,
+    }
+
+    var sql = 'INSERT INTO SIMILAR_TO VALUES(?, ?);'
+    var params = [data.v_id, data.sim_id]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
 
 
 /*****************************************Review**************** */
@@ -895,7 +949,7 @@ app.delete("/esport/:league", (req, res) => {
 })
 
 
-/********************************PARTICIPATE************************ */ 
+/********************************PARTICIPATE************************ */
 app.get("/player/:playername/participate", (req, res) => {
     var sql = "SELECT * FROM PLAYER NATURAL JOIN PARTICIPATE WHERE PLAYERNAME = ?;"
     db.all(sql, req.params.playername, (err, rows) => {
@@ -927,6 +981,27 @@ app.delete("/player/:playername/participate/:competitionname", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
+})
+
+app.post("/player/:playername/participate/", (req, res) => {
+    var sql = 'INSERT INTO PARTICIPATE VALUES(?, ?, ?);'
+    var data = {
+        cname: req.body.cname,
+        playername: req.params.playername,
+        league: req.body.league
+    }
+
+    var params = [data.cname, data.playername, data.league]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
 })
 
 /******************************PLAYER********************* */
@@ -993,6 +1068,76 @@ app.post("/player/", (req, res) => {
     });
 })
 
+/*****************************************EMPLOYS**************** */
+app.get("/Team/employs", (req, res) => {
+    var sql = "SELECT * FROM EMPLOYS NATURAL JOIN PLAYER;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/Team/:TName/employs", (req, res) => {
+    var sql = "SELECT * FROM EMPLOYS NATURAL JOIN PLAYER WHERE TNAME = ?;"
+
+    db.get(sql, req.params.TName, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.post("/Team/:TName/employs", (req, res) => {
+    var data = {
+        TName: req.params.TName,
+		PlayerName : req.body.PlayerName,
+        Year : req.body.Year,
+		Month : req.body.Month,
+		Day : req.body.Day
+    }
+
+    var sql = 'INSERT INTO EMPLOYS VALUES (?, ?, ?, ?, ?);'
+    var params = [data.TName, data.PlayerName, data.Year, data.Month, data.Day]
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+app.delete("/Team/:TName/employs", (req, res) => {
+    var data = {
+        TName: req.params.TName,
+		PlayerName : req.body.PlayerName,
+    }
+   var params = [data.TName, data.PlayerName];
+    db.run(
+        'DELETE FROM EMPLOYS WHERE TNAME = ? AND PLAYERNAME = ?',
+        params,
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
 ////////////////////TEAM///////////////////////
 app.get("/Team/:tname", (req, res) => {
     var sql = "SELECT * FROM TEAM WHERE TNAME = ?;"
@@ -1025,7 +1170,6 @@ app.get("/Team/", (req, res) => {
 app.post("/Team/", (req, res) => {
 
     var data = {
-        league: req.body.league,
         tname: req.body.tname,
         description: req.body.description,
         year: req.body.year,
@@ -1033,8 +1177,8 @@ app.post("/Team/", (req, res) => {
         day: req.body.day,
     }
 
-    var sql = 'INSERT INTO TEAM VALUES (?, ?, ?, ?, ?, ?);'
-    var params = [data.league, data.tname, data.description, data.year, data.month, data.day]
+    var sql = 'INSERT INTO TEAM VALUES (?, ?, ?, ?, ?);'
+    var params = [data.tname, data.description, data.year, data.month, data.day]
     db.run(sql, params, function (err, result) {
         if (err) {
             res.status(400).json({ "error": err.message })
@@ -1047,21 +1191,20 @@ app.post("/Team/", (req, res) => {
     });
 })
 
-// app.delete("/Team/:tname", (req, res) => {
-//     var data = {
-//         tname : req.params.tname,
-//         league : req.body.league
-//     }
-//     var sql = "DELETE FROM TEAM WHERE TNAME = ? AND LEAGUE = ?;"
-//     var params = [data.tname, data.league]
-//     db.run(sql, params, (err, rows) => {
-//         if (err) {
-//             res.status(400).json({ "error": err.message });
-//             return;
-//         }
-//         res.json({ "message": "deleted", rows: this.changes })
-//     });
-// });
+app.delete("/Team/:tname", (req, res) => {
+    var data = {
+        tname: req.params.tname,
+    }
+    var sql = "DELETE FROM TEAM WHERE TNAME = ?;"
+    var params = [data.tname, data.league]
+    db.run(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({ "message": "deleted", rows: this.changes })
+    });
+});
 
 
 
@@ -1107,7 +1250,7 @@ app.delete("/Competition/:cname/Time_Table/", (req, res) => {
         });
 })
 
-app.post("/Competition/:cname/Time_Table/", (req, res) => {  
+app.post("/Competition/:cname/Time_Table/", (req, res) => {
     var data = {
         cname: req.params.cname,
         time: req.body.time,
@@ -1131,8 +1274,8 @@ app.post("/Competition/:cname/Time_Table/", (req, res) => {
 /******************************CLOCATION*********************************/
 app.get("/Competition/clocation_table/", (req, res) => {
     var sql = "SELECT * FROM CLOCATION_TABLE;"
-    var params = []
-    db.all(sql, params, (err, rows) => {
+
+    db.all(sql, (err, rows) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
@@ -1160,13 +1303,13 @@ app.get("/Competition/:cname/clocation_table/", (req, res) => {
 
 app.post("/Competition/:cname/clocation_table/", (req, res) => {
     var data = {
-        cname: req.params.cname,
         location: req.body.location,
-		league: req.body.league
+        cname: req.params.cname,
+        league: req.body.league
     }
 
-    var sql = 'INSERT INTO clocation_table VALUES (?, ?, ?);'
-    var params = [data.pname, data.location, data.league]
+    var sql = 'INSERT INTO CLOCATION_TABLE VALUES (?, ?, ?);'
+    var params = [data.location, data.cname, data.league]
     db.run(sql, params, function (err) {
         if (err) {
             res.status(400).json({ "error": err.message })
@@ -1249,58 +1392,5 @@ app.post("/Competition/", (req, res) => {
     });
 })
 
-//SIMILAR
 
-app.get("/Similar_To/:v_id", (req, res) => {
-    var sql = "SELECT * FROM SIMILAR_TO WHERE V_ID = ?;"
-    db.get(sql, req.params.v_id, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-});
-
-app.delete("/Similar_To/:v_id", (req, res) => {
-    var data = {
-        pname: req.params.v_id,
-        location: req.body.simv_id
-    }
-    var params = [data.v_id, data.sim_vid]
-    db.run(
-        'DELETE FROM TIME_TABLE WHERE V_ID = ? AND SIMV_ID = ?',
-
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
-})
-
-app.post("/Similar_To/:v_id", (req, res) => {
-    var data = {
-        dname: req.body.dname,
-        v_id: req.params.v_id,
-        simdname: req.body.sim_d_name,
-        sim_vid: req.body.simv_id,
-    }
-
-    var sql = 'INSERT INTO VIDEO_GAME(DNAME, V_ID, SIMDNAME, SIMV_ID) VALUES(?, ?, ?, ?);'
-    var params = [data.dname, data.v_id, data.simdname, data.sim_vid]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
-})
 
