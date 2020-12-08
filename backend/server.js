@@ -4,7 +4,7 @@ var db = require("./database.js")
 var md5 = require("md5")
 
 var bodyParser = require("body-parser");
-const { Statement } = require("sqlite3");
+const { Statement, Database } = require("sqlite3");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -339,7 +339,7 @@ app.get("/Video_Game/operating_platform", (req, res) => {
 
 app.get("/Video_Game/:v_id/operating_platform", (req, res) => {
     var sql = "SELECT * FROM OPERATING_PLATFORM WHERE V_ID = ?;"
-    db.all(sql, req.params.v_id,(err, rows) => {
+    db.all(sql, req.params.v_id, (err, rows) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
@@ -423,9 +423,9 @@ app.get("/Video_Game/:v_id/Review", (req, res) => {
 
 app.post("/Video_Game/:v_id/Review", (req, res) => {
     var data = {
-        U_ID : req.body.U_ID,
+        U_ID: req.body.U_ID,
         v_id: req.params.v_id,
-		Rating : req.body.Rating
+        Rating: req.body.Rating
     }
 
     var sql = 'INSERT INTO REVIEW VALUES (?, ?, ?);'
@@ -444,8 +444,8 @@ app.post("/Video_Game/:v_id/Review", (req, res) => {
 
 app.delete("/Video_Game/:v_id/Review", (req, res) => {
     var data = {
-        v_id : req.params.v_id,
-		u_id : req.body.u_id,
+        v_id: req.params.v_id,
+        u_id: req.body.u_id,
     }
 
     var params = [data.v_id, data.u_id];
@@ -493,8 +493,8 @@ app.get("/Video_Game/:v_id/has", (req, res) => {
 app.post("/Video_Game/:v_id/has", (req, res) => {
     var data = {
         v_id: req.params.v_id,
-        league : req.body.league,
-		genre : req.body.genre
+        league: req.body.league,
+        genre: req.body.genre
     }
 
     var sql = 'INSERT INTO HAS VALUES (?, ?, ?);'
@@ -514,9 +514,9 @@ app.post("/Video_Game/:v_id/has", (req, res) => {
 app.delete("/Video_Game/:v_id/has", (req, res) => {
     var data = {
         v_id: req.params.v_id,
-        league : req.body.league
+        league: req.body.league
     }
-   var params = [data.v_id, data.league];
+    var params = [data.v_id, data.league];
     db.run(
         'DELETE FROM HAS WHERE V_ID = ? AND LEAGUE = ?',
         params,
@@ -701,8 +701,8 @@ app.post("/publisher/:pname/plocation_table/", (req, res) => {
 
 app.delete("/publisher/:pname/plocation_table/", (req, res, next) => {
     var data = {
-        pname : req.params.pname,
-        location : req.body.location
+        pname: req.params.pname,
+        location: req.body.location
     }
 
     var params = [data.pname, data.location]
@@ -750,7 +750,7 @@ app.get("/publisher/:pname/publishes", (req, res) => {
 app.post("/publisher/:pname/publishes", (req, res) => {
     var data = {
         pname: req.params.pname,
-        v_id : req.body.v_id
+        v_id: req.body.v_id
     }
 
     var sql = 'INSERT INTO PUBLISHES VALUES (?, ?);'
@@ -769,8 +769,8 @@ app.post("/publisher/:pname/publishes", (req, res) => {
 
 app.delete("/publisher/:pname/publishes", (req, res) => {
     var data = {
-        pname : req.params.pname,
-        v_id : req.body.v_id
+        pname: req.params.pname,
+        v_id: req.body.v_id
     }
     var params = [data.pname, data.v_id];
     db.run(
@@ -895,10 +895,10 @@ app.delete("/esport/:league", (req, res) => {
 })
 
 
-/********************************PARTICIPATE************************ */ //NEED TO TEST
+/********************************PARTICIPATE************************ */ 
 app.get("/player/:playername/participate", (req, res) => {
     var sql = "SELECT * FROM PLAYER NATURAL JOIN PARTICIPATE WHERE PLAYERNAME = ?;"
-    db.all(sql,req.params.playername, (err, rows) => {
+    db.all(sql, req.params.playername, (err, rows) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
@@ -912,8 +912,8 @@ app.get("/player/:playername/participate", (req, res) => {
 
 app.delete("/player/:playername/participate/:competitionname", (req, res) => {
     var data = {
-        playername : req.params.playername,
-        competitionname : req.params.competitionname
+        playername: req.params.playername,
+        competitionname: req.params.competitionname
     }
 
     var params = [data.playername, data.competitionname]
@@ -971,13 +971,13 @@ app.delete("/player/:playername", (req, res) => {
 
 app.post("/player/", (req, res) => {
     var sql = 'INSERT INTO PLAYER VALUES(?, ?, ?, ?, ?, ?);'
-    var data  = {
-        playername : req.body.playername,
-        age : req.body.age,
+    var data = {
+        playername: req.body.playername,
+        age: req.body.age,
         nationality: req.body.nationality,
         description: req.body.description,
         player_flag: req.body.playerflag,
-        org_less_flag : req.body.orglessflag
+        org_less_flag: req.body.orglessflag
     }
 
     var params = [data.playername, data.age, data.nationality, data.description, data.player_flag, data.org_less_flag]
@@ -1047,23 +1047,22 @@ app.post("/Team/", (req, res) => {
     });
 })
 
-// app.delete("/Team/:tname", (req, res) => { //Test later
+// app.delete("/Team/:tname", (req, res) => {
 //     var data = {
-//         tname : req.params.tname
+//         tname : req.params.tname,
+//         league : req.body.league
 //     }
+//     var sql = "DELETE FROM TEAM WHERE TNAME = ? AND LEAGUE = ?;"
+//     var params = [data.tname, data.league]
+//     db.run(sql, params, (err, rows) => {
+//         if (err) {
+//             res.status(400).json({ "error": err.message });
+//             return;
+//         }
+//         res.json({ "message": "deleted", rows: this.changes })
+//     });
+// });
 
-//     var params = [data.tname]
-//     db.run(
-//         'DELETE FROM TEAM WHERE TNAME = \'TSM\';',
-//         params,
-//         function (err) {
-//             if (err) {
-//                 res.status(400).json({ "error": res.message })
-//                 return;
-//             }
-//             res.json({ "message": "deleted", rows: this.changes })
-//         });
-// })
 
 
 //////////////////////////////Time_Table///////////////////////////
@@ -1108,7 +1107,7 @@ app.delete("/Competition/:cname/Time_Table/", (req, res) => {
         });
 })
 
-app.post("/Competition/:cname/Time_Table/", (req, res) => {     //Might look at this again later references error
+app.post("/Competition/:cname/Time_Table/", (req, res) => {  
     var data = {
         cname: req.params.cname,
         time: req.body.time,
@@ -1129,6 +1128,75 @@ app.post("/Competition/:cname/Time_Table/", (req, res) => {     //Might look at 
     });
 })
 
+/******************************CLOCATION*********************************/
+app.get("/Competition/clocation_table/", (req, res) => {
+    var sql = "SELECT * FROM CLOCATION_TABLE;"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/Competition/:cname/clocation_table/", (req, res) => {
+    var sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = ? COLLATE NOCASE;"
+    db.get(sql, req.params.cname, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": row
+        })
+    });
+});
+
+app.post("/Competition/:cname/clocation_table/", (req, res) => {
+    var data = {
+        cname: req.params.cname,
+        location: req.body.location,
+		league: req.body.league
+    }
+
+    var sql = 'INSERT INTO clocation_table VALUES (?, ?, ?);'
+    var params = [data.pname, data.location, data.league]
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+app.delete("/Competition/:cname/clocation_table/", (req, res, next) => {
+    var data = {
+        cname: req.params.cname,
+        location: req.body.location
+    }
+
+    var params = [data.cname, data.location]
+    db.run(
+        'DELETE FROM CLOCATION_TABLE WHERE CNAME = ? AND LOCATION = ?',
+        params,
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
 /////////////////////////Competition////////////////////
 
 app.get("/Competition/:cname", (req, res) => {
@@ -1181,8 +1249,6 @@ app.post("/Competition/", (req, res) => {
     });
 })
 
-
-
 //SIMILAR
 
 app.get("/Similar_To/:v_id", (req, res) => {
@@ -1219,7 +1285,7 @@ app.delete("/Similar_To/:v_id", (req, res) => {
 app.post("/Similar_To/:v_id", (req, res) => {
     var data = {
         dname: req.body.dname,
-        v_id: req.param.v_id,
+        v_id: req.params.v_id,
         simdname: req.body.sim_d_name,
         sim_vid: req.body.simv_id,
     }
@@ -1237,3 +1303,4 @@ app.post("/Similar_To/:v_id", (req, res) => {
         })
     });
 })
+
