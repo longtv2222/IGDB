@@ -39,7 +39,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         //Done
         db.run(`CREATE TABLE IF NOT EXISTS CLIENT(U_ID INT PRIMARY KEY);`);
 
-        
+
         db.run(`CREATE TABLE IF NOT EXISTS F2PCLIENT(U_ID INT REFERENCES CLIENT(U_ID) ON DELETE CASCADE, PRIMARY KEY(U_ID));`);
 
         //Done
@@ -59,6 +59,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
 
         db.run(`CREATE TABLE IF NOT EXISTS ESPORT (LEAGUE CHAR PRIMARY KEY);`);
 
+        //Done
         db.run(`CREATE TABLE IF NOT EXISTS HAS (V_ID INT REFERENCES VIDEO_GAME(V_ID), LEAGUE CHAR REFERENCES ESPORT(LEAGUE),
                           GENRE CHAR, PRIMARY KEY(V_ID, LEAGUE));`);
 
@@ -77,7 +78,8 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         db.run(`CREATE TABLE IF NOT EXISTS CLOCATION_TABLE(LOCATION CHAR, CNAME CHAR REFERENCES COMPETITION(CNAME), LEAGUE CHAR REFERENCES ESPORT(LEAGUE),
                                      PRIMARY KEY(LOCATION,CNAME,LEAGUE));`);
 
-        db.run(`CREATE TABLE IF NOT EXISTS TIME_TABLE (TIME CHAR, CNAME CHAR REFERENCES COMPETITION(CNAME), LEAGUE CHAR REFERENCES ESPORT(LEAGUE));`);
+                                     db.run('DROP TABLE TIME_TABLE');
+        db.run(`CREATE TABLE IF NOT EXISTS TIME_TABLE (TIME CHAR, CNAME CHAR, LEAGUE CHAR REFERENCES ESPORT(LEAGUE));`);
         (err) => {
             if (err) {
                 // Table already created

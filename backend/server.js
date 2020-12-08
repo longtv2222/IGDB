@@ -390,6 +390,145 @@ app.delete("/Video_Game/:v_id/operating_platform", (req, res) => {
         });
 })
 
+
+
+/*****************************************Review**************** */
+app.get("/Video_Game/Review", (req, res) => {
+    var sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/Video_Game/:v_id/Review", (req, res) => {
+    var sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER WHERE V_ID = ?;"
+
+    db.all(sql, req.params.v_id, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.post("/Video_Game/:v_id/Review", (req, res) => {
+    var data = {
+        U_ID : req.body.U_ID,
+        v_id: req.params.v_id,
+		Rating : req.body.Rating
+    }
+
+    var sql = 'INSERT INTO REVIEW VALUES (?, ?, ?);'
+    var params = [data.U_ID, data.v_id, data.Rating]
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+app.delete("/Video_Game/:v_id/Review", (req, res) => {
+    var data = {
+        v_id : req.params.v_id,
+		u_id : req.body.u_id,
+    }
+
+    var params = [data.v_id, data.u_id];
+    db.run(
+        'DELETE FROM REVIEW WHERE V_ID = ? AND U_ID = ?;',
+        params,
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+/*****************************************HAS**************** */
+app.get("/Video_Game/has", (req, res) => {
+    var sql = "SELECT * FROM HAS;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/Video_Game/:v_id/has", (req, res) => {
+    var sql = "SELECT * FROM HAS NATURAL JOIN ESPORT WHERE V_ID = ?;"
+
+    db.get(sql, req.params.v_id, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.post("/Video_Game/:v_id/has", (req, res) => {
+    var data = {
+        v_id: req.params.v_id,
+        league : req.body.league,
+		genre : req.body.genre
+    }
+
+    var sql = 'INSERT INTO HAS VALUES (?, ?, ?);'
+    var params = [data.v_id, data.league, data.genre]
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+app.delete("/Video_Game/:v_id/has", (req, res) => {
+    var data = {
+        v_id: req.params.v_id,
+        league : req.body.league
+    }
+   var params = [data.v_id, data.league];
+    db.run(
+        'DELETE FROM HAS WHERE V_ID = ? AND LEAGUE = ?',
+        params,
+        function (err) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
 // /************ VIDEO_GAME **************** */
 app.get("/Video_Game/", (req, res) => {
     var sql = "SELECT * FROM VIDEO_GAME;"
@@ -854,4 +993,247 @@ app.post("/player/", (req, res) => {
     });
 })
 
+////////////////////TEAM///////////////////////
+app.get("/Team/:tname", (req, res) => {
+    var sql = "SELECT * FROM TEAM WHERE TNAME = ?;"
+    db.all(sql, req.params.tname, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": row
+        })
+    });
+});
 
+app.get("/Team/", (req, res) => {
+    var sql = "SELECT * FROM TEAM;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.post("/Team/", (req, res) => {
+
+    var data = {
+        league: req.body.league,
+        tname: req.body.tname,
+        description: req.body.description,
+        year: req.body.year,
+        month: req.body.month,
+        day: req.body.day,
+    }
+
+    var sql = 'INSERT INTO TEAM VALUES (?, ?, ?, ?, ?, ?);'
+    var params = [data.league, data.tname, data.description, data.year, data.month, data.day]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+// app.delete("/Team/:tname", (req, res) => { //Test later
+//     var data = {
+//         tname : req.params.tname
+//     }
+
+//     var params = [data.tname]
+//     db.run(
+//         'DELETE FROM TEAM WHERE TNAME = \'TSM\';',
+//         params,
+//         function (err) {
+//             if (err) {
+//                 res.status(400).json({ "error": res.message })
+//                 return;
+//             }
+//             res.json({ "message": "deleted", rows: this.changes })
+//         });
+// })
+
+
+//////////////////////////////Time_Table///////////////////////////
+app.get("/Competition/Time_Table/", (req, res) => {
+    var sql = "SELECT * FROM TIME_TABLE;"
+
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.get("/Competition/:cname/Time_Table/", (req, res) => {
+    var sql = "SELECT * FROM TIME_TABLE WHERE CNAME = ?;"
+    db.all(sql, req.params.cname, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.delete("/Competition/:cname/Time_Table/", (req, res) => {
+    db.run(
+        'DELETE FROM TIME_TABLE WHERE CNAME = ?',
+        req.params.cname,
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+app.post("/Competition/:cname/Time_Table/", (req, res) => {     //Might look at this again later references error
+    var data = {
+        cname: req.params.cname,
+        time: req.body.time,
+        league: req.body.league
+    }
+
+    var sql = 'INSERT INTO TIME_TABLE VALUES(?, ?, ?);'
+    var params = [data.time, data.cname, data.league]
+    db.run(sql, params, function (err) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+/////////////////////////Competition////////////////////
+
+app.get("/Competition/:cname", (req, res) => {
+    var sql = "SELECT * FROM COMPETITION WHERE CNAME = ?;"
+    db.all(sql, req.params.cname, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": row
+        })
+    });
+});
+
+app.get("/Competition/", (req, res) => {
+    var sql = "SELECT * FROM COMPETITION;"
+    db.all(sql, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+app.post("/Competition/", (req, res) => {
+
+    var data = {
+        cname: req.body.cname,
+        description: req.body.description,
+        league: req.body.league,
+    }
+
+    var sql = 'INSERT INTO COMPETITION VALUES (?, ?, ?);'
+    var params = [data.cname, data.description, data.league]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
+
+
+
+//SIMILAR
+
+app.get("/Similar_To/:v_id", (req, res) => {
+    var sql = "SELECT * FROM SIMILAR_TO WHERE V_ID = ?;"
+    db.get(sql, req.params.v_id, (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "data": row
+        })
+    });
+});
+
+app.delete("/Similar_To/:v_id", (req, res) => {
+    var data = {
+        pname: req.params.v_id,
+        location: req.body.simv_id
+    }
+    var params = [data.v_id, data.sim_vid]
+    db.run(
+        'DELETE FROM TIME_TABLE WHERE V_ID = ? AND SIMV_ID = ?',
+
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+})
+
+app.post("/Similar_To/:v_id", (req, res) => {
+    var data = {
+        dname: req.body.dname,
+        v_id: req.param.v_id,
+        simdname: req.body.sim_d_name,
+        sim_vid: req.body.simv_id,
+    }
+
+    var sql = 'INSERT INTO VIDEO_GAME(DNAME, V_ID, SIMDNAME, SIMV_ID) VALUES(?, ?, ?, ?);'
+    var params = [data.dname, data.v_id, data.simdname, data.sim_vid]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data
+        })
+    });
+})
