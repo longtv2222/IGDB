@@ -24,7 +24,7 @@ IGDB is an an acronym for International Game Database. This project provides a R
 
 ### Run the program:
 * Make sure that there is no running process on your http://localhost:8000/
-* Run the following command inside backend folder:
+* Run the following command inside _backend_ folder:
   
    ``` npm start ```
    
