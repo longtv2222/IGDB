@@ -29,3 +29,6 @@ IGDB is an an acronym for International Game Database. This project provides a R
    ``` npm start ```
    
 * Navigate to http://localhost:8000/ and you can start using the program
+
+### License
+* This project is licensed under the Apache-2.0 License - see the [LICENSE](https://github.com/longtv2222/IGDB/blob/master/LICENSE) file for more details.
