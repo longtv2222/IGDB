@@ -52,7 +52,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         //Done
         db.run(`CREATE TABLE IF NOT EXISTS OPERATING_PLATFORM(V_ID INT REFERENCES VIDEO_GAME(V_ID), PLATFORM CHAR,
                                         PRIMARY KEY(V_ID, PLATFORM));`);
-        db.run('DROP TABLE SIMILAR_TO');
+
         db.run(`CREATE TABLE IF NOT EXISTS SIMILAR_TO (V_ID INT, SIM_ID INT, 
                 PRIMARY KEY (V_ID, SIM_ID), FOREIGN KEY(V_ID) REFERENCES VIDEO_GAME(V_ID));`);
 
@@ -83,16 +83,6 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
 
         db.run(`CREATE TABLE IF NOT EXISTS TIME_TABLE (TIME CHAR, CNAME CHAR, LEAGUE CHAR, PRIMARY KEY(TIME, CNAME, LEAGUE)
                 FOREIGN KEY(CNAME, LEAGUE) REFERENCES COMPETITION(CNAME, LEAGUE));`);
-        (err) => {
-            if (err) {
-                // Table already created
-            } else {
-                // Table just created, creating some rows
-                // var insert = 'INSERT INTO user (name, email, password) VALUES (?,?,?)'
-                // db.run(insert, ["admin", "admin@example.com", md5("admin123456")])
-                // db.run(insert, ["user", "user@example.com", md5("user123456")])
-            }
-        };
     }
 });
 

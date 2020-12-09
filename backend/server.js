@@ -405,25 +405,6 @@ app.get("/Video_Game/Similar_To/:v_id", (req, res) => {
     });
 });
 
-// app.delete("/Video_Game/Similar_To/:v_id", (req, res) => {
-//     var data = {
-//         pname: req.params.v_id,
-//         location: req.body.sim_id
-//     }
-//     var params = [data.v_id, data.sim_id]
-
-//     db.run(
-//         'DELETE FROM SIMILAR_TO WHERE V_ID = ? AND SIM_ID = ?',
-//         params,
-//         function (err, result) {
-//             if (err) {
-//                 res.status(400).json({ "error": res.message })
-//                 return;
-//             }
-//             res.json({ "message": "deleted", rows: this.changes })
-//         });
-// })
-
 app.post("/Video_Game/Similar_To/:v_id", (req, res) => {
     var data = {
         v_id: req.params.v_id,
@@ -891,9 +872,9 @@ app.post("/publisher/", (req, res) => {
     });
 })
 
-app.delete("/publisher/:pname", (req, res) => {
+app.delete("/publisher/:pname/", (req, res, next) => {
     db.run(
-        'DELETE FROM PUBLISHER WHERE pname = ?',
+        'DELETE FROM PUBLISHER WHERE PNAME = ?',
         req.params.pname,
         function (err) {
             if (err) {
