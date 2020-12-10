@@ -9,7 +9,7 @@ IGDB is an an acronym for International Game Database. This project provides a R
 ## Getting Started
 
 ### Prerequisite
-- Make sure you have Node.js downloaded in your machine. Download link: https://nodejs.org/
+- Make sure you have [Node.js](https://nodejs.org/) downloaded in your machine.
 
 ### Installation
 1. Clone the repository:
