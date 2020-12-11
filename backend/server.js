@@ -3,7 +3,7 @@ var app = express()
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+const authentication = require('./middleware/authentication')
 
 // Start server
 var HTTP_PORT = 8000
@@ -19,6 +19,14 @@ const publisherRoutes = require('./api/publisher');
 const playerRoutes = require('./api/player');
 const teamRoutes = require('./api/team');
 const competitionRoutes = require('./api/competition');
+
+app.post('*', authentication, (req, res, next) => {
+    next();
+})
+
+app.delete('*', authentication, (req, rest, next) => {
+    next();
+})
 
 app.use('/client', clientRoutes);
 app.use('/developer', developerRoutes);
