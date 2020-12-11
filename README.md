@@ -6,6 +6,7 @@ IGDB is an an acronym for International Game Database. This project provides a R
 - [Node.js](https://nodejs.org/en/)
 - [Express.js](https://expressjs.com/)
 - [SQLite3](https://www.sqlite.org/index.html)
+- [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 ## Getting Started
 
 ### Prerequisite
@@ -14,13 +15,15 @@ IGDB is an an acronym for International Game Database. This project provides a R
 ### Installation
 1. Clone the repository:
     ```git clone https://github.com/longtv2222/IGDB.git```
-2. Install the Express and Sqlite3 and md5:
+2. Install the Express, Sqlite3, md5 and jsonwebtoken:
 
     ```npm install express```
     
     ```npm install sqlite3```
     
     ```npm install md5```
+    
+    ```npm install jsonwebtoken```
 
 ### Run the program:
 * Make sure that there is no running process on your http://localhost:8000/
