@@ -28,6 +28,10 @@ app.delete('*', authentication, (req, rest, next) => {
     next();
 })
 
+app.patch('*', authentication, (req, rest, next) => {
+    next();
+})
+
 app.use('/client', clientRoutes);
 app.use('/developer', developerRoutes);
 app.use('/Video_Game', videoGameRoutes);
