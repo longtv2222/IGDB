@@ -1,9 +1,6 @@
-const express = require('express')
-const router = express.Router();
 var db = require("../database.js")
 
-/******************OPERATING PLATFORM ****************************/
-router.get("/operating_platform", (req, res) => {
+exports.getOS = (req, res) => {
     var sql = "SELECT * FROM OPERATING_PLATFORM;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -15,9 +12,9 @@ router.get("/operating_platform", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:v_id/operating_platform", (req, res) => {
+exports.getOSByID = (req, res) => {
     var sql = "SELECT * FROM OPERATING_PLATFORM WHERE V_ID = ?;"
     db.all(sql, req.params.v_id, (err, rows) => {
         if (err) {
@@ -29,9 +26,9 @@ router.get("/:v_id/operating_platform", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.post("/:v_id/operating_platform", (req, res) => {
+exports.postOSByID = (req, res) => {
     var data = {
         v_id: req.params.v_id,
         platform: req.body.platform
@@ -49,9 +46,9 @@ router.post("/:v_id/operating_platform", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:v_id/operating_platform", (req, res) => {
+exports.deleteOSByID = (req, res) => {
     var data = {
         v_id: req.params.v_id,
         platform: req.body.platform
@@ -68,11 +65,9 @@ router.delete("/:v_id/operating_platform", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-//**********************************************SIMILAR************************************************
-
-router.get("/Similar_To/:v_id", (req, res) => {
+exports.getSimilarGame = (req, res) => {
     var sql = "SELECT * FROM SIMILAR_TO WHERE V_ID = ?;"
     db.get(sql, req.params.v_id, (err, row) => {
         if (err) {
@@ -83,9 +78,9 @@ router.get("/Similar_To/:v_id", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/Similar_To/:v_id", (req, res) => {
+exports.postSimilarGame = (req, res) => {
     var data = {
         v_id: req.params.v_id,
         sim_id: req.body.sim_id,
@@ -103,10 +98,9 @@ router.post("/Similar_To/:v_id", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-/*****************************************Review**************** */
-router.get("/Review", (req, res) => {
+exports.getAllReviews = (req, res) => {
     var sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -118,9 +112,9 @@ router.get("/Review", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:v_id/Review", (req, res) => {
+exports.getReviewsByUser = (req, res) => {
     var sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER WHERE V_ID = ?;"
 
     db.all(sql, req.params.v_id, (err, row) => {
@@ -132,9 +126,9 @@ router.get("/:v_id/Review", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/:v_id/Review", (req, res) => {
+exports.postReviewByUser = (req, res) => {
     var data = {
         U_ID: req.body.U_ID,
         v_id: req.params.v_id,
@@ -153,9 +147,9 @@ router.post("/:v_id/Review", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:v_id/Review", (req, res) => {
+exports.deleteReviewByUser = (req, res) => {
     var data = {
         v_id: req.params.v_id,
         u_id: req.body.u_id,
@@ -172,10 +166,9 @@ router.delete("/:v_id/Review", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-/*****************************************HAS**************** */
-router.get("/has", (req, res) => {
+exports.getCompetition = (req, res) => {
     var sql = "SELECT * FROM HAS;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -187,9 +180,9 @@ router.get("/has", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:v_id/has", (req, res) => {
+exports.getCompetitionByGame = (req, res) => {
     var sql = "SELECT * FROM HAS NATURAL JOIN ESPORT WHERE V_ID = ?;"
 
     db.get(sql, req.params.v_id, (err, row) => {
@@ -201,9 +194,9 @@ router.get("/:v_id/has", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/:v_id/has", (req, res) => {
+exports.postCompetitionByGame = (req, res) => {
     var data = {
         v_id: req.params.v_id,
         league: req.body.league,
@@ -222,9 +215,9 @@ router.post("/:v_id/has", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:v_id/has", (req, res) => {
+exports.deleteCompetitionByGame = (req, res) => {
     var data = {
         v_id: req.params.v_id,
         league: req.body.league
@@ -240,10 +233,9 @@ router.delete("/:v_id/has", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-// /************ VIDEO_GAME **************** */
-router.get("/", (req, res) => {
+exports.getAllGame =  (req, res) => {
     var sql = "SELECT * FROM VIDEO_GAME;"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -256,9 +248,9 @@ router.get("/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:v_id", (req, res) => {
+exports.getGame = (req, res) => {
     var sql = "SELECT * FROM VIDEO_GAME WHERE V_ID = ?;"
 
 
@@ -271,9 +263,9 @@ router.get("/:v_id", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.delete("/:v_id", (req, res) => {
+exports.deleteGame = (req, res) => {
     db.run(
         'DELETE FROM VIDEO_GAME WHERE V_ID = ?',
         req.params.v_id,
@@ -284,9 +276,9 @@ router.delete("/:v_id", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-router.post("/", (req, res) => {
+exports.postGame = (req, res) => {
     var data = {
         description: req.body.description,
         vname: req.body.vname,
@@ -305,9 +297,4 @@ router.post("/", (req, res) => {
             "data": data
         })
     });
-})
-
-
-
-
-module.exports = router;
+}

@@ -1,9 +1,6 @@
-const express = require('express')
-const router = express.Router();
 var db = require("../database.js")
 
-/************************ESPORT******************** */
-app.get("/", (req, res) => {
+exports.getAllEsport = (req, res) => {
     var sql = "SELECT * FROM ESPORT;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -15,9 +12,9 @@ app.get("/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-app.post("/", (req, res) => {
+exports.postAEsport = (req, res) => {
     var sql = 'INSERT INTO ESPORT VALUES (?);'
     var league = req.body.league
     db.run(sql, league, function (err, result) {
@@ -30,9 +27,9 @@ app.post("/", (req, res) => {
             "data": league
         })
     });
-})
+}
 
-app.delete("/:league", (req, res) => {
+exports.deleteALeague = (req, res) => {
     db.run(
         'DELETE FROM ESPORT WHERE league = ?',
         req.params.league,
@@ -43,6 +40,4 @@ app.delete("/:league", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
-
-module.exports = router;
+}

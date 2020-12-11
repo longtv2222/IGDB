@@ -1,9 +1,6 @@
-const express = require('express')
-const router = express.Router();
 var db = require("../database.js")
 
-/*****************************************EMPLOYS**************** */
-router.get("/employs", (req, res) => {
+exports.getTeamEmployee = (req, res) => {
     var sql = "SELECT * FROM EMPLOYS NATURAL JOIN PLAYER;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -15,9 +12,9 @@ router.get("/employs", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:TName/employs", (req, res) => {
+exports.getTeamEmployeeWithTName = (req, res) => {
     var sql = "SELECT * FROM EMPLOYS NATURAL JOIN PLAYER WHERE TNAME = ?;"
 
     db.get(sql, req.params.TName, (err, row) => {
@@ -29,9 +26,9 @@ router.get("/:TName/employs", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/:TName/employs", (req, res) => {
+exports.postTeamEmploy = (req, res) => {
     var data = {
         TName: req.params.TName,
         PlayerName: req.body.PlayerName,
@@ -52,9 +49,9 @@ router.post("/:TName/employs", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:TName/employs", (req, res) => {
+exports.deleteTeamEmploy = (req, res) => {
     var data = {
         TName: req.params.TName,
         PlayerName: req.body.PlayerName,
@@ -70,10 +67,9 @@ router.delete("/:TName/employs", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-////////////////////TEAM///////////////////////
-router.get("/:tname", (req, res) => {
+exports.getTeam = (req, res) => {
     var sql = "SELECT * FROM TEAM WHERE TNAME = ?;"
     db.all(sql, req.params.tname, (err, row) => {
         if (err) {
@@ -85,9 +81,9 @@ router.get("/:tname", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.get("/", (req, res) => {
+exports.getAllTeam = (req, res) => {
     var sql = "SELECT * FROM TEAM;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -99,9 +95,9 @@ router.get("/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.post("/", (req, res) => {
+exports.postTeam = (req, res) => {
 
     var data = {
         tname: req.body.tname,
@@ -123,9 +119,9 @@ router.post("/", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:tname", (req, res) => {
+exports.deleteTeam = (req, res) => {
     var data = {
         tname: req.params.tname,
     }
@@ -138,7 +134,4 @@ router.delete("/:tname", (req, res) => {
         }
         res.json({ "message": "deleted", rows: this.changes })
     });
-});
-
-
-module.exports = router;
+}

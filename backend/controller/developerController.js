@@ -1,11 +1,6 @@
-const express = require('express')
-const router = express.Router();
 var db = require("../database.js")
 
-
-/* **************************DEVELOPER************************************ */
-
-router.get("/:dname", (req, res) => {
+exports.getADeveloper = (req, res) => {
     var sql = "SELECT * FROM DEVELOPER WHERE DNAME = ?;"
     db.get(sql, req.params.dname, (err, row) => {
         if (err) {
@@ -16,9 +11,9 @@ router.get("/:dname", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/", (req, res) => {
+exports.postADeveloper = (req, res) => {
     var errors = []
     if (!req.body.DName) {
         errors.push("No developer name is specified");
@@ -35,9 +30,9 @@ router.post("/", (req, res) => {
             "DName": data
         })
     });
-})
+}
 
-router.get("/", (req, res) => {
+exports.getAllDeveloper = (req, res) => {
     var sql = "SELECT * FROM DEVELOPER;"
     db.all(sql, (err, row) => {
         if (err) {
@@ -48,9 +43,9 @@ router.get("/", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.delete("/:dname", (req, res) => {
+exports.deleteADeveloper = (req, res) => {
     db.run(
         'DELETE FROM DEVELOPER WHERE DName = ?;',
         req.params.dname,
@@ -61,11 +56,9 @@ router.delete("/:dname", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-// //////////////////////////DLOCATION_TABLE/////////////////////////////////////////
-
-router.get("/:dname/dlocation_table/", (req, res, next) => {
+exports.getLocationWithDName = (req, res, next) => {
     var sql = "SELECT * FROM DLOCATION_TABLE WHERE DName = ?;"
     var params = [req.params.dname]
     db.all(sql, params, (err, row) => {
@@ -77,9 +70,9 @@ router.get("/:dname/dlocation_table/", (req, res, next) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/:dname/dlocation_table/", (req, res, next) => {
+exports.postLocationWithDName = (req, res, next) => {
     var errors = []
     if (!req.body.dname) {
         errors.push("No developer name is specified");
@@ -101,9 +94,9 @@ router.post("/:dname/dlocation_table/", (req, res, next) => {
             data
         })
     });
-})
+}
 
-router.delete("/:dname/dlocation_table/:location", (req, res, next) => {
+exports.deleteLocation = (req, res, next) => {
     var data = {
         dname: req.params.dname,
         location: req.params.location
@@ -120,11 +113,9 @@ router.delete("/:dname/dlocation_table/:location", (req, res, next) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-// //////////////////////////DEVELOPS/////////////////////////////////////////
-
-router.get("/:dname/develops", (req, res) => { //All video games this developer develops
+exports.getAllVideoGamesWithDName = (req, res) => { //All video games this developer develops
     var sql = "SELECT * FROM DEVELOPS AS D NATURAL JOIN VIDEO_GAME WHERE D.DNAME = ?;"
     var params = [req.params.dname]
 
@@ -137,9 +128,9 @@ router.get("/:dname/develops", (req, res) => { //All video games this developer 
             "data": row
         })
     });
-});
+}
 
-router.post("/:dname/develops/", (req, res) => {
+exports.postADevelop = (req, res) => {
     var data = {
         v_id: req.body.v_id,
         dname: req.params.dname
@@ -157,9 +148,9 @@ router.post("/:dname/develops/", (req, res) => {
             "U_ID": data
         })
     });
-})
+}
 
-router.delete("/:dname/develops/", (req, res) => {
+exports.deleteADevelop = (req, res) => {
     var data = {
         v_id: req.body.v_id,
         dname: req.params.dname
@@ -175,6 +166,4 @@ router.delete("/:dname/develops/", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
-
-module.exports = router;
+}

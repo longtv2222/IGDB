@@ -12,23 +12,24 @@ app.listen(HTTP_PORT, () => {
 });
 
 
-const clientRoutes = require("./api/client");
-const developerRoutes = require("./api/developer");
-const videoGameRoutes = require('./api/Video_Game');
-const publisherRoutes = require('./api/publisher');
-const playerRoutes = require('./api/player');
-const teamRoutes = require('./api/team');
-const competitionRoutes = require('./api/competition');
+const clientRoutes = require("./routes/client");
+const developerRoutes = require("./routes/developer");
+const videoGameRoutes = require('./routes/Video_Game');
+const publisherRoutes = require('./routes/publisher');
+const playerRoutes = require('./routes/player');
+const teamRoutes = require('./routes/team');
+const competitionRoutes = require('./routes/competition');
+const esportRoutes = require('./routes/esport');
 
-app.post('*', authentication, (req, res, next) => {
+app.post('*', authentication, (res, req, next) => {
     next();
 })
 
-app.delete('*', authentication, (req, rest, next) => {
+app.delete('*', authentication, (res, req, next) => {
     next();
 })
 
-app.patch('*', authentication, (req, rest, next) => {
+app.patch('*', authentication, (res, req, next) => {
     next();
 })
 
@@ -39,6 +40,7 @@ app.use('/publisher', publisherRoutes);
 app.use('/player', playerRoutes);
 app.use('/team', teamRoutes);
 app.use('/competition', competitionRoutes);
+app.use('/esport', esportRoutes)
 
 
 

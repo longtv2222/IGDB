@@ -1,9 +1,6 @@
-const express = require('express')
-const router = express.Router();
 var db = require("../database.js")
 
-/******************************PLOCATION*********************************/
-router.get("/plocation_table/", (req, res) => {
+exports.getLocation = (req, res) => {
     var sql = "SELECT * FROM PLOCATION_TABLE;"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -16,9 +13,9 @@ router.get("/plocation_table/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:pname/plocation_table/", (req, res) => {
+exports.getLocationWithPName = (req, res) => {
     var sql = "SELECT * FROM PLOCATION_TABLE WHERE PNAME = ? COLLATE NOCASE;"
     db.get(sql, req.params.pname, (err, row) => {
         if (err) {
@@ -30,9 +27,9 @@ router.get("/:pname/plocation_table/", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/:pname/plocation_table/", (req, res) => {
+exports.postLocationWithPName = (req, res) => {
     var data = {
         pname: req.params.pname,
         location: req.body.location
@@ -50,9 +47,9 @@ router.post("/:pname/plocation_table/", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:pname/plocation_table/", (req, res, next) => {
+exports.deleteLocationWithPName = (req, res, next) => {
     var data = {
         pname: req.params.pname,
         location: req.body.location
@@ -69,10 +66,9 @@ router.delete("/:pname/plocation_table/", (req, res, next) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-/*****************************************PUBLISHES**************** */
-router.get("/publishes", (req, res) => {
+exports.getAllPublishes = (req, res) => {
     var sql = "SELECT * FROM PUBLISHES NATURAL JOIN VIDEO_GAME;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -84,9 +80,9 @@ router.get("/publishes", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:pname/publishes", (req, res) => {
+exports.getPublishes = (req, res) => {
     var sql = "SELECT * FROM PUBLISHES NATURAL JOIN VIDEO_GAME WHERE PNAME = ?;"
 
     db.get(sql, req.params.pname, (err, row) => {
@@ -98,9 +94,9 @@ router.get("/:pname/publishes", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/:pname/publishes", (req, res) => {
+exports.postPublishes = (req, res) => {
     var data = {
         pname: req.params.pname,
         v_id: req.body.v_id
@@ -118,9 +114,9 @@ router.post("/:pname/publishes", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:pname/publishes", (req, res) => {
+exports.deletePublishes = (req, res) => {
     var data = {
         pname: req.params.pname,
         v_id: req.body.v_id
@@ -136,10 +132,9 @@ router.delete("/:pname/publishes", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-// //////////////////////////////////PUBLISHER////////////////////////////////////////////////////////////////////////
-router.get("/", (req, res) => {
+exports.getAllPublisher = (req, res) => {
     var sql = "SELECT * FROM PUBLISHER;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -151,9 +146,9 @@ router.get("/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:pname/", (req, res) => {
+exports.getPublisher = (req, res) => {
     var sql = "SELECT * FROM PUBLISHER WHERE PNAME = ?;"
 
     db.get(sql, req.params.pname, (err, row) => {
@@ -165,9 +160,9 @@ router.get("/:pname/", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/", (req, res) => {
+exports.postPublisher = (req, res) => {
     var errors = []
     if (!req.body.id) {
         errors.push("No PName specified");
@@ -188,9 +183,9 @@ router.post("/", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:pname/", (req, res, next) => {
+exports.deletePublisher = (req, res, next) => {
     db.run(
         'DELETE FROM PUBLISHER WHERE PNAME = ?',
         req.params.pname,
@@ -201,6 +196,4 @@ router.delete("/:pname/", (req, res, next) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
-
-module.exports = router;
+}

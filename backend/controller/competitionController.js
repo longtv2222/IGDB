@@ -1,9 +1,6 @@
-const express = require('express')
-const router = express.Router();
 var db = require("../database.js")
 
-//////////////////////////////Time_Table///////////////////////////
-router.get("/Time_Table/", (req, res) => {
+exports.getAllTimeTable = (req, res) => {
     var sql = "SELECT * FROM TIME_TABLE;"
 
     db.all(sql, (err, rows) => {
@@ -16,9 +13,9 @@ router.get("/Time_Table/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:cname/Time_Table/", (req, res) => {
+exports.getCNameTimeTable = (req, res) => {
     var sql = "SELECT * FROM TIME_TABLE WHERE CNAME = ?;"
     db.all(sql, req.params.cname, (err, row) => {
         if (err) {
@@ -29,9 +26,9 @@ router.get("/:cname/Time_Table/", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.delete("/:cname/Time_Table/", (req, res) => {
+exports.deleteTimeTable = (req, res) => {
     db.run(
         'DELETE FROM TIME_TABLE WHERE CNAME = ?',
         req.params.cname,
@@ -42,9 +39,9 @@ router.delete("/:cname/Time_Table/", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-router.post("/:cname/Time_Table/", (req, res) => {
+exports.postTimeTable = (req, res) => {
     var data = {
         cname: req.params.cname,
         time: req.body.time,
@@ -63,10 +60,9 @@ router.post("/:cname/Time_Table/", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-/******************************CLOCATION*********************************/
-router.get("/clocation_table/", (req, res) => {
+exports.getAllLocation = (req, res) => {
     var sql = "SELECT * FROM CLOCATION_TABLE;"
 
     db.all(sql, (err, rows) => {
@@ -79,9 +75,9 @@ router.get("/clocation_table/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:cname/clocation_table/", (req, res) => {
+exports.getAllLocationWithCName = (req, res) => {
     var sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = ? COLLATE NOCASE;"
     db.get(sql, req.params.cname, (err, row) => {
         if (err) {
@@ -93,9 +89,9 @@ router.get("/:cname/clocation_table/", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/:cname/clocation_table/", (req, res) => {
+exports.postLocationWithCName = (req, res) => {
     var data = {
         location: req.body.location,
         cname: req.params.cname,
@@ -114,9 +110,9 @@ router.post("/:cname/clocation_table/", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.delete("/:cname/clocation_table/", (req, res, next) => {
+exports.deleteLocationWithCName = (req, res, next) => {
     var data = {
         cname: req.params.cname,
         location: req.body.location
@@ -133,10 +129,9 @@ router.delete("/:cname/clocation_table/", (req, res, next) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
-/////////////////////////Competition////////////////////
+}
 
-router.get("/:cname", (req, res) => {
+exports.getCName = (req, res) => {
     var sql = "SELECT * FROM COMPETITION WHERE CNAME = ?;"
     db.all(sql, req.params.cname, (err, row) => {
         if (err) {
@@ -148,9 +143,9 @@ router.get("/:cname", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.get("/", (req, res) => {
+exports.getAllCname = (req, res) => {
     var sql = "SELECT * FROM COMPETITION;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -162,9 +157,9 @@ router.get("/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.post("/", (req, res) => {
+exports.postCName = (req, res) => {
 
     var data = {
         cname: req.body.cname,
@@ -184,6 +179,4 @@ router.post("/", (req, res) => {
             "data": data
         })
     });
-})
-
-module.exports = router;
+}

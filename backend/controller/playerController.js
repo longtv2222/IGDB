@@ -1,9 +1,6 @@
-const express = require('express')
-const router = express.Router();
 var db = require("../database.js")
 
-/********************************PARTICIPATE************************ */
-router.get("/:playername/participate", (req, res) => {
+exports.getPlayerParticipate = (req, res) => {
     var sql = "SELECT * FROM PLAYER NATURAL JOIN PARTICIPATE WHERE PLAYERNAME = ?;"
     db.all(sql, req.params.playername, (err, rows) => {
         if (err) {
@@ -15,9 +12,9 @@ router.get("/:playername/participate", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.delete("/:playername/participate/:competitionname", (req, res) => {
+exports.deletePlayerParticipate = (req, res) => {
     var data = {
         playername: req.params.playername,
         competitionname: req.params.competitionname
@@ -34,9 +31,9 @@ router.delete("/:playername/participate/:competitionname", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-router.post("/:playername/participate/", (req, res) => {
+exports.postParticipate = (req, res) => {
     var sql = 'INSERT INTO PARTICIPATE VALUES(?, ?, ?);'
     var data = {
         cname: req.body.cname,
@@ -55,10 +52,9 @@ router.post("/:playername/participate/", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-/******************************PLAYER********************* */
-router.get("/", (req, res) => {
+exports.getAllPlayer = (req, res) => {
     var sql = "SELECT * FROM PLAYER;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -70,9 +66,9 @@ router.get("/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:playername", (req, res) => {
+exports.getPlayer = (req, res) => {
     var sql = "SELECT * FROM PLAYER WHERE PLAYERNAME = ?;"
     db.all(sql, req.params.playername, (err, rows) => {
         if (err) {
@@ -84,9 +80,9 @@ router.get("/:playername", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.delete("/:playername", (req, res) => {
+exports.deletePlayer = (req, res) => {
     var sql = "DELETE FROM PLAYER WHERE PLAYERNAME = ?;"
     db.run(sql, req.params.playername, (err, rows) => {
         if (err) {
@@ -95,9 +91,9 @@ router.delete("/:playername", (req, res) => {
         }
         res.json({ "message": "deleted", rows: this.changes })
     });
-});
+}
 
-router.post("/", (req, res) => {
+exports.postPlayer = (req, res) => {
     var sql = 'INSERT INTO PLAYER VALUES(?, ?, ?, ?, ?, ?);'
     var data = {
         playername: req.body.playername,
@@ -119,6 +115,4 @@ router.post("/", (req, res) => {
             "data": data
         })
     });
-})
-
-module.exports = router;
+}

@@ -1,11 +1,9 @@
-const express = require('express')
-const router = express.Router();
 var db = require("../database.js")
 var jwt = require('jsonwebtoken')
 var md5 = require("md5")
 
-/* ******************* PAID USER OPERATIONS  ******************* */
-router.get("/paid_user/login", (req, res) => {
+
+exports.paidUserLogin = (req, res) => {
     var data = {
         username: req.body.username,
         password: md5(req.body.password)
@@ -21,25 +19,25 @@ router.get("/paid_user/login", (req, res) => {
         }
 
         if (rows) {
-            const token = jwt.sign( {
-                dat : data.username,
-                id : rows.u_id
-            },'NEKROZ OF BRIONAC',
-            {
-                expiresIn: "2h"
-            });
+            const token = jwt.sign({
+                dat: data.username,
+                id: rows.u_id
+            }, 'NEKROZ OF BRIONAC',
+                {
+                    expiresIn: "2h"
+                });
 
             res.json({
-                message : "Login succesfully",
-                the_token : token
+                message: "Login succesfully",
+                the_token: token
             })
         } else {
             res.json("Login failed")
         }
     });
-})
+}
 
-router.post("/paid_user/signup", (req, res) => {
+exports.paidUserSignUp = (req, res) => {
     var data = {
         u_id: req.body.id,
         username: req.body.username,
@@ -60,9 +58,9 @@ router.post("/paid_user/signup", (req, res) => {
             "data": data
         })
     });
-})
+}
 
-router.get("/paid_user/:id", (req, res) => {
+exports.getPaidUserByID = (req, res) => {
     var sql = "SELECT * FROM PAID_USER WHERE U_ID = ?;"
 
     db.get(sql, req.params.id, (err, row) => {
@@ -74,9 +72,9 @@ router.get("/paid_user/:id", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.get("/paid_user", (req, res) => {
+exports.getAllPaidUser = (req, res) => {
     var sql = "SELECT * FROM PAID_USER;"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -89,9 +87,9 @@ router.get("/paid_user", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.delete("/paid_user/:id", (req, res) => {
+exports.deletePaidUserByID = (req, res) => {
     db.run(
         'DELETE FROM PAID_USER WHERE U_ID = ?',
         req.params.id,
@@ -102,11 +100,9 @@ router.delete("/paid_user/:id", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-
-/* ********************** F2P CLIENT *********************** */
-router.get("/f2pclient", (req, res) => {
+exports.getAllF2P = (req, res) => {
     var sql = "SELECT * FROM F2PClient;"
     db.all(sql, (err, rows) => {
         if (err) {
@@ -118,9 +114,9 @@ router.get("/f2pclient", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.delete("/f2pclient/:u_id", (req, res) => {
+exports.deleteF2PByID = (req, res) => {
     db.run(
         'DELETE FROM F2PCLIENT WHERE U_ID = ?',
         req.params.u_id,
@@ -131,9 +127,9 @@ router.delete("/f2pclient/:u_id", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
+}
 
-router.post("/f2pclient/", (req, res) => {
+exports.insertF2PClient = (req, res) => {
     var sql = "INSERT INTO F2PCLIENT VALUES (?);"
     var params = [req.body.u_id]
     db.run(sql, params, (err, row) => {
@@ -146,10 +142,9 @@ router.post("/f2pclient/", (req, res) => {
             "data": params
         })
     });
-});
+}
 
-/* ******************* CLIENT OPERATIONS  ******************* */
-router.get("/", (req, res) => {
+exports.getAllClient = (req, res) => {
     var sql = "SELECT * FROM CLIENT;"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -162,9 +157,9 @@ router.get("/", (req, res) => {
             "data": rows
         })
     });
-});
+}
 
-router.get("/:id", (req, res) => {
+exports.getClientByID = (req, res) => {
     var sql = "SELECT * FROM CLIENT WHERE U_ID = ?;"
     var params = [req.params.id]
     db.get(sql, params, (err, row) => {
@@ -176,9 +171,9 @@ router.get("/:id", (req, res) => {
             "data": row
         })
     });
-});
+}
 
-router.post("/", (req, res) => {
+exports.postClient = (req, res) => {
     var errors = []
     if (!req.body.id) {
         errors.push("No user id specified");
@@ -198,9 +193,9 @@ router.post("/", (req, res) => {
             "U_ID": data
         })
     });
-})
+}
 
-router.delete("/:id", (req, res) => {
+exports.deleteClient = (req, res) => {
     db.run(
         'DELETE FROM CLIENT WHERE U_ID = ?',
         req.params.id,
@@ -211,6 +206,4 @@ router.delete("/:id", (req, res) => {
             }
             res.json({ "message": "deleted", rows: this.changes })
         });
-})
-
-module.exports = router;
+}
