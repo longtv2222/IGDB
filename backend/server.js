@@ -16,7 +16,25 @@ app.listen(HTTP_PORT, () => {
 });
 
 /* ******************* PAID USER OPERATIONS  ******************* */
-app.post("/client/paid_user/", (req, res) => {
+app.get("/client/paid_user/login", (req, res) => {
+    var data = {
+        username: req.body.username,
+        password: md5(req.body.password)
+    }
+
+    var sql = "SELECT * FROM PAID_USER WHERE USER_NAME = ? AND PASSWORD = ?;"
+    var params = [data.username, data.password]
+
+    db.get(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).send("Login failed");
+            return;
+        } 
+        rows ? res.send("Login succesfully") : res.send("Login failed")
+    });
+})
+
+app.post("/client/paid_user/signup", (req, res) => {
     var errors = []
     if (Object.keys(req.body.id).length == 0) {
         errors.push("No user id specified");
@@ -94,6 +112,7 @@ app.delete("/client/paid_user/:id", (req, res) => {
         });
 })
 
+
 /* ********************** F2P CLIENT *********************** */
 
 app.get("/client/f2pclient", (req, res) => {
@@ -137,6 +156,7 @@ app.post("/client/f2pclient/", (req, res) => {
         })
     });
 });
+
 /* ******************* CLIENT OPERATIONS  ******************* */
 app.get("/client", (req, res) => {
     var sql = "SELECT * FROM CLIENT;"
@@ -1081,10 +1101,10 @@ app.get("/Team/:TName/employs", (req, res) => {
 app.post("/Team/:TName/employs", (req, res) => {
     var data = {
         TName: req.params.TName,
-		PlayerName : req.body.PlayerName,
-        Year : req.body.Year,
-		Month : req.body.Month,
-		Day : req.body.Day
+        PlayerName: req.body.PlayerName,
+        Year: req.body.Year,
+        Month: req.body.Month,
+        Day: req.body.Day
     }
 
     var sql = 'INSERT INTO EMPLOYS VALUES (?, ?, ?, ?, ?);'
@@ -1104,9 +1124,9 @@ app.post("/Team/:TName/employs", (req, res) => {
 app.delete("/Team/:TName/employs", (req, res) => {
     var data = {
         TName: req.params.TName,
-		PlayerName : req.body.PlayerName,
+        PlayerName: req.body.PlayerName,
     }
-   var params = [data.TName, data.PlayerName];
+    var params = [data.TName, data.PlayerName];
     db.run(
         'DELETE FROM EMPLOYS WHERE TNAME = ? AND PLAYERNAME = ?',
         params,
