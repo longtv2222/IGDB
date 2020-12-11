@@ -44,4 +44,6 @@ router.delete("/:v_id", Video_GameController.deleteGame);
 
 router.post("/", Video_GameController.postGame);
 
+router.patch("/:v_id", Video_GameController.updateStatus);
+
 module.exports = router;

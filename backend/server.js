@@ -33,8 +33,6 @@ app.patch('*', authentication, (res, req, next) => {
     next();
 })
 
-
-
 app.use('/client', clientRoutes);
 app.use('/developer', developerRoutes);
 app.use('/Video_Game', videoGameRoutes);

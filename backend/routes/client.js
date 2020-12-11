@@ -16,6 +16,7 @@ router.get("/paid_user", clientController.getAllPaidUser);
 
 router.delete("/paid_user/:id", clientController.deletePaidUserByID);
 
+router.patch("/paid_user/:id", clientController.updateUsername);
 
 /*********************** F2P CLIENT *********************** */
 router.get("/f2pclient", clientController.getAllF2P);

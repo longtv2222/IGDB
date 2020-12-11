@@ -102,6 +102,38 @@ exports.deletePaidUserByID = (req, res) => {
         });
 }
 
+exports.deletePaidUserByID = (req, res) => {
+    db.run(
+        'DELETE FROM PAID_USER WHERE U_ID = ?',
+        req.params.id,
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": res.message })
+                return;
+            }
+            res.json({ "message": "deleted", rows: this.changes })
+        });
+}
+
+exports.updateUsername = (req, res) => {
+    var data = {
+        u_id: req.params.id,
+        username: req.body.username,
+    }
+
+    var sql = 'UPDATE PAID_USER SET USER_NAME = ? WHERE U_ID = ?;'
+    var params = [data.username, data.u_id]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+        res.json({
+            "message": "Updated",
+        })
+    });
+}
+
 exports.getAllF2P = (req, res) => {
     var sql = "SELECT * FROM F2PClient;"
     db.all(sql, (err, rows) => {

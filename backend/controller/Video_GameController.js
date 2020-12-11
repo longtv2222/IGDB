@@ -235,7 +235,7 @@ exports.deleteCompetitionByGame = (req, res) => {
         });
 }
 
-exports.getAllGame =  (req, res) => {
+exports.getAllGame = (req, res) => {
     var sql = "SELECT * FROM VIDEO_GAME;"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -295,6 +295,26 @@ exports.postGame = (req, res) => {
         res.json({
             "message": "success",
             "data": data
+        })
+    });
+}
+
+exports.updateStatus = (req, res) => {
+    var data = {
+        v_id: req.params.v_id,
+        rs: req.body.rs,
+    }
+
+    var sql = 'UPDATE VIDEO_GAME SET RELEASE_STATUS = ? WHERE V_ID = ?;'
+    var params = [data.rs, data.v_id]
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ "error": err.message })
+            return;
+        }
+
+        res.json({
+            "message": "Updated",
         })
     });
 }
