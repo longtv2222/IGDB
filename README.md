@@ -1,6 +1,6 @@
 # IGDB
 
-IGDB is an an acronym for International Game Database. This project provides a RESTful API services for programmers to do CRUD operations with JSON Object with given game data in the database.
+IGDB is an acronym for International Game Database. This project provides a RESTful API services for programmers to do CRUD operations with JSON Object with given game data in the database.
 
 ## Built With
 - [Node.js](https://nodejs.org/en/)
