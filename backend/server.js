@@ -33,9 +33,7 @@ app.patch('*', authentication, (res, req, next) => {
     next();
 })
 
-app.get('/', (req, res) => {
-    res.json('Welcome to IGDB!')
-})
+
 
 app.use('/client', clientRoutes);
 app.use('/developer', developerRoutes);
@@ -46,7 +44,9 @@ app.use('/team', teamRoutes);
 app.use('/competition', competitionRoutes);
 app.use('/esport', esportRoutes)
 
-
+app.get('/', (req, res) => {
+    res.json('Welcome to IGDB!')
+})
 
 
 
