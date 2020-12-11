@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router();
 var db = require("../database.js")
-
+var jwt = require('jsonwebtoken')
+var md5 = require("md5")
 
 /* ******************* PAID USER OPERATIONS  ******************* */
 router.get("/paid_user/login", (req, res) => {
@@ -17,8 +18,24 @@ router.get("/paid_user/login", (req, res) => {
         if (err) {
             res.status(400).send("Login failed");
             return;
-        } 
-        rows ? res.send("Login succesfully") : res.send("Login failed")
+        }
+
+        if (rows) {
+            const token = jwt.sign( {
+                dat : data.username,
+                id : rows.u_id
+            },'NEKROZ OF BRIONAC',
+            {
+                expiresIn: "2h"
+            });
+
+            res.json({
+                message : "Login succesfully",
+                the_token : token
+            })
+        } else {
+            res.json("Login failed")
+        }
     });
 })
 

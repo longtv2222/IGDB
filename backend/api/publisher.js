@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 var db = require("../database.js")
-
+const authentication = require('../middleware/authentication')
 /******************************PLOCATION*********************************/
 router.get("/plocation_table/", (req, res) => {
     var sql = "SELECT * FROM PLOCATION_TABLE;"
@@ -167,7 +167,7 @@ router.get("/:pname/", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", authentication, (req, res) => {
     var errors = []
     if (!req.body.id) {
         errors.push("No PName specified");
