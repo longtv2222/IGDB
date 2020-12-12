@@ -33,8 +33,21 @@ IGDB is an acronym for International Game Database. This project provides a REST
    
 * Navigate to http://localhost:8000/ and you can start using the program
 
-### Usage:
-* IGDB provides 2 options for user. If you are a __paid user__, you will have access to view, edit, update and delete information. If you are a __nonpaid user__, the content you view will be restricted to read only.
+### Program Usage with Postman:
+* Make sure you have [Postman](https://www.postman.com/downloads/) in your machine.
+* IGDB provides 2 options for user. If you are a __paid user__, you will have access to view, edit, update and delete information. If you are a __free user__, the content you view will be restricted to read only.
+
+* To sign up as a paid user, navigate to the following endpoint: http://localhost:8000/client/paid_user/signup and enter the data in body field username and password. This request is considered as a post request.
+
+![ScreenShot](/User_Usage/1.png)
+
+* Navigate to the following endpoint to login http://localhost:8000/client/paid_user/login and enter your username, password you just signed up previously. 
+
+![ScreenShot](/User_Usage/2.png)
+
+* After that there will be a token generated and everytime you make a patch, post or delete request, you should have your token put in the header with the key as token and value is the value generated in the previous image. The following image demonstrates how you should do this.
+
+![ScreenShot](/User_Usage/3.png)
 
 ## License
 * This project is licensed under the Apache-2.0 License - see the [LICENSE](https://github.com/longtv2222/IGDB/blob/master/LICENSE) file for more details.
