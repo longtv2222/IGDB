@@ -39,23 +39,20 @@ exports.paidUserLogin = (req, res) => {
 
 exports.paidUserSignUp = (req, res) => {
     var data = {
-        u_id: req.body.id,
         username: req.body.username,
         password: md5(req.body.password) //md5 to hash the password
     }
 
 
-    var sql = 'INSERT INTO PAID_USER(U_ID, USER_NAME, PASSWORD) VALUES (?, ?, ?);'
-    var params = [data.u_id, data.username, data.password]
+    var sql = 'INSERT INTO PAID_USER(USER_NAME, PASSWORD) VALUES  (?, ?);'
+    var params = [data.username, data.password]
     db.run(sql, params, function (err, result) {
         if (err) {
             res.status(400).json({ "error": err.message })
             return;
         }
         res.json({
-            "message": "success",
-            "id": this.lastID,
-            "data": data
+            "message": "success"
         })
     });
 }
