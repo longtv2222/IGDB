@@ -15,7 +15,7 @@ IGDB is an acronym for International Game Database. This project provides a REST
 ### Installation
 1. Clone the repository:
     ```git clone https://github.com/longtv2222/IGDB.git```
-2. Install the Express, Sqlite3, md5 and jsonwebtoken:
+2. Install Express, Sqlite3, md5 and jsonwebtoken:
 
     ```npm install express```
     
