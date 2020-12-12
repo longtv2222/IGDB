@@ -49,5 +49,8 @@ IGDB is an acronym for International Game Database. This project provides a REST
 
 ![ScreenShot](/User_Usage/3.png)
 
+## Documentation
+* Please refer to [this document](https://github.com/longtv2222/IGDB/blob/master/User_Usage/Documentation.pdf) for detailed information on all IGDB's endpoints.
+
 ## License
 * This project is licensed under the Apache-2.0 License - see the [LICENSE](https://github.com/longtv2222/IGDB/blob/master/LICENSE) file for more details.
