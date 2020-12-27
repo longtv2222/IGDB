@@ -1,6 +1,6 @@
 # IGDB
 
-IGDB is an acronym for International Game Database. This project provides a RESTful API services for programmers to do CRUD operations with JSON Object with given game data in the database. IGDB is considered as a 'Wikipedia' so that you can easily search information of everything that involves video games! 
+IGDB is an acronym for International Game Database. This project provides a RESTful API services for users to do CRUD operations with JSON Object with given game data in the database. IGDB is considered as a 'Wikipedia' so that you can easily search information of everything that involves video games! 
 
 ## Built With
 - [Node.js](https://nodejs.org/en/)
@@ -15,7 +15,7 @@ IGDB is an acronym for International Game Database. This project provides a REST
 ### Installation
 1. Clone the repository:
     ```git clone https://github.com/longtv2222/IGDB.git```
-2. Install the Express, Sqlite3, md5 and jsonwebtoken:
+2. Install Express, Sqlite3, md5 and jsonwebtoken:
 
     ```npm install express```
     
@@ -24,6 +24,8 @@ IGDB is an acronym for International Game Database. This project provides a REST
     ```npm install md5```
     
     ```npm install jsonwebtoken```
+    
+    ```npm install pg```
 
 ### Run the program:
 * Make sure that there is no running process on your http://localhost:8000/
@@ -48,6 +50,9 @@ IGDB is an acronym for International Game Database. This project provides a REST
 * After that there will be a token generated and everytime you make a patch, post or delete request, you should have your token put in the header with the key as token and value is the value generated in the previous image. The following image demonstrates how you should do this.
 
 ![ScreenShot](/User_Usage/3.png)
+
+## Documentation
+* Please refer to [this document](https://github.com/longtv2222/IGDB/blob/master/User_Usage/Documentation.pdf) for detailed information on all IGDB's endpoints.
 
 ## License
 * This project is licensed under the Apache-2.0 License - see the [LICENSE](https://github.com/longtv2222/IGDB/blob/master/LICENSE) file for more details.
