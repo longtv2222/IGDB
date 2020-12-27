@@ -5,6 +5,36 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const authentication = require('./middleware/authentication')
 
+
+
+const { Pool, Client } = require('pg')
+
+
+// const pool = new Pool({
+//     user: 'dbuser',
+//     host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
+//     database: 'igdb_postgres',
+//     password: 'Uzumakinaruto220.',
+//     port: 5432,
+// })
+
+// pool.query('SELECT NOW()', (err, res) => {
+//     console.log(err, res)
+//     pool.end()
+// })
+
+// const client = new Client({
+//     user: 'dbuser',
+//     host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
+//     database: 'igdb_postgres',
+//     password: 'Uzumakinaruto220.',
+//     port: 5432,
+// })
+
+// client.connect()
+
+
+
 // Start server
 var HTTP_PORT = 8000
 app.listen(HTTP_PORT, () => {
