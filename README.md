@@ -26,6 +26,8 @@ IGDB is an acronym for International Game Database. This project provides a REST
     ```npm install jsonwebtoken```
     
     ```npm install pg```
+    
+    ```npm install aws-sdk```
 
 ### Run the program:
 * Make sure that there is no running process on your http://localhost:8000/
