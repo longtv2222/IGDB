@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.817.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",

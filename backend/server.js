@@ -5,7 +5,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const authentication = require('./middleware/authentication')
 
-var clouddb = require('./cloudDatabase')
+
 
 // Start server
 var HTTP_PORT = 8000
@@ -14,7 +14,41 @@ app.listen(HTTP_PORT, () => {
 });
 
 
- 
+const { Pool, Client } = require('pg')
+const AWS = require('aws-sdk')
+
+var signer = new AWS.RDS.Signer({
+    // configure options
+    region: 'us-east-2',
+    username: 'db_user',
+    hostname: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
+    port: 5432
+});
+
+var token = signer.getAuthToken();
+
+console.log(token);
+
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+const client = new Client({
+    user: 'db_user',
+    host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
+    database: 'IGDB',
+    password: token,
+    port: 5432,
+    ssl : true,
+  })
+client.connect();
+client.query('select * from bye', (err, res) => {
+    if (err) {
+      console.log(err.stack)
+    } else {
+      console.log(res.rows)
+    }
+  })
+
+
+
 
 
 const clientRoutes = require("./routes/client");

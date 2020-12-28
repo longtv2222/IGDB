@@ -3,7 +3,7 @@ const pool = new Pool({
   user: 'igdb_postgres',
   host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
   database: 'postgres',
-  password: '',
+  password: 'Uzumakinaruto220.',
   port: 5432,
 })
 
@@ -12,7 +12,7 @@ const client = new Client({
   user: 'igdb_postgres',
   host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
   database: 'postgres',
-  password: '',
+  password: 'Uzumakinaruto220.',
   port: 5432,
 })
 
@@ -26,7 +26,7 @@ client.query('SELECT * FROM DEVELOPER;', (err, res) => {
   client.end()
 })
 
-module.exports = {
-    client,
-    pool
-}
+// module.exports = {
+//     client,
+//     pool
+// }
