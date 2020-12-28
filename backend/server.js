@@ -27,9 +27,7 @@ var signer = new AWS.RDS.Signer({
 
 var token = signer.getAuthToken();
 
-console.log(token);
-
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;    //For debugging purpose only, need to be fixed
 const client = new Client({
     user: 'db_user',
     host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
@@ -39,7 +37,7 @@ const client = new Client({
     ssl : true,
   })
 client.connect();
-client.query('select * from bye', (err, res) => {
+client.query('INSERT INTO bye VALUES(3);', (err, res) => {
     if (err) {
       console.log(err.stack)
     } else {
