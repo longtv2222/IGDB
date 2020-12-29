@@ -2,6 +2,8 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const authentication = require('./middleware/authentication')
 const connection = require('./db/cloudDatabase')
+const mountRoutes = require('./routes/index.js')
+
 
 // Start server
 const app = express()
@@ -30,7 +32,6 @@ client.query('SELECT * FROM BYE;', (err, res) => {
   }
 })
 
-
 //Authentication middleware for all post
 app.post('*', authentication, (res, req, next) => {
   next();
@@ -46,31 +47,9 @@ app.patch('*', authentication, (res, req, next) => {
   next();
 })
 
-const clientRoutes = require("./routes/client");
-app.use('/client', clientRoutes);
+mountRoutes(app)    //Define all available routes
 
-const developerRoutes = require("./routes/developer");
-app.use('/developer', developerRoutes);
 
-const videoGameRoutes = require('./routes/Video_Game');
-app.use('/Video_Game', videoGameRoutes);
 
-const publisherRoutes = require('./routes/publisher');
-app.use('/publisher', publisherRoutes);
 
-const playerRoutes = require('./routes/player');
-app.use('/player', playerRoutes);
-
-const teamRoutes = require('./routes/team');
-app.use('/team', teamRoutes);
-
-const competitionRoutes = require('./routes/competition');
-app.use('/competition', competitionRoutes);
-
-const esportRoutes = require('./routes/esport');
-app.use('/esport', esportRoutes)
-
-app.get('/', (req, res) => {
-  res.json('Welcome to IGDB!')
-})
 
