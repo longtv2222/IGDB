@@ -1,7 +1,7 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const authentication = require('./middleware/authentication')
-const connection = require('./cloudDatabase')
+const connection = require('./db/cloudDatabase')
 
 // Start server
 const app = express()

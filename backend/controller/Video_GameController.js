@@ -1,4 +1,4 @@
-var db = require("../database.js")
+var db = require("../db/database.js")
 
 exports.getOS = (req, res) => {
     var sql = "SELECT * FROM OPERATING_PLATFORM;"

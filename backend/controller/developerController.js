@@ -1,4 +1,4 @@
-var db = require("../database.js")
+var db = require("../db/database.js")
 
 exports.getADeveloper = (req, res) => {
     var sql = "SELECT * FROM DEVELOPER WHERE DNAME = ?;"

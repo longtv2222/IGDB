@@ -1,4 +1,4 @@
-var db = require("../database.js")
+var db = require("../db/database.js")
 
 exports.getPlayerParticipate = (req, res) => {
     var sql = "SELECT * FROM PLAYER NATURAL JOIN PARTICIPATE WHERE PLAYERNAME = ?;"

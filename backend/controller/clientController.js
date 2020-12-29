@@ -1,4 +1,4 @@
-var db = require("../database.js")
+var db = require("../db/database.js")
 var jwt = require('jsonwebtoken')
 var md5 = require("md5")
 

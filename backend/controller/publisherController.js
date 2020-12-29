@@ -1,4 +1,4 @@
-var db = require("../database.js")
+var db = require("../db/database.js")
 
 exports.getLocation = (req, res) => {
     var sql = "SELECT * FROM PLOCATION_TABLE;"
