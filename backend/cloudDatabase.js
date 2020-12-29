@@ -23,9 +23,17 @@ const clientConnection = (token) => {
   })
 }
 
-module.exports = {
-  signInAWS, clientConnection
+const poolConnection = (token) => {
+  return new Pool({
+    user: 'db_user',
+    host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
+    database: 'IGDB',
+    password: token,
+    port: 5432,
+    ssl: true,
+  })
 }
 
-// exports.signInAWS = signInAWS;
-// exports.clientConnection = clientConnection;
+module.exports = {
+  signInAWS, clientConnection, poolConnection
+}

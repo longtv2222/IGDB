@@ -14,10 +14,12 @@ app.listen(HTTP_PORT, () => {
   // console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT))
 });
 
-let signer = connection.signInAWS()
+const signer = connection.signInAWS()
 let token = signer.getAuthToken()
 let client = connection.clientConnection(token)
+let pool = connection.poolConnection(token)
 client.connect()
+pool.connect()
 
 client.query('SELECT * FROM BYE;', (err, res) => {
   if (err) {
