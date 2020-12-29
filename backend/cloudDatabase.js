@@ -1,32 +1,31 @@
 const { Pool, Client } = require('pg')
-const pool = new Pool({
-  user: 'igdb_postgres',
-  host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
-  database: 'postgres',
-  password: 'Uzumakinaruto220.',
-  port: 5432,
-})
+const AWS = require('aws-sdk')
+
+const signInAWS = () => {
+  return new AWS.RDS.Signer({
+    // configure options
+    region: 'us-east-2',
+    username: 'db_user',
+    hostname: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
+    port: 5432
+  });
+}
 
 
-const client = new Client({
-  user: 'igdb_postgres',
-  host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
-  database: 'postgres',
-  password: 'Uzumakinaruto220.',
-  port: 5432,
-})
+const clientConnection = (token) => {
+  return new Client({
+    user: 'db_user',
+    host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
+    database: 'IGDB',
+    password: token,
+    port: 5432,
+    ssl: true,
+  })
+}
 
-client.connect()
-client.query('SELECT * FROM DEVELOPER;', (err, res) => {
-    if (err) {
-        console.log(err.stack)
-      } else {
-        console.log(res.rows)
-      }
-  client.end()
-})
+module.exports = {
+  signInAWS, clientConnection
+}
 
-// module.exports = {
-//     client,
-//     pool
-// }
+// exports.signInAWS = signInAWS;
+// exports.clientConnection = clientConnection;
