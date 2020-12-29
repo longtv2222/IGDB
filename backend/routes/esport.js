@@ -1,6 +1,4 @@
-const { Router } = require('express');
-const express = require('express')
-const router = express.Router();
+const router = require('express').Router();
 const esportController = require('../controller/esportController')
 
 

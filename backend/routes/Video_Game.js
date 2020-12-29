@@ -1,5 +1,4 @@
-const express = require('express')
-const router = express.Router();
+const router = require('express').Router();
 const Video_GameController = require('../controller/Video_GameController')
 
 /******************OPERATING PLATFORM ****************************/
