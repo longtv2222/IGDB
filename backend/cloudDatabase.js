@@ -19,7 +19,7 @@ const clientConnection = (token) => {
     database: 'IGDB',
     password: token,
     port: 5432,
-    ssl: true,
+    ssl: { rejectUnauthorized: false },
   })
 }
 
@@ -30,7 +30,7 @@ const poolConnection = (token) => {
     database: 'IGDB',
     password: token,
     port: 5432,
-    ssl: true,
+    ssl: { rejectUnauthorized: false },
   })
 }
 

@@ -3,8 +3,6 @@ const bodyParser = require("body-parser")
 const authentication = require('./middleware/authentication')
 const connection = require('./cloudDatabase')
 
-
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;    //For debugging purpose only, need to be fixed
 // Start server
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -26,10 +24,12 @@ pool.connect()
 client.query('SELECT * FROM BYE;', (err, res) => {
   if (err) {
     console.log(err.stack)
+    client.end();
   } else {
     console.log(res.rows)
   }
 })
+
 
 //Authentication middleware for all post
 app.post('*', authentication, (res, req, next) => {
@@ -73,7 +73,4 @@ app.use('/esport', esportRoutes)
 app.get('/', (req, res) => {
   res.json('Welcome to IGDB!')
 })
-
-
-
 
