@@ -1,6 +1,6 @@
-var db = require("../db/database.js")
-var jwt = require('jsonwebtoken')
-var md5 = require("md5")
+const db = require("../db/database.js")
+const jwt = require('jsonwebtoken')
+const md5 = require("md5")
 
 
 exports.paidUserLogin = (req, res) => {

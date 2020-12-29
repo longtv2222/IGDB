@@ -4,7 +4,6 @@ const authentication = require('./middleware/authentication')
 const connection = require('./db/cloudDatabase')
 const mountRoutes = require('./routes/index.js')
 
-
 // Start server
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -13,7 +12,7 @@ app.use(bodyParser.json())
 
 var HTTP_PORT = 8000
 app.listen(HTTP_PORT, () => {
-  console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT))
+  console.log("Server running on port " + HTTP_PORT)
 });
 
 const signer = connection.signInAWS()
@@ -31,6 +30,7 @@ client.query('SELECT * FROM BYE;', (err, res) => {
     console.log(res.rows)
   }
 })
+
 
 //Authentication middleware for all post
 app.post('*', authentication, (res, req, next) => {

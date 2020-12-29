@@ -1,4 +1,4 @@
-var db = require("../db/database.js")
+const db = require("../db/database.js")
 
 exports.getAllEsport = (req, res) => {
     var sql = "SELECT * FROM ESPORT;"
