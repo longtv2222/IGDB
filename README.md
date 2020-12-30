@@ -5,8 +5,10 @@ IGDB is an acronym for International Game Database. This project provides a REST
 ## Built With
 - [Node.js](https://nodejs.org/en/)
 - [Express.js](https://expressjs.com/)
-- [SQLite3](https://www.sqlite.org/index.html)
+- [PostgreSQL](https://www.postgresql.org/)
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+- [AWS IAM](https://aws.amazon.com/iam/)
+- [AWS RDS](https://aws.amazon.com/rds/) 
 ## Getting Started
 
 ### Prerequisite
