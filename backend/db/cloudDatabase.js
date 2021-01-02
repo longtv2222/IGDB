@@ -31,6 +31,9 @@ const poolConnection = (token) => {
     password: token,
     port: 5432,
     ssl: { rejectUnauthorized: false },
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,  
   })
 }
 
