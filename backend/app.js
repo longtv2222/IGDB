@@ -20,13 +20,8 @@ let token = signer.getAuthToken()
 let client = connection.clientConnection(token)
 let pool = connection.poolConnection(token)
 
-pool.query('SELECT * FROM BYE;', (err, res) => {
-  if (err) {
-    console.log(err.stack)
-  } else {
-    console.log(res.rows)
-  }
-})
+
+pool.query('SELECT * FROM BYE;').then(res => console.log(res.rows)).catch(err => console.log(err.stack));
 
 
 //Authentication middleware for all post
