@@ -13,7 +13,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
 
         db.run('PRAGMA foreign_keys = ON;'); //Turn on foreign key checking
 
-
+            //Pg has citext
         db.run(`CREATE TABLE IF NOT EXISTS DEVELOPER(DNAME CHAR PRIMARY KEY);`);
 
 
