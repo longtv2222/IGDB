@@ -34,7 +34,6 @@ const poolConnection = (token) => {
   })
 }
 
-
 module.exports = {
   signInAWS, clientConnection, poolConnection
 }

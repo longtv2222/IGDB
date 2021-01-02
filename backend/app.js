@@ -19,13 +19,10 @@ const signer = connection.signInAWS()
 let token = signer.getAuthToken()
 let client = connection.clientConnection(token)
 let pool = connection.poolConnection(token)
-client.connect()
-pool.connect()
 
-client.query('SELECT * FROM BYE;', (err, res) => {
+pool.query('SELECT * FROM BYE;', (err, res) => {
   if (err) {
     console.log(err.stack)
-    client.end();
   } else {
     console.log(res.rows)
   }
