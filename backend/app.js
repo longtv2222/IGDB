@@ -15,8 +15,6 @@ app.listen(HTTP_PORT, () => {
   console.log("Server running on port " + HTTP_PORT)
 });
 
-pool.query('SELECT * FROM BYE;').then(res => console.log(res.rows)).catch(err => console.log(err.stack));
-
 
 //Authentication middleware for all post
 app.post('*', authentication, (res, req, next) => {
