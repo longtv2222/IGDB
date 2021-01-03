@@ -2,6 +2,8 @@ const db = require("../db/database.js")
 const jwt = require('jsonwebtoken')
 const md5 = require("md5")
 
+const { pool } = require('../db/cloudDatabase')
+
 
 exports.paidUserLogin = (req, res) => {
     var data = {
@@ -9,8 +11,10 @@ exports.paidUserLogin = (req, res) => {
         password: md5(req.body.password)
     }
 
-    var sql = "SELECT * FROM PAID_USER WHERE USER_NAME = ? AND PASSWORD = ?;"
+    var sql = "SELECT * FROM PAID_USER WHERE USER_NAME = $1 AND PASSWORD = $2;"
     var params = [data.username, data.password]
+
+
 
     db.get(sql, params, (err, rows) => {
         if (err) {
@@ -38,23 +42,11 @@ exports.paidUserLogin = (req, res) => {
 }
 
 exports.paidUserSignUp = (req, res) => {
-    var data = {
-        username: req.body.username,
-        password: md5(req.body.password) //md5 to hash the password
-    }
-
-
-    var sql = 'INSERT INTO PAID_USER(USER_NAME, PASSWORD) VALUES  (?, ?);'
-    var params = [data.username, data.password]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success"
-        })
-    });
+    const sql = 'INSERT INTO PAID_USER(USER_NAME, PASSWORD) VALUES  ($1, $2);'
+    const params = [req.body.username, md5(req.body.password)]
+    pool.query(sql, params).then(
+        res.json('Signed up paid user ' + data.username + ' succesfully')
+    ).catch('Signed up failed')
 }
 
 exports.getPaidUserByID = (req, res) => {
@@ -173,19 +165,13 @@ exports.insertF2PClient = (req, res) => {
     });
 }
 
-exports.getAllClient = (req, res) => {
-    var sql = "SELECT * FROM CLIENT;"
-    var params = []
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
+exports.getAllClient = async (_req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM CLIENT;')
+        res.json(rows);
+    } catch (error) {
+        res.json(error);
+    }
 }
 
 exports.getClientByID = (req, res) => {

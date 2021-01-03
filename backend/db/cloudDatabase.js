@@ -1,4 +1,4 @@
-const { Pool } = require('pg')
+const { Pool, Client } = require('pg')
 const AWS = require('aws-sdk')
 
 let signer = new AWS.RDS.Signer({
@@ -23,6 +23,17 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 })
 
+const client = new Client({
+  user: 'db_user',
+  host: 'igdb.cmxcawzmeu8f.us-east-2.rds.amazonaws.com',
+  database: 'IGDB',
+  password: token,
+  port: 5432,
+  ssl: { rejectUnauthorized: false },
+})
+
+client.connect();
+
 module.exports = {
-  pool
+  pool, client
 }
