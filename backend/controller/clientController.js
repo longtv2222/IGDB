@@ -6,47 +6,37 @@ const { pool } = require('../db/cloudDatabase')
 
 
 exports.paidUserLogin = (req, res) => {
-    var data = {
-        username: req.body.username,
-        password: md5(req.body.password)
-    }
+    const sql = "SELECT * FROM PAID_USER WHERE USER_NAME = $1 AND PASSWORD = $2;"
+    const params = [req.body.username, md5(req.body.password)]
 
-    var sql = "SELECT * FROM PAID_USER WHERE USER_NAME = $1 AND PASSWORD = $2;"
-    var params = [data.username, data.password]
-
-
-
-    db.get(sql, params, (err, rows) => {
-        if (err) {
-            res.status(400).send("Login failed");
-            return;
-        }
-
-        if (rows) {
+    pool.query(sql, params, (err, result) => {
+        if (result.rows.length) {   //Check if any row exists
             const token = jwt.sign({
-                dat: data.username,
-                id: rows.u_id
-            }, 'NEKROZ OF BRIONAC',
+                data: result.rows[0].user_name,
+                id: result.rows[0].u_id,
+            }, 'NEKROZ OF BRIONAC', 
                 {
                     expiresIn: "2h"
                 });
 
             res.json({
                 message: "Login succesfully",
-                the_token: token
+                token: token
             })
-        } else {
-            res.json("Login failed")
         }
+        else
+            res.json(err.stack)
     });
 }
 
-exports.paidUserSignUp = (req, res) => {
-    const sql = 'INSERT INTO PAID_USER(USER_NAME, PASSWORD) VALUES  ($1, $2);'
+
+
+exports.paidUserSignUp = async (req, res) => {
+    const sql = 'INSERT INTO PAID_USER(u_id,USER_NAME, PASSWORD) VALUES  (1,$1, $2);'
     const params = [req.body.username, md5(req.body.password)]
     pool.query(sql, params).then(
-        res.json('Signed up paid user ' + data.username + ' succesfully')
-    ).catch('Signed up failed')
+        res.json('Signed up paid user ' + params[0] + ' succesfully')
+    ).catch(res.send('Signed up failed'))
 }
 
 exports.getPaidUserByID = (req, res) => {
@@ -165,6 +155,7 @@ exports.insertF2PClient = (req, res) => {
     });
 }
 
+
 exports.getAllClient = async (_req, res) => {
     try {
         const { rows } = await pool.query('SELECT * FROM CLIENT;')
@@ -174,40 +165,23 @@ exports.getAllClient = async (_req, res) => {
     }
 }
 
-exports.getClientByID = (req, res) => {
-    var sql = "SELECT * FROM CLIENT WHERE U_ID = ?;"
-    var params = [req.params.id]
-    db.get(sql, params, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
+exports.getClientByID = async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM CLIENT WHERE U_ID = $1;', [req.params.id]);
+        res.json(rows);
+    } catch (error) {
+        res.json(error);
+    }
 }
 
-exports.postClient = (req, res) => {
-    var errors = []
-    if (!req.body.id) {
-        errors.push("No user id specified");
-    }
-    var data = {
-        id: req.body.id
-    }
+exports.postClient = async (req, res) => {
+    try {
+        await pool.query('INSERT INTO CLIENT VALUES(DEFAULT);')
 
-    var sql = 'INSERT INTO CLIENT VALUES (?);'
-    var params = [data.id]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "U_ID": data
-        })
-    });
+        res.json('Success');
+    } catch (error) {
+        res.json(error);
+    }
 }
 
 exports.deleteClient = (req, res) => {

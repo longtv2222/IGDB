@@ -16,20 +16,20 @@ app.listen(HTTP_PORT, () => {
 });
 
 
-//Authentication middleware for all post
-app.post('*', authentication, (res, req, next) => {
-  next();
-})
+// //Authentication middleware for all post
+// app.post('*', authentication, (res, req, next) => {
+//   next();
+// })
 
-//Authentication middleware for all delete
-app.delete('*', authentication, (res, req, next) => {
-  next();
-})
+// //Authentication middleware for all delete
+// app.delete('*', authentication, (res, req, next) => {
+//   next();
+// })
 
-//Authentication middleware for all modify
-app.patch('*', authentication, (res, req, next) => {
-  next();
-})
+// //Authentication middleware for all modify
+// app.patch('*', authentication, (res, req, next) => {
+//   next();
+// })
 
 mountRoutes(app)    //Define all available routes
 
