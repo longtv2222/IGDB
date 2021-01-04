@@ -4,38 +4,41 @@ const md5 = require("md5")
 const { pool } = require('../db/cloudDatabase')
 
 
-exports.paidUserLogin = (req, res) => {
+exports.paidUserLogin = async (req, res) => {
     const sql = "SELECT * FROM PAID_USER WHERE USER_NAME = $1 AND PASSWORD = $2;"
     const params = [req.body.username, md5(req.body.password)]
 
-    pool
-        .query(sql, params)
-        .then(result => {
-            if (result.rows.length) {   //Check if any row exists
+    try {
+        const result = await pool.query(sql, params)
 
-                const token = authentication.jwtSignIn(result.rows[0].user_name, result.rows[0].u_id)
+        if (result.rows.length) {   //Check if any row exists
+            const token = authentication.jwtSignIn(result.rows[0].user_name, result.rows[0].u_id)
 
-                res.json({
-                    message: 'Login succesfully',
-                    token: token
-                })
-            } else {
-                res.json({
-                    message: 'Login failed'
-                })
-            }
-        })
-        .catch(err => err.stack)
+            res.json({
+                message: 'Login succesfully',
+                token: token
+            })
+        } else {
+            res.json({
+                message: 'Login failed'
+            })
+        }
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
 
 
 exports.paidUserSignUp = async (req, res) => {
-    const sql = 'INSERT INTO PAID_USER(u_id,USER_NAME, PASSWORD) VALUES  (1,$1, $2);'
+    const sql = 'INSERT INTO PAID_USER(USER_NAME, PASSWORD) VALUES  ($1, $2) RETURNING user_name;'
     const params = [req.body.username, md5(req.body.password)]
-    pool.query(sql, params).then(
-        res.json('Signed up paid user ' + params[0] + ' succesfully')
-    ).catch(res.send('Signed up failed'))
+    try {
+        const { rows } = await pool.query(sql, params)
+        res.json({ message: 'Signed up for account ' + rows[0].user_name + ' succefully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
 exports.getPaidUserByID = (req, res) => {
