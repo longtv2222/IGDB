@@ -112,86 +112,12 @@ exports.updateUsername = (req, res) => {
     });
 }
 
-exports.getAllF2P = (req, res) => {
-    var sql = "SELECT * FROM F2PClient;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.deleteF2PByID = (req, res) => {
-    db.run(
-        'DELETE FROM F2PCLIENT WHERE U_ID = ?',
-        req.params.u_id,
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
-}
-
-exports.insertF2PClient = (req, res) => {
-    var sql = "INSERT INTO F2PCLIENT VALUES (?);"
-    var params = [req.body.u_id]
-    db.run(sql, params, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": params
-        })
-    });
-}
 
 
-exports.getAllClient = async (_req, res) => {
-    try {
-        const { rows } = await pool.query('SELECT * FROM CLIENT;')
-        res.json(rows);
-    } catch (error) {
-        res.json(error);
-    }
-}
 
-exports.getClientByID = async (req, res) => {
-    try {
-        const { rows } = await pool.query('SELECT * FROM CLIENT WHERE U_ID = $1;', [req.params.id]);
-        res.json(rows);
-    } catch (error) {
-        res.json(error);
-    }
-}
 
-exports.postClient = async (req, res) => {
-    try {
-        await pool.query('INSERT INTO CLIENT VALUES(DEFAULT);')
 
-        res.json('Success');
-    } catch (error) {
-        res.json(error);
-    }
-}
 
-exports.deleteClient = (req, res) => {
-    db.run(
-        'DELETE FROM CLIENT WHERE U_ID = ?',
-        req.params.id,
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
-}
+
+
+
