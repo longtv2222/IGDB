@@ -1,14 +1,28 @@
 const jwt = require('jsonwebtoken')
+const key = 'NEKROZ OF BRIONAC';
 
-module.exports = (req, res, next) => {
+const checkToken = (req, res, next) => {
     try {
         if (req.originalUrl == '/client/paid_user/signup')
             return next();
-        console.log(req.originalUrl);
-        const decode = jwt.verify(req.headers.token, 'NEKROZ OF BRIONAC')
+        const decode = jwt.verify(req.headers.token, key)
         req.myData = decode
         next();
     } catch (error) {
         res.json("Authentication failed");
     }
-} 
+}
+
+const jwtSignIn = (username, u_id) => {
+    return jwt.sign({
+        data: username,
+        id: u_id,
+    }, key,
+        {
+            expiresIn: "2h"
+        });
+}
+
+module.exports = {
+    checkToken, jwtSignIn
+}

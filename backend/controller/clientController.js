@@ -1,7 +1,6 @@
 const db = require("../db/database.js")
-const jwt = require('jsonwebtoken')
+const authentication = require('../middleware/authentication')
 const md5 = require("md5")
-
 const { pool } = require('../db/cloudDatabase')
 
 
@@ -9,24 +8,24 @@ exports.paidUserLogin = (req, res) => {
     const sql = "SELECT * FROM PAID_USER WHERE USER_NAME = $1 AND PASSWORD = $2;"
     const params = [req.body.username, md5(req.body.password)]
 
-    pool.query(sql, params, (err, result) => {
-        if (result.rows.length) {   //Check if any row exists
-            const token = jwt.sign({
-                data: result.rows[0].user_name,
-                id: result.rows[0].u_id,
-            }, 'NEKROZ OF BRIONAC', 
-                {
-                    expiresIn: "2h"
-                });
+    pool
+        .query(sql, params)
+        .then(result => {
+            if (result.rows.length) {   //Check if any row exists
 
-            res.json({
-                message: "Login succesfully",
-                token: token
-            })
-        }
-        else
-            res.json(err.stack)
-    });
+                const token = authentication.jwtSignIn(result.rows[0].user_name, result.rows[0].u_id)
+
+                res.json({
+                    message: 'Login succesfully',
+                    token: token
+                })
+            } else {
+                res.json({
+                    message: 'Login failed'
+                })
+            }
+        })
+        .catch(err => err.stack)
 }
 
 
