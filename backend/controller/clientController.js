@@ -41,59 +41,34 @@ exports.paidUserSignUp = async (req, res) => {
     }
 }
 
-exports.getPaidUserByID = (req, res) => {
-    var sql = "SELECT * FROM PAID_USER WHERE U_ID = ?;"
-
-    db.get(sql, req.params.id, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
+exports.getPaidUserByID = async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM PAID_USER WHERE U_ID = $1;', [req.params.id]);
         res.json({
-            "data": row
-        })
-    });
-}
-
-exports.getAllPaidUser = (req, res) => {
-    var sql = "SELECT * FROM PAID_USER;"
-    var params = []
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.deletePaidUserByID = (req, res) => {
-    db.run(
-        'DELETE FROM PAID_USER WHERE U_ID = ?',
-        req.params.id,
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
+            id: rows[0].u_id,
+            username: rows[0].user_name
         });
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
-exports.deletePaidUserByID = (req, res) => {
-    db.run(
-        'DELETE FROM PAID_USER WHERE U_ID = ?',
-        req.params.id,
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
+exports.getAllPaidUser = async (_req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT u_id, user_name FROM PAID_USER;');
+        res.json({ rows });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.deletePaidUserByID = async (req, res) => {
+    try {
+        await pool.query('DELETE FROM PAID_USER WHERE U_ID = $1;', [req.params.id]);
+        res.json({ message: 'Deleted user with id: ' + req.params.id + 'succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
 exports.updateUsername = (req, res) => {
