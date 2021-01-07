@@ -71,23 +71,15 @@ exports.deletePaidUserByID = async (req, res) => {
     }
 }
 
-exports.updateUsername = (req, res) => {
-    var data = {
-        u_id: req.params.id,
-        username: req.body.username,
+exports.updateUsername = async (req, res) => {
+    try {
+        const sql = 'UPDATE PAID_USER SET USER_NAME = $1 WHERE U_ID = $2;'
+        const params = [req.body.username, req.params.id]
+        await pool.query(sql, params)
+        res.json({ message: 'Update username of user with id: ' + params[1] + ' to ' + params[0] })
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'UPDATE PAID_USER SET USER_NAME = ? WHERE U_ID = ?;'
-    var params = [data.username, data.u_id]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "Updated",
-        })
-    });
 }
 
 
