@@ -1,13 +1,9 @@
-const db = require("../db/database.js")
-
 const { pool } = require('../db/cloudDatabase')
-
-
 
 exports.getADeveloper = async (req, res) => {
     const sql = "SELECT * FROM DEVELOPER WHERE DNAME = $1;"
     try {
-        const { rows } = await pool.query(sql, req.params.dname);
+        const { rows } = await pool.query(sql, [req.params.dname]);
         res.json(rows);
     } catch (error) {
         res.json(error.stack);
@@ -17,7 +13,7 @@ exports.getADeveloper = async (req, res) => {
 exports.postADeveloper = async (req, res) => {
     const sql = 'INSERT INTO DEVELOPER VALUES ($1);'
     try {
-        await pool.query(sql, req.body.dname);
+        await pool.query(sql, [req.body.dname]);
         res.json({ message: 'Insert developer ' + req.body.dname + ' succefully.' })
     } catch (error) {
         res.json(error.stack);
@@ -36,7 +32,7 @@ exports.getAllDeveloper = async (_req, res) => {
 
 exports.deleteADeveloper = async (req, res) => {
     try {
-        await pool.query('DELETE FROM DEVELOPER WHERE DNAME = $1', req.params.dname);
+        await pool.query('DELETE FROM DEVELOPER WHERE DNAME = $1', [req.params.dname]);
         res.json('DELETED developer with name ' + req.params.dnmae);
     } catch (error) {
         res.json(error.stack);
@@ -46,7 +42,7 @@ exports.deleteADeveloper = async (req, res) => {
 exports.getLocationWithDName = async (req, res) => {
     const sql = "SELECT * FROM DLOCATION_TABLE WHERE DName = $1;"
     try {
-        const { rows } = await pool.query(sql, req.params.dname);
+        const { rows } = await pool.query(sql, [req.params.dname]);
         res.json(rows);
     } catch (error) {
         res.json(error.stack);

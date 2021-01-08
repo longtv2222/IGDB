@@ -1,199 +1,143 @@
-const db = require("../db/database.js")
+const { pool } = require('../db/cloudDatabase')
 
-exports.getLocation = (req, res) => {
-    var sql = "SELECT * FROM PLOCATION_TABLE;"
-    var params = []
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
+
+exports.getLocation = async (_req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM PLOCATION_TABLE;');
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
-exports.getLocationWithPName = (req, res) => {
-    var sql = "SELECT * FROM PLOCATION_TABLE WHERE PNAME = ? COLLATE NOCASE;"
-    db.get(sql, req.params.pname, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": row
-        })
-    });
+exports.getLocationWithPName = async (req, res) => {
+    const sql = "SELECT * FROM PLOCATION_TABLE WHERE PNAME = $1;"
+    try {
+        const { rows } = await pool.query(sql, [req.params.pname]);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
-exports.postLocationWithPName = (req, res) => {
-    var data = {
-        pname: req.params.pname,
-        location: req.body.location
+exports.postLocationWithPName = async (req, res) => {
+
+    const sql = 'INSERT INTO plocation_table VALUES ($1, $2);'
+    const params = [req.params.pname, req.body.location]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.deleteLocationWithPName = async (req, res) => {
+
+    const sql = 'DELETE FROM PLOCATION_TABLE WHERE PNAME = $1 AND LOCATION = $2'
+    const params = [req.params.pname, req.body.location]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getAllPublishes = async (_req, res) => {
+    const sql = "SELECT * FROM PUBLISHES NATURAL JOIN VIDEO_GAME;"
+    try {
+        const { rows } = await pool.query(sql);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getPublishes = async (req, res) => {
+    const sql = "SELECT * FROM PUBLISHES NATURAL JOIN VIDEO_GAME WHERE PNAME = $1;"
+    try {
+        const { rows } = await pool.query(sql, req.params.pname);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.postPublishes = async (req, res) => {
+
+    const sql = 'INSERT INTO PUBLISHES VALUES ($1, $2);'
+    const params = [req.params.pname, req.body.v_id]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.deletePublishes = async (req, res) => {
+    const params = [req.params.pname, req.body.v_id];
+    const sql = 'DELETE FROM PUBLISHES WHERE PNAME = $1 AND V_ID = $2'
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getAllPublisher = async (_req, res) => {
+    const sql = "SELECT * FROM PUBLISHER;"
+
+    try {
+        const { rows } = await pool.query(sql);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
 
-    var sql = 'INSERT INTO plocation_table VALUES (?, ?);'
-    var params = [data.pname, data.location]
-    db.run(sql, params, function (err) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.deleteLocationWithPName = (req, res, next) => {
-    var data = {
-        pname: req.params.pname,
-        location: req.body.location
+exports.getPublisher = async (req, res) => {
+    const sql = "SELECT * FROM PUBLISHER WHERE PNAME = $1;"
+    try {
+        const { rows } = await pool.query(sql, [req.params.pname]);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.postPublisher = async (req, res) => {
+
+
+    const sql = 'INSERT INTO PUBLISHER VALUES (?);'
+    const params = [req.body.pname]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
     }
 
-    var params = [data.pname, data.location]
-    db.run(
-        'DELETE FROM PLOCATION_TABLE WHERE PNAME = ? AND LOCATION = ?',
-        params,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
 }
 
-exports.getAllPublishes = (req, res) => {
-    var sql = "SELECT * FROM PUBLISHES NATURAL JOIN VIDEO_GAME;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
+exports.deletePublisher = async (req, res) => {
 
-exports.getPublishes = (req, res) => {
-    var sql = "SELECT * FROM PUBLISHES NATURAL JOIN VIDEO_GAME WHERE PNAME = ?;"
+    const sql = 'DELETE FROM PUBLISHER WHERE PNAME = ?'
+    const params = [req.params.pname];
 
-    db.get(sql, req.params.pname, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-}
 
-exports.postPublishes = (req, res) => {
-    var data = {
-        pname: req.params.pname,
-        v_id: req.body.v_id
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'INSERT INTO PUBLISHES VALUES (?, ?);'
-    var params = [data.pname, data.v_id]
-    db.run(sql, params, function (err) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
-}
-
-exports.deletePublishes = (req, res) => {
-    var data = {
-        pname: req.params.pname,
-        v_id: req.body.v_id
-    }
-    var params = [data.pname, data.v_id];
-    db.run(
-        'DELETE FROM PUBLISHES WHERE PNAME = ? AND V_ID = ?',
-        params,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
-}
-
-exports.getAllPublisher = (req, res) => {
-    var sql = "SELECT * FROM PUBLISHER;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.getPublisher = (req, res) => {
-    var sql = "SELECT * FROM PUBLISHER WHERE PNAME = ?;"
-
-    db.get(sql, req.params.pname, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-}
-
-exports.postPublisher = (req, res) => {
-    var errors = []
-    if (!req.body.id) {
-        errors.push("No PName specified");
-    }
-    var data = {
-        pname: req.body.pname
-    }
-
-    var sql = 'INSERT INTO PUBLISHER VALUES (?);'
-    var params = [data.pname]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
-}
-
-exports.deletePublisher = (req, res, next) => {
-    db.run(
-        'DELETE FROM PUBLISHER WHERE PNAME = ?',
-        req.params.pname,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
 }

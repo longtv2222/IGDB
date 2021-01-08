@@ -1,43 +1,30 @@
-const db = require("../db/database.js")
+const { pool } = require('../db/cloudDatabase')
 
-exports.getAllEsport = (req, res) => {
-    var sql = "SELECT * FROM ESPORT;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
+
+exports.getAllEsport = async (_req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM ESPORT;');
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
-exports.postAEsport = (req, res) => {
-    var sql = 'INSERT INTO ESPORT VALUES (?);'
-    var league = req.body.league
-    db.run(sql, league, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": league
-        })
-    });
+exports.postAEsport = async (req, res) => {
+    const sql = 'INSERT INTO ESPORT VALUES ($1);'
+    try {
+        await pool.query(sql, [req.body.league])
+        res.json({ message: 'Insert succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
-exports.deleteALeague = (req, res) => {
-    db.run(
-        'DELETE FROM ESPORT WHERE league = ?',
-        req.params.league,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
+exports.deleteALeague = async (req, res) => {
+    try {
+        await pool.query('DELETE FROM ESPORT WHERE LEAGUE = $1;', [req.params.league]);
+        res.json({ message: 'Delete succesfully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
 }

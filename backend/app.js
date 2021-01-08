@@ -1,7 +1,6 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const authentication = require('./middleware/authentication')
-const { pool } = require('./db/cloudDatabase')
 const mountRoutes = require('./routes/index.js')
 
 // Start server

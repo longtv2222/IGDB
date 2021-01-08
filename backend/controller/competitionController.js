@@ -13,7 +13,7 @@ exports.getAllTimeTable = async (_req, res) => {
 exports.getCNameTimeTable = async (req, res) => {
     try {
         const sql = "SELECT * FROM TIME_TABLE WHERE CNAME = $1;"
-        const { rows } = await pool.query(sql, req.params.cname);
+        const { rows } = await pool.query(sql, [req.params.cname]);
         res.json(rows);
     } catch (error) {
         res.json(error.stack);
@@ -54,7 +54,7 @@ exports.getAllLocation = async (_req, res) => {
 exports.getAllLocationWithCName = async (req, res) => {
     try {
         const sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = $1;"
-        const { rows } = await pool.query(sql, req.params.cname);
+        const { rows } = await pool.query(sql, [req.params.cname]);
         res.json(rows);
     } catch (error) {
         res.json(error.stack);

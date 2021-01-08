@@ -1,118 +1,80 @@
-const db = require("../db/database.js")
+const { pool } = require('../db/cloudDatabase')
 
-exports.getPlayerParticipate = (req, res) => {
-    var sql = "SELECT * FROM PLAYER NATURAL JOIN PARTICIPATE WHERE PLAYERNAME = ?;"
-    db.all(sql, req.params.playername, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.deletePlayerParticipate = (req, res) => {
-    var data = {
-        playername: req.params.playername,
-        competitionname: req.params.competitionname
+exports.getPlayerParticipate = async (req, res) => {
+    const sql = "SELECT * FROM PLAYER NATURAL JOIN PARTICIPATE WHERE PLAYERNAME = $1;"
+    try {
+        const { rows } = await pool.query(sql, req.params.playername);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var params = [data.playername, data.competitionname]
-    db.run(
-        'DELETE FROM PARTICIPATE WHERE PLAYERNAME = ? AND CNAME = ?',
-        params,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
 }
 
-exports.postParticipate = (req, res) => {
-    var sql = 'INSERT INTO PARTICIPATE VALUES(?, ?, ?);'
-    var data = {
-        cname: req.body.cname,
-        playername: req.params.playername,
-        league: req.body.league
+exports.deletePlayerParticipate = async (req, res) => {
+
+
+    const params = [req.params.playername, req.params.competitionname]
+    const sql = 'DELETE FROM PARTICIPATE WHERE PLAYERNAME = $1 AND CNAME = $2;'
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' });
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var params = [data.cname, data.playername, data.league]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.getAllPlayer = (req, res) => {
-    var sql = "SELECT * FROM PLAYER;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
+exports.postParticipate = async (req, res) => {
+    const sql = 'INSERT INTO PARTICIPATE VALUES($1, $2, $3);'
+    const params = [req.body.cname, req.params.playername, req.body.league]
 
-exports.getPlayer = (req, res) => {
-    var sql = "SELECT * FROM PLAYER WHERE PLAYERNAME = ?;"
-    db.all(sql, req.params.playername, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.deletePlayer = (req, res) => {
-    var sql = "DELETE FROM PLAYER WHERE PLAYERNAME = ?;"
-    db.run(sql, req.params.playername, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({ "message": "deleted", rows: this.changes })
-    });
-}
-
-exports.postPlayer = (req, res) => {
-    var sql = 'INSERT INTO PLAYER VALUES(?, ?, ?, ?, ?, ?);'
-    var data = {
-        playername: req.body.playername,
-        age: req.body.age,
-        nationality: req.body.nationality,
-        description: req.body.description,
-        player_flag: req.body.playerflag,
-        org_less_flag: req.body.orglessflag
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
     }
+}
 
-    var params = [data.playername, data.age, data.nationality, data.description, data.player_flag, data.org_less_flag]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
+exports.getAllPlayer = async (_req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM PLAYER');
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getPlayer = async (req, res) => {
+    const sql = "SELECT * FROM PLAYER WHERE PLAYERNAME = $1;"
+
+    try {
+        const { rows } = await pool.query(sql, [req.params.playername])
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.deletePlayer = async (req, res) => {
+    const sql = "DELETE FROM PLAYER WHERE PLAYERNAME = $1;"
+
+    try {
+        await pool.query(sql, [req.params.playername])
+        res.json({ message: 'Deleted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.postPlayer = async (req, res) => {
+    const sql = 'INSERT INTO PLAYER VALUES($1, $2, $3, $4, $5, $6);'
+    const params = [req.body.playername, req.body.age, req.body.nationality, req.body.description, req.body.player_flag, req.body.org_less_flag]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
 }

@@ -1,137 +1,95 @@
-const db = require("../db/database.js")
+const { pool } = require('../db/cloudDatabase')
 
-exports.getTeamEmployee = (req, res) => {
-    var sql = "SELECT * FROM EMPLOYS NATURAL JOIN PLAYER;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
 
-exports.getTeamEmployeeWithTName = (req, res) => {
-    var sql = "SELECT * FROM EMPLOYS NATURAL JOIN PLAYER WHERE TNAME = ?;"
 
-    db.get(sql, req.params.TName, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-}
+exports.getTeamEmployee = async (_req, res) => {
+    const sql = "SELECT * FROM EMPLOYS NATURAL JOIN PLAYER;"
 
-exports.postTeamEmploy = (req, res) => {
-    var data = {
-        TName: req.params.TName,
-        PlayerName: req.body.PlayerName,
-        Year: req.body.Year,
-        Month: req.body.Month,
-        Day: req.body.Day
+    try {
+        const { rows } = await pool.query(sql);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'INSERT INTO EMPLOYS VALUES (?, ?, ?, ?, ?);'
-    var params = [data.TName, data.PlayerName, data.Year, data.Month, data.Day]
-    db.run(sql, params, function (err) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.deleteTeamEmploy = (req, res) => {
-    var data = {
-        TName: req.params.TName,
-        PlayerName: req.body.PlayerName,
+exports.getTeamEmployeeWithTName = async (_req, res) => {
+    const sql = "SELECT * FROM EMPLOYS NATURAL JOIN PLAYER WHERE TNAME = $1;"
+
+    try {
+        const { rows } = await pool.query(sql, [req.params.tname]);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-    var params = [data.TName, data.PlayerName];
-    db.run(
-        'DELETE FROM EMPLOYS WHERE TNAME = ? AND PLAYERNAME = ?',
-        params,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
 }
 
-exports.getTeam = (req, res) => {
-    var sql = "SELECT * FROM TEAM WHERE TNAME = ?;"
-    db.all(sql, req.params.tname, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": row
-        })
-    });
-}
+exports.postTeamEmploy = async (req, res) => {
 
-exports.getAllTeam = (req, res) => {
-    var sql = "SELECT * FROM TEAM;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
 
-exports.postTeam = (req, res) => {
-
-    var data = {
-        tname: req.body.tname,
-        description: req.body.description,
-        year: req.body.year,
-        month: req.body.month,
-        day: req.body.day,
+    const sql = 'INSERT INTO EMPLOYS VALUES ($1, $2, $3, $4, $5);'
+    const params = [req.params.tname, req.body.playername, req.body.year, req.body.month, req.body.day]
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'INSERT INTO TEAM VALUES (?, ?, ?, ?, ?);'
-    var params = [data.tname, data.description, data.year, data.month, data.day]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.deleteTeam = (req, res) => {
-    var data = {
-        tname: req.params.tname,
+exports.deleteTeamEmploy = async (req, res) => {
+
+    const params = [req.params.tname, req.body.playername]
+    const sql = 'DELETE FROM EMPLOYS WHERE TNAME = $1 AND PLAYERNAME = $2'
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
     }
-    var sql = "DELETE FROM TEAM WHERE TNAME = ?;"
-    var params = [data.tname, data.league]
-    db.run(sql, params, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({ "message": "deleted", rows: this.changes })
-    });
+}
+
+exports.getTeam = async (req, res) => {
+    const sql = "SELECT * FROM TEAM WHERE TNAME = ?;"
+    const params = [req.params.tname]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getAllTeam = async (_req, res) => {
+    const sql = "SELECT * FROM TEAM;"
+    try {
+        await pool.query(sql);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.postTeam = async (req, res) => {
+    const sql = 'INSERT INTO TEAM VALUES ($1, $2, $3, $4, $5);'
+    const params = [req.body.tname, req.body.description, req.body.year, req.body.month, req.body.day]
+    try {
+        await pool.query(sql);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.deleteTeam = async (req, res) => {
+    const sql = "DELETE FROM TEAM WHERE TNAME = $1;"
+    const params = [req.params.tname]
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
 }

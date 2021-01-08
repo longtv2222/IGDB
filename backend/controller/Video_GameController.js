@@ -1,320 +1,218 @@
-const db = require("../db/database.js")
+const { pool } = require('../db/cloudDatabase')
 
-exports.getOS = (req, res) => {
-    var sql = "SELECT * FROM OPERATING_PLATFORM;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.getOSByID = (req, res) => {
-    var sql = "SELECT * FROM OPERATING_PLATFORM WHERE V_ID = ?;"
-    db.all(sql, req.params.v_id, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.postOSByID = (req, res) => {
-    var data = {
-        v_id: req.params.v_id,
-        platform: req.body.platform
+exports.getOS = async (_req, res) => {
+    const sql = "SELECT * FROM OPERATING_PLATFORM;"
+    try {
+        const { rows } = await pool.query(sql);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'INSERT INTO OPERATING_PLATFORM VALUES (?, ?);'
-    var params = [data.v_id, data.platform]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.deleteOSByID = (req, res) => {
-    var data = {
-        v_id: req.params.v_id,
-        platform: req.body.platform
+exports.getOSByID = async (req, res) => {
+    const sql = "SELECT * FROM OPERATING_PLATFORM WHERE V_ID = $1;"
+    const params = [req.params.v_id]
+    try {
+        const { rows } = await pool.query(sql, params);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var params = [data.v_id, data.platform]
-    db.run(
-        'DELETE FROM OPERATING_PLATFORM WHERE V_ID = ? AND PLATFORM = ?',
-        params,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
 }
 
-exports.getSimilarGame = (req, res) => {
-    var sql = "SELECT * FROM SIMILAR_TO WHERE V_ID = ?;"
-    db.get(sql, req.params.v_id, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-}
-
-exports.postSimilarGame = (req, res) => {
-    var data = {
-        v_id: req.params.v_id,
-        sim_id: req.body.sim_id,
+exports.postOSByID = async (req, res) => {
+    const sql = 'INSERT INTO OPERATING_PLATFORM VALUES ($1, $2);'
+    const params = [req.params.v_id, req.body.platform]
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'INSERT INTO SIMILAR_TO VALUES(?, ?);'
-    var params = [data.v_id, data.sim_id]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.getAllReviews = (req, res) => {
-    var sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
+exports.deleteOSByID = async (req, res) => {
+    const sql = 'DELETE FROM OPERATING_PLATFORM WHERE V_ID = ? AND PLATFORM = ?';
+    const params = [req.params.v_id, req.body.platform]
 
-exports.getReviewsByUser = (req, res) => {
-    var sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER WHERE V_ID = ?;"
-
-    db.all(sql, req.params.v_id, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-}
-
-exports.postReviewByUser = (req, res) => {
-    var data = {
-        U_ID: req.body.U_ID,
-        v_id: req.params.v_id,
-        Rating: req.body.Rating
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'INSERT INTO REVIEW VALUES (?, ?, ?);'
-    var params = [data.U_ID, data.v_id, data.Rating]
-    db.run(sql, params, function (err) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.deleteReviewByUser = (req, res) => {
-    var data = {
-        v_id: req.params.v_id,
-        u_id: req.body.u_id,
+exports.getSimilarGame = async (req, res) => {
+    const sql = "SELECT * FROM SIMILAR_TO WHERE V_ID = ?;"
+    const params = [req.params.v_id]
+    try {
+        const { rows } = await pool.query(sql, params);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var params = [data.v_id, data.u_id];
-    db.run(
-        'DELETE FROM REVIEW WHERE V_ID = ? AND U_ID = ?;',
-        params,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
 }
 
-exports.getCompetition = (req, res) => {
-    var sql = "SELECT * FROM HAS;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
+exports.postSimilarGame = async (req, res) => {
+    const sql = 'INSERT INTO SIMILAR_TO VALUES($1, $2);'
+    const params = [req.params.v_id, req.body.sim_id]
 
-exports.getCompetitionByGame = (req, res) => {
-    var sql = "SELECT * FROM HAS NATURAL JOIN ESPORT WHERE V_ID = ?;"
-
-    db.get(sql, req.params.v_id, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-}
-
-exports.postCompetitionByGame = (req, res) => {
-    var data = {
-        v_id: req.params.v_id,
-        league: req.body.league,
-        genre: req.body.genre
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'INSERT INTO HAS VALUES (?, ?, ?);'
-    var params = [data.v_id, data.league, data.genre]
-    db.run(sql, params, function (err) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.deleteCompetitionByGame = (req, res) => {
-    var data = {
-        v_id: req.params.v_id,
-        league: req.body.league
+exports.getAllReviews = async (_req, res) => {
+    const sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER;"
+    try {
+        const { rows } = await pool.query(sql);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-    var params = [data.v_id, data.league];
-    db.run(
-        'DELETE FROM HAS WHERE V_ID = ? AND LEAGUE = ?',
-        params,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
 }
 
-exports.getAllGame = (req, res) => {
-    var sql = "SELECT * FROM VIDEO_GAME;"
-    var params = []
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.getGame = (req, res) => {
-    var sql = "SELECT * FROM VIDEO_GAME WHERE V_ID = ?;"
-
-
-    db.get(sql, req.params.v_id, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-}
-
-exports.deleteGame = (req, res) => {
-    db.run(
-        'DELETE FROM VIDEO_GAME WHERE V_ID = ?',
-        req.params.v_id,
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
-}
-
-exports.postGame = (req, res) => {
-    var data = {
-        description: req.body.description,
-        vname: req.body.vname,
-        rs: req.body.rs,
+exports.getReviewsByUser = async (req, res) => {
+    const sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER WHERE V_ID = $1;"
+    const params = [req.params.v_id];
+    try {
+        const { rows } = await pool.query(sql, params);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var sql = 'INSERT INTO VIDEO_GAME(DESCRIPTION, VNAME, RELEASE_STATUS) VALUES(?, ?, ?);'
-    var params = [data.description, data.vname, data.rs]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.updateStatus = (req, res) => {
-    var data = {
-        v_id: req.params.v_id,
-        rs: req.body.rs,
+exports.postReviewByUser = async (req, res) => {
+    const sql = 'INSERT INTO REVIEW VALUES ($1, $2, $3);'
+    const params = [req.body.u_id, req.params.v_id, req.body.rating]
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
     }
+}
 
-    var sql = 'UPDATE VIDEO_GAME SET RELEASE_STATUS = ? WHERE V_ID = ?;'
-    var params = [data.rs, data.v_id]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
+exports.deleteReviewByUser = async (req, res) => {
 
-        res.json({
-            "message": "Updated",
-        })
-    });
+    const sql = 'DELETE FROM REVIEW WHERE V_ID = $1 AND U_ID = $2;';
+    const params = [req.params.v_id, req.body.u_id];
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getCompetition = async (_req, res) => {
+    const sql = "SELECT * FROM HAS;"
+    try {
+        const { rows } = await pool.query(sql);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getCompetitionByGame = async (req, res) => {
+    const sql = "SELECT * FROM HAS NATURAL JOIN ESPORT WHERE V_ID = ?;"
+    const params = [req.params.v_id]
+
+    try {
+        const { rows } = await pool.query(sql, params);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.postCompetitionByGame = async (req, res) => {
+
+    const sql = 'INSERT INTO HAS VALUES ($1, $2, $3);'
+    const params = [req.params.v_id, req.body.league, req.body.genre]
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.deleteCompetitionByGame = async (req, res) => {
+
+    const sql = 'DELETE FROM HAS WHERE V_ID = $1 AND LEAGUE = $2';
+    const params = [req.params.v_id, req.body.league];
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getAllGame = async (_req, res) => {
+    const sql = "SELECT * FROM VIDEO_GAME;"
+    try {
+        const { rows } = await pool.query(sql);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getGame = async (req, res) => {
+    const sql = "SELECT * FROM VIDEO_GAME WHERE V_ID = $1;"
+    const params = [req.params.v_id]
+
+    try {
+        const { rows } = await pool.query(sql, params);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.deleteGame = async (req, res) => {
+    const sql = 'DELETE FROM VIDEO_GAME WHERE V_ID = $1';
+    const params = req.params.v_id;
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Deleted succefully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.postGame = async (req, res) => {
+
+
+    const sql = 'INSERT INTO VIDEO_GAME(DESCRIPTION, VNAME, RELEASE_STATUS) VALUES($1, $2, $3);'
+    const params = [req.body.description, req.body.vname, req.body.rs]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.updateStatus = async (req, res) => {
+
+    const sql = 'UPDATE VIDEO_GAME SET RELEASE_STATUS = $1 WHERE V_ID = $2;'
+    const params = [req.body.rs, req.params.v_id]
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Updated succefully' });
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
