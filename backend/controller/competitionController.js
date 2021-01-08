@@ -1,182 +1,118 @@
-const db = require("../db/database.js")
+const { pool } = require('../db/cloudDatabase')
 
-exports.getAllTimeTable = (req, res) => {
-    var sql = "SELECT * FROM TIME_TABLE;"
-
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.getCNameTimeTable = (req, res) => {
-    var sql = "SELECT * FROM TIME_TABLE WHERE CNAME = ?;"
-    db.all(sql, req.params.cname, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "data": row
-        })
-    });
-}
-
-exports.deleteTimeTable = (req, res) => {
-    db.run(
-        'DELETE FROM TIME_TABLE WHERE CNAME = ?',
-        req.params.cname,
-        function (err, result) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
-}
-
-exports.postTimeTable = (req, res) => {
-    var data = {
-        cname: req.params.cname,
-        time: req.body.time,
-        league: req.body.league
+exports.getAllTimeTable = async (_req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM TIME_TABLEaaa');
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
 
-    var sql = 'INSERT INTO TIME_TABLE VALUES(?, ?, ?);'
-    var params = [data.time, data.cname, data.league]
-    db.run(sql, params, function (err) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.getAllLocation = (req, res) => {
-    var sql = "SELECT * FROM CLOCATION_TABLE;"
-
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
+exports.getCNameTimeTable = async (req, res) => {
+    try {
+        const sql = "SELECT * FROM TIME_TABLE WHERE CNAME = $1;"
+        const { rows } = await pool.query(sql, req.params.cname);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
-exports.getAllLocationWithCName = (req, res) => {
-    var sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = ? COLLATE NOCASE;"
-    db.get(sql, req.params.cname, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": row
-        })
-    });
+exports.deleteTimeTable = async (req, res) => {
+    try {
+        const params = [req.params.cname];
+        await pool.query('DELETE FROM TIME_TABLE WHERE CNAME = $1', params);
+        res.json({ message: 'DELETE cname ' + params[0] + ' succesfully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
 }
 
-exports.postLocationWithCName = (req, res) => {
-    var data = {
-        location: req.body.location,
-        cname: req.params.cname,
-        league: req.body.league
+exports.postTimeTable = async (req, res) => {
+    const sql = 'INSERT INTO TIME_TABLE VALUES($1, $2, $3);'
+    const params = [req.params.cname, req.body.time, req.body.league]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Inserted succefully' })
+    } catch (error) {
+        res.json(error.stack)
+    }
+}
+
+exports.getAllLocation = async (_req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM CLOCATION_TABLE');
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getAllLocationWithCName = async (req, res) => {
+    try {
+        const sql = "SELECT * FROM CLOCATION_TABLE WHERE CNAME = $1;"
+        const { rows } = await pool.query(sql, req.params.cname);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.postLocationWithCName = async (req, res) => {
+    const sql = 'INSERT INTO CLOCATION_TABLE VALUES ($1, $2, $3);'
+    const params = [req.body.location, req.params.cname, req.body.league]
+
+    try {
+        const { rows } = await pool.query(sql, params);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.deleteLocationWithCName = async (req, res) => {
+
+    const sql = 'DELETE FROM CLOCATION_TABLE WHERE CNAME = $1 AND LOCATION = $2;'
+    const params = [req.params.cname, req.body.location]
+
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Delete ' + params[1] + ' in competition ' + params[0] + ' succefully' })
+    } catch (error) {
+        res.json(error.stack);
+    }
+}
+
+exports.getCName = async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM COMPETITION WHERE CNAME = $1;', req.params.cname);
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
 
-    var sql = 'INSERT INTO CLOCATION_TABLE VALUES (?, ?, ?);'
-    var params = [data.location, data.cname, data.league]
-    db.run(sql, params, function (err) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }
 
-exports.deleteLocationWithCName = (req, res, next) => {
-    var data = {
-        cname: req.params.cname,
-        location: req.body.location
+exports.getAllCname = async (_req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM COMPETITION;');
+        res.json(rows);
+    } catch (error) {
+        res.json(error.stack);
     }
-
-    var params = [data.cname, data.location]
-    db.run(
-        'DELETE FROM CLOCATION_TABLE WHERE CNAME = ? AND LOCATION = ?',
-        params,
-        function (err) {
-            if (err) {
-                res.status(400).json({ "error": res.message })
-                return;
-            }
-            res.json({ "message": "deleted", rows: this.changes })
-        });
 }
 
-exports.getCName = (req, res) => {
-    var sql = "SELECT * FROM COMPETITION WHERE CNAME = ?;"
-    db.all(sql, req.params.cname, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": row
-        })
-    });
-}
+exports.postCName = async (req, res) => {
+    const sql = 'INSERT INTO COMPETITION VALUES ($1, $2, $3);'
+    const params = [req.body.cname, req.body.description, req.body.league]
 
-exports.getAllCname = (req, res) => {
-    var sql = "SELECT * FROM COMPETITION;"
-    db.all(sql, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
-        })
-    });
-}
-
-exports.postCName = (req, res) => {
-
-    var data = {
-        cname: req.body.cname,
-        description: req.body.description,
-        league: req.body.league,
+    try {
+        await pool.query(sql, params);
+        res.json({ message: 'Insert competition ' + params[0] + ' succefully' })
+    } catch (error) {
+        res.json(error.stack)
     }
-
-    var sql = 'INSERT INTO COMPETITION VALUES (?, ?, ?);'
-    var params = [data.cname, data.description, data.league]
-    db.run(sql, params, function (err, result) {
-        if (err) {
-            res.status(400).json({ "error": err.message })
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": data
-        })
-    });
 }

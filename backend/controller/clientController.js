@@ -1,4 +1,3 @@
-const db = require("../db/database.js")
 const authentication = require('../middleware/authentication')
 const md5 = require("md5")
 const { pool } = require('../db/cloudDatabase')
