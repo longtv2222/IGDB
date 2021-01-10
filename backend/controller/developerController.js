@@ -87,8 +87,6 @@ exports.getAllVideoGamesWithDName = async (req, res) => { //All video games this
 }
 
 exports.postADevelop = async (req, res) => {
-
-
     const sql = 'INSERT INTO DEVELOPS VALUES ($1, $2);'
     const params = [req.body.v_id, req.params.dname]
 
