@@ -4,7 +4,7 @@ exports.getADeveloper = async (req, res) => {
     const sql = "SELECT * FROM DEVELOPER WHERE DNAME = $1;"
     try {
         const { rows } = await pool.query(sql, [req.params.dname]);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
         res.json(error.stack);
     }
@@ -14,7 +14,8 @@ exports.postADeveloper = async (req, res) => {
     const sql = 'INSERT INTO DEVELOPER VALUES ($1);'
     try {
         await pool.query(sql, [req.body.dname]);
-        res.json({ message: 'Insert developer ' + req.body.dname + ' succefully.' })
+
+        res.status(200).send({ message: 'Insert developer ' + req.body.dname + ' succefully.' })
     } catch (error) {
         res.json(error.stack);
     }
@@ -23,7 +24,7 @@ exports.postADeveloper = async (req, res) => {
 exports.getAllDeveloper = async (_req, res) => {
     try {
         const { rows } = await pool.query('SELECT * FROM DEVELOPER;');
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
         res.json(error.stack);
     }
@@ -33,7 +34,7 @@ exports.getAllDeveloper = async (_req, res) => {
 exports.deleteADeveloper = async (req, res) => {
     try {
         await pool.query('DELETE FROM DEVELOPER WHERE DNAME = $1', [req.params.dname]);
-        res.json('DELETED developer with name ' + req.params.dnmae);
+        res.status(200).json('DELETED developer with name ' + req.params.dnmae);
     } catch (error) {
         res.json(error.stack);
     }
@@ -43,7 +44,7 @@ exports.getLocationWithDName = async (req, res) => {
     const sql = "SELECT * FROM DLOCATION_TABLE WHERE DName = $1;"
     try {
         const { rows } = await pool.query(sql, [req.params.dname]);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
         res.json(error.stack);
     }
@@ -55,7 +56,7 @@ exports.postLocationWithDName = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Insert succefully' })
+        res.status(200).json({ message: 'Insert succefully' })
     } catch (error) {
         res.json(error.stack);
     }
@@ -68,7 +69,7 @@ exports.deleteLocation = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
         res.json(error.stack);
     }
@@ -79,7 +80,7 @@ exports.getAllVideoGamesWithDName = async (req, res) => { //All video games this
     const params = [req.params.dname]
     try {
         const { rows } = await pool.query(sql, params);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
         res.json(error.stack);
     }
@@ -93,7 +94,7 @@ exports.postADevelop = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json('INSERTED SUCCEFULLY');
+        res.status(200).json('INSERTED SUCCEFULLY');
     } catch (error) {
         res.json(error.stack);
     }
@@ -104,7 +105,7 @@ exports.deleteADevelop = async (req, res) => {
     const sql = 'DELETE FROM DEVELOPS WHERE V_ID = $1 AND DNAME = $2;'
     try {
         await pool.query(sql, params);
-        res.json({ message: 'DELETED SUCCEFULLY' })
+        res.status(200).json({ message: 'DELETED SUCCEFULLY' })
     } catch (error) {
         res.json(error.stack);
     }
