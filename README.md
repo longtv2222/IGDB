@@ -6,7 +6,7 @@ IGDB is an acronym for International Game Database. This project provides a REST
 - [Node.js](https://nodejs.org/en/)
 - [Express.js](https://expressjs.com/)
 - [AWS IAM](https://aws.amazon.com/iam/) - Role-based authentication for database
-- [AWS RDS](https://aws.amazon.com/rds/) -  DBSM
+- [AWS RDS](https://aws.amazon.com/rds/) -  DBMS
 - [PostgreSQL](https://www.postgresql.org/) - Database
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) - User authentication
 - [Swagger](https://swagger.io/) -  API Documentation 
