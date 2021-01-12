@@ -17,8 +17,4 @@ module.exports = (app) => {
     app.use('/team', teamRoutes);
     app.use('/competition', competitionRoutes);
     app.use('/esport', esportRoutes)
-
-    app.get('/', (req, res) => {
-        res.json('Welcome to IGDB!')
-      })
 }

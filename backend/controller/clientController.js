@@ -5,7 +5,7 @@ const { pool } = require('../db/cloudDatabase')
 
 exports.paidUserLogin = async (req, res) => {
     const sql = "SELECT * FROM PAID_USER WHERE USER_NAME = $1 AND PASSWORD = $2;"
-    const params = [req.body.username, md5(req.body.password)]
+    const params = [req.query.username, md5(req.query.password)]
 
     try {
         const result = await pool.query(sql, params)
@@ -13,7 +13,7 @@ exports.paidUserLogin = async (req, res) => {
         if (result.rows.length) {   //Check if any row exists
             const token = authentication.jwtSignIn(result.rows[0].user_name, result.rows[0].u_id)
 
-            res.json({
+            res.status(200).json({
                 message: 'Login succesfully',
                 token: token
             })
