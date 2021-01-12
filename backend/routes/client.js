@@ -42,6 +42,7 @@ router.get("/paid_user/login", clientController.paidUserLogin);
  *              type: object
  *              required:
  *              - userName
+ *              - password
  *              properties:
  *                  username:
  *                      type: string
@@ -127,7 +128,7 @@ router.delete("/paid_user/:id", clientController.deletePaidUserByID);
  * @swagger
  * /client/paid_user/{id} :
  *    patch:
- *      description : Get paid user by id
+ *      description : Update username by id
  *      parameters :
  *          - name : token 
  *            in : header
@@ -141,13 +142,23 @@ router.delete("/paid_user/:id", clientController.deletePaidUserByID);
  *            description : Paid user id
  *            schema :
  *              type : number
- *              example : 1
+ *              example : 4
+ *              
+ *      requestBody : 
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          username:
+ *                              type : string
+ *                      example:
+ *                          username : hello 
  *      responses :
  *        200:
- *          description : Delete user succesfully
+ *          description : Update user succesfully
  *        500:
  *          description : Error occured
- *          
  */
 router.patch("/paid_user/:id", clientController.updateUsername);
 
