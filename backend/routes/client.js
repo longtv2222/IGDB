@@ -30,28 +30,27 @@ router.get("/paid_user/login", clientController.paidUserLogin);
 /**
  * @swagger
  * /client/paid_user/signup:
- *    get:
+ *    post:
  *      description : Login into your account
  *      parameters :
- *          - name : username
- *            in : body
- *            descripton : name of user
+ *          - in : body
+ *            name : user
+ *            description : The user to create.
  *            schema :
- *                  type : string
- *                  example : longpro
- * 
- *          - name : password
- *            in : body
- *            description : password of user
- *            schema :
- *              type : string
- *              example : 22222
+ *              type: object
+ *              required:
+ *              - userName
+ *              properties:
+ *                  username:
+ *                      type: string
+ *                      example : "long"
+ *                  password:
+ *                      type: string
+ *                      example : "22222"
  *      responses :
  *        200:
- *          description : Login succesfully
- *          
+ *          description : Created account succesfully         
  */
- 
 router.post("/paid_user/signup", clientController.paidUserSignUp);
 
 router.get("/paid_user/:id", clientController.getPaidUserByID);

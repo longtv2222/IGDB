@@ -18,12 +18,12 @@ exports.paidUserLogin = async (req, res) => {
                 token: token
             })
         } else {
-            res.json({
+            res.status(500).json({
                 message: 'Login failed'
             })
         }
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
