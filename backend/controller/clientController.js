@@ -36,26 +36,34 @@ exports.paidUserSignUp = async (req, res) => {
         const { rows } = await pool.query(sql, params)
         res.json({ message: 'Signed up for account ' + rows[0].user_name + ' succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
 exports.getPaidUserByID = async (req, res) => {
     try {
         const { rows } = await pool.query('SELECT * FROM PAID_USER WHERE U_ID = $1;', [req.params.id]);
-        res.json({
-            id: rows[0].u_id,
-            username: rows[0].user_name
-        });
+
+        if (rows.length)
+            res.status(200).json({
+                id: rows[0].u_id,
+                username: rows[0].user_name
+            });
+        else
+            res.sendStatus(204);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
 exports.getAllPaidUser = async (_req, res) => {
     try {
         const { rows } = await pool.query('SELECT u_id, user_name FROM PAID_USER;');
-        res.json({ rows });
+
+        if (rows.length)
+            res.json({ rows });
+        else
+            res.sendStatus(204);
     } catch (error) {
         res.json(error.stack);
     }
@@ -64,9 +72,9 @@ exports.getAllPaidUser = async (_req, res) => {
 exports.deletePaidUserByID = async (req, res) => {
     try {
         await pool.query('DELETE FROM PAID_USER WHERE U_ID = $1;', [req.params.id]);
-        res.json({ message: 'Deleted user with id: ' + req.params.id + 'succefully' });
+        res.json({ message: 'Deleted user with id: ' + req.params.id + ' succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -75,9 +83,9 @@ exports.updateUsername = async (req, res) => {
         const sql = 'UPDATE PAID_USER SET USER_NAME = $1 WHERE U_ID = $2;'
         const params = [req.body.username, req.params.id]
         await pool.query(sql, params)
-        res.json({ message: 'Update username of user with id: ' + params[1] + ' to ' + params[0] })
+        res.status(200).json({ message: 'Update username of user with id: ' + params[1] + ' to ' + params[0] })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 

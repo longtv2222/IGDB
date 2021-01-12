@@ -23,6 +23,8 @@ const router = require('express').Router();
  *      responses :
  *        200:
  *          description : Login succesfully
+ *        500:
+ *          description : Error occured
  *          
  */
 router.get("/paid_user/login", clientController.paidUserLogin);
@@ -49,16 +51,104 @@ router.get("/paid_user/login", clientController.paidUserLogin);
  *                      example : "22222"
  *      responses :
  *        200:
- *          description : Created account succesfully         
+ *          description : Created account succesfully   
+ *        500:
+ *          description : Error occured      
  */
 router.post("/paid_user/signup", clientController.paidUserSignUp);
 
+/**
+ * @swagger
+ * /client/paid_user/{id} :
+ *    get:
+ *      description : Get paid user by id
+ *      parameters :
+ *          - name : id
+ *            in : path
+ *            description : Paid user id
+ *            schema :
+ *              type : number
+ *              example : 1
+ *      responses :
+ *        200:
+ *          description : Get user succesfully
+ *        204:
+ *          description : No user returned
+ *        500:
+ *          description : Error occured
+ *          
+ */
 router.get("/paid_user/:id", clientController.getPaidUserByID);
 
+/**
+ * @swagger
+ * /client/paid_user/ :
+ *    get:
+ *      description : Get all paid user
+ *      responses :
+ *        200:
+ *          description : Get all user succesfully
+ *        204:
+ *          description : No user returned
+ *        500:
+ *          description : Error occured   
+ */
 router.get("/paid_user", clientController.getAllPaidUser);
 
+/**
+ * @swagger
+ * /client/paid_user/{id} :
+ *    delete:
+ *      description : Get paid user by id
+ *      parameters :
+ *          - name : token 
+ *            in : header
+ *            description : paid user token.
+ *            schema :
+ *              type : string
+ *              example : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoibG9uZyIsImlkIjoxMiwiaWF0IjoxNjEwNDE4MjcxLCJleHAiOjE2MTA0MjU0NzF9.37F4wxS3ypXhx81eVNz0YDCDRDLKPWyiDApzAZUnWtw"
+ * 
+ *          - name : id
+ *            in : path
+ *            description : Paid user id
+ *            schema :
+ *              type : number
+ *              example : 1
+ *      responses :
+ *        200:
+ *          description : Delete user succesfully
+ *        500:
+ *          description : Error occured
+ *          
+ */
 router.delete("/paid_user/:id", clientController.deletePaidUserByID);
 
+/**
+ * @swagger
+ * /client/paid_user/{id} :
+ *    patch:
+ *      description : Get paid user by id
+ *      parameters :
+ *          - name : token 
+ *            in : header
+ *            description : paid user token.
+ *            schema :
+ *              type : string
+ *              example : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoibG9uZyIsImlkIjoxMiwiaWF0IjoxNjEwNDE4MjcxLCJleHAiOjE2MTA0MjU0NzF9.37F4wxS3ypXhx81eVNz0YDCDRDLKPWyiDApzAZUnWtw"
+ * 
+ *          - name : id
+ *            in : path
+ *            description : Paid user id
+ *            schema :
+ *              type : number
+ *              example : 1
+ *      responses :
+ *        200:
+ *          description : Delete user succesfully
+ *        500:
+ *          description : Error occured
+ *          
+ */
 router.patch("/paid_user/:id", clientController.updateUsername);
 
 module.exports = router;
