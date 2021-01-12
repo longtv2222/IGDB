@@ -106,7 +106,7 @@ router.get("/paid_user", clientController.getAllPaidUser);
  *            description : paid user token.
  *            schema :
  *              type : string
- *              example : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoibG9uZyIsImlkIjoxMiwiaWF0IjoxNjEwNDE4MjcxLCJleHAiOjE2MTA0MjU0NzF9.37F4wxS3ypXhx81eVNz0YDCDRDLKPWyiDApzAZUnWtw"
+ *              example : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoibG9uZyIsImlkIjoxMiwiaWF0IjoxNjEwNDE4NzY3fQ.eberfpuSHIuPdbr82krqBlOILR406ZZ8ZxfcD5wjiKg"
  * 
  *          - name : id
  *            in : path
@@ -134,7 +134,7 @@ router.delete("/paid_user/:id", clientController.deletePaidUserByID);
  *            description : paid user token.
  *            schema :
  *              type : string
- *              example : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoibG9uZyIsImlkIjoxMiwiaWF0IjoxNjEwNDE4MjcxLCJleHAiOjE2MTA0MjU0NzF9.37F4wxS3ypXhx81eVNz0YDCDRDLKPWyiDApzAZUnWtw"
+ *              example : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoibG9uZyIsImlkIjoxMiwiaWF0IjoxNjEwNDE4NzY3fQ.eberfpuSHIuPdbr82krqBlOILR406ZZ8ZxfcD5wjiKg"
  * 
  *          - name : id
  *            in : path
