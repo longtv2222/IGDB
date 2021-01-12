@@ -9,7 +9,7 @@ const checkToken = (req, res, next) => {
         req.myData = decode
         next();
     } catch (error) {
-        res.json("Authentication failed");
+        res.status(401).json({ message: "Authentication failed" });
     }
 }
 
