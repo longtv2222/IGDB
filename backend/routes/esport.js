@@ -70,7 +70,9 @@ router.post("/", esportController.postAEsport);
  *          - name : esport
  *            in : path
  *            description : esport
- *            example : "League of Legend Esport"
+ *            schema :
+ *              type : string
+ *              example : "League of Legend Esport"
  *      responses :
  *        200:
  *          description : Delete specified esport succesfully

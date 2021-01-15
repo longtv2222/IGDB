@@ -14,8 +14,8 @@ exports.getPlayerParticipate = async (req, res) => {
 exports.deletePlayerParticipate = async (req, res) => {
 
 
-    const params = [req.params.playername, req.params.competitionname]
-    const sql = 'DELETE FROM PARTICIPATE WHERE PLAYERNAME = $1 AND CNAME = $2;'
+    const params = [req.params.playername, req.params.competitionname, req.params.league]
+    const sql = 'DELETE FROM PARTICIPATE WHERE PLAYERNAME = $1 AND CNAME = $2 AND LEAGUE = $3;'
 
     try {
         await pool.query(sql, params);

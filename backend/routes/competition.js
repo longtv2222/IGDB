@@ -23,6 +23,8 @@ router.get("/Time_Table/", competitionController.getAllTimeTable);
  *    get:
  *      tags:
  *      - "competition"
+ *      security:
+ *      - ApiKeyAuth: []
  *      summary : Get all time table for a competition
  *      parameters :
  *          - name : cname
@@ -57,6 +59,8 @@ router.get("/:cname/Time_Table/", competitionController.getCNameTimeTable);
  *    delete:
  *      tags:
  *      - "competition"
+ *      security:
+ *      - ApiKeyAuth: []
  *      summary : Delete all time table for a competition
  *      parameters :
  *          - name : cname
@@ -92,6 +96,8 @@ router.delete("/:cname/Time_Table/", competitionController.deleteTimeTable);
  *    post:
  *      tags:
  *      - "competition"
+ *      security:
+ *      - ApiKeyAuth: []
  *      summary : Get all time table for a competition
  *      parameters :
  *          - name : cname
@@ -179,6 +185,8 @@ router.get("/:cname/clocation_table/", competitionController.getAllLocationWithC
  *    post:
  *      tags:
  *      - "competition"
+ *      security:
+ *      - ApiKeyAuth: []
  *      summary : Insert location for a league
  *      parameters :
  *          - name : cname
@@ -196,7 +204,7 @@ router.get("/:cname/clocation_table/", competitionController.getAllLocationWithC
  *              - cname
  *              - league
  *              properties:
- *                  cname:
+ *                  cname :
  *                      type: string
  *                      example : "LCS"
  *                  league:
@@ -228,6 +236,8 @@ router.post("/:cname/clocation_table/", competitionController.postLocationWithCN
  *    delete:
  *      tags:
  *      - "competition"
+ *      security:
+ *      - ApiKeyAuth: []
  *      summary : Delete location for a league
  *      parameters :
  *          - name : cname
@@ -321,6 +331,8 @@ router.get("/", competitionController.getAllCname);
  *    post:
  *      tags:
  *      - "competition"
+ *      security:
+ *      - ApiKeyAuth: []
  *      summary : Insert competition
  *      parameters :
  *          - in : body
