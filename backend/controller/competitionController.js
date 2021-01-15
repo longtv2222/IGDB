@@ -2,10 +2,10 @@ const { pool } = require('../db/cloudDatabase')
 
 exports.getAllTimeTable = async (_req, res) => {
     try {
-        const { rows } = await pool.query('SELECT * FROM TIME_TABLEaaa');
-        res.json(rows);
+        const { rows } = await pool.query('SELECT * FROM TIME_TABLE');
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 
 }
@@ -75,8 +75,8 @@ exports.postLocationWithCName = async (req, res) => {
 
 exports.deleteLocationWithCName = async (req, res) => {
 
-    const sql = 'DELETE FROM CLOCATION_TABLE WHERE CNAME = $1 AND LOCATION = $2;'
-    const params = [req.params.cname, req.body.location]
+    const sql = 'DELETE FROM CLOCATION_TABLE WHERE CNAME = $1 AND LOCATION = $2 AND LEAGUE = $3;'
+    const params = [req.params.cname, req.body.location, req.body.league]
 
     try {
         await pool.query(sql, params);

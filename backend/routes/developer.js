@@ -300,7 +300,7 @@ router.post("/:dname/develops/:v_id", developerController.postADevelop);
  *      - "developer"
  *      security:
  *      - ApiKeyAuth: []
- *      summary : Insert location for a developer
+ *      summary : Delete location for a developer
  *      parameters :
  *          - name : dname
  *            in : path
