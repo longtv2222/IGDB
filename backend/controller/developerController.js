@@ -99,7 +99,7 @@ exports.postADevelop = async (req, res) => {
 }
 
 exports.deleteADevelop = async (req, res) => {
-    const params = [req.body.v_id, , req.params.dname]
+    const params = [req.params.v_id, , req.params.dname]
     const sql = 'DELETE FROM DEVELOPS WHERE V_ID = $1 AND DNAME = $2;'
     try {
         await pool.query(sql, params);

@@ -1,8 +1,6 @@
 const router = require('express').Router();
 const developerController = require('../controller/developerController')
 
-
-
 /**
  * @swagger
  * /developer/{dname} :
@@ -156,6 +154,16 @@ router.get("/:dname/dlocation_table/", developerController.getLocationWithDName)
  *            schema :
  *              type : string
  *              example : "Ubisoft"
+ *          - name : developer
+ *            in : body
+ *            description : Developer
+ *            schema :
+ *              type : object
+ *              required : location
+ *              properties :
+ *                  location :
+ *                      type : string
+ *                      example : "California, US"
  *      responses :
  *        200:
  *          description : Delete developer succesfully
@@ -176,14 +184,154 @@ router.get("/:dname/dlocation_table/", developerController.getLocationWithDName)
  */
 router.post("/:dname/dlocation_table/", developerController.postLocationWithDName);
 
+/**
+ * @swagger
+ * /developer/{dname}/dlocation_table/{location} :
+ *    delete:
+ *      tags:
+ *      - "developer"
+ *      security:
+ *      - ApiKeyAuth: []
+ *      summary : Find specific location for a developer
+ *      parameters :
+ *          - name : dname
+ *            in : path
+ *            description : Name of developer
+ *            schema :
+ *              type : string
+ *              example : "Ubisoft"
+ *          - name : location
+ *            in : path
+ *            description : Location of developer
+ *            schema :
+ *              type : string
+ *              example : California, US
+ *      responses :
+ *        200:
+ *          description : Find location of developer succesfully
+ *        500:
+ *          description : Error occured
+ *        401:
+ *          description : Error occured 
+ *          responseBody :
+ *          content :
+ *              application/json:
+ *                  schema : 
+ *                      type : object
+ *                      properties :
+ *                          message :
+ *                              type : string
+ *                      example :
+ *                          message : "Authentication failed"           
+ */
 router.delete("/:dname/dlocation_table/:location", developerController.deleteLocation);
 
-
-
+/**
+ * @swagger
+ * /developer/{dname}/develops :
+ *    get:
+ *      tags:
+ *      - "developer"
+ *      summary : Get all video games developer develops
+ *      parameters :
+ *          - name : dname
+ *            in : path
+ *            description : Name of developer
+ *            schema :
+ *              type : string
+ *              example : "Ubisoft"
+ *      responses :
+ *        200:
+ *          description : Find location of developer succesfully
+ *        500:
+ *          description : Error occured         
+ */
 router.get("/:dname/develops", developerController.getAllVideoGamesWithDName);
 
-router.post("/:dname/develops/", developerController.postADevelop);
 
-router.delete("/:dname/develops/", developerController.deleteADevelop);
+/**
+ * @swagger
+ * /developer/{dname}/develops/{v_id} :
+ *    post:
+ *      tags:
+ *      - "developer"
+ *      security:
+ *      - ApiKeyAuth: []
+ *      summary : Insert video game developer developed
+ *      parameters :
+ *          - name : dname
+ *            in : path
+ *            description : Name of developer
+ *            schema :
+ *              type : string
+ *              example : "Ubisoft"
+ *          - name : v_id
+ *            in : path
+ *            description : Video games id
+ *            schema :
+ *              type : number
+ *              example : 1
+ *      responses :
+ *        200:
+ *          description : Inserted video game for developer succesfully
+ *        500:
+ *          description : Error occured
+ *        401:
+ *          description : Error occured 
+ *          responseBody :
+ *          content :
+ *              application/json:
+ *                  schema : 
+ *                      type : object
+ *                      properties :
+ *                          message :
+ *                              type : string
+ *                      example :
+ *                          message : "Authentication failed"           
+ */
+router.post("/:dname/develops/:v_id", developerController.postADevelop);
+
+
+/**
+ * @swagger
+ * /developer/{dname}/develops/{v_id} :
+ *    delete:
+ *      tags:
+ *      - "developer"
+ *      security:
+ *      - ApiKeyAuth: []
+ *      summary : Insert location for a developer
+ *      parameters :
+ *          - name : dname
+ *            in : path
+ *            description : Name of developer
+ *            schema :
+ *              type : string
+ *              example : "Ubisoft"
+ *          - name : v_id
+ *            in : path
+ *            description : Video games id
+ *            schema :
+ *              type : number
+ *              example : 1
+ *      responses :
+ *        200:
+ *          description : Find location of developer succesfully
+ *        500:
+ *          description : Error occured
+ *        401:
+ *          description : Error occured 
+ *          responseBody :
+ *          content :
+ *              application/json:
+ *                  schema : 
+ *                      type : object
+ *                      properties :
+ *                          message :
+ *                              type : string
+ *                      example :
+ *                          message : "Authentication failed"           
+ */
+router.delete("/:dname/develops/:v_id", developerController.deleteADevelop);
 
 module.exports = router;

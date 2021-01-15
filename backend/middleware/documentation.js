@@ -8,7 +8,7 @@ const swaggerOptions = {
         info: {
             title: 'IGDB API',
             version: '1.0.0',
-            description: 'API doumentation for international game database',
+            description: 'API documentation for international game database',
             license: {
                 name: 'Apache 2.0',
                 url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
