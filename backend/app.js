@@ -33,8 +33,10 @@ app.patch('*', authentication.checkToken, (res, req, next) => {
 
 mountRoutes(app)    //Define all available routes
 
-
-app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerDoc)); //Display swagger ui documentation
+const options = {
+  customCss: '.swagger-ui .topbar { display: none }',
+};
+app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerDoc, options)); //Display swagger ui documentation
 
 
 
