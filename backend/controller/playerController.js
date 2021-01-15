@@ -4,9 +4,10 @@ exports.getPlayerParticipate = async (req, res) => {
     const sql = "SELECT * FROM PLAYER NATURAL JOIN PARTICIPATE WHERE PLAYERNAME = $1;"
     try {
         const { rows } = await pool.query(sql, req.params.playername);
-        res.json(rows);
+        res.status(200).json(rows);
+
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -18,9 +19,9 @@ exports.deletePlayerParticipate = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' });
+        res.status(200).json({ message: 'Deleted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -30,18 +31,18 @@ exports.postParticipate = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
 exports.getAllPlayer = async (_req, res) => {
     try {
         const { rows } = await pool.query('SELECT * FROM PLAYER');
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -50,9 +51,9 @@ exports.getPlayer = async (req, res) => {
 
     try {
         const { rows } = await pool.query(sql, [req.params.playername])
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -61,9 +62,9 @@ exports.deletePlayer = async (req, res) => {
 
     try {
         await pool.query(sql, [req.params.playername])
-        res.json({ message: 'Deleted succefully' });
+        res.status(200).json({ message: 'Deleted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -73,8 +74,8 @@ exports.postPlayer = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }

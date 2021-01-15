@@ -4,9 +4,9 @@ const { pool } = require('../db/cloudDatabase')
 exports.getLocation = async (_req, res) => {
     try {
         const { rows } = await pool.query('SELECT * FROM PLOCATION_TABLE;');
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -14,9 +14,9 @@ exports.getLocationWithPName = async (req, res) => {
     const sql = "SELECT * FROM PLOCATION_TABLE WHERE PNAME = $1;"
     try {
         const { rows } = await pool.query(sql, [req.params.pname]);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -27,9 +27,9 @@ exports.postLocationWithPName = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -40,9 +40,9 @@ exports.deleteLocationWithPName = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -50,9 +50,9 @@ exports.getAllPublishes = async (_req, res) => {
     const sql = "SELECT * FROM PUBLISHES NATURAL JOIN VIDEO_GAME;"
     try {
         const { rows } = await pool.query(sql);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -60,9 +60,9 @@ exports.getPublishes = async (req, res) => {
     const sql = "SELECT * FROM PUBLISHES NATURAL JOIN VIDEO_GAME WHERE PNAME = $1;"
     try {
         const { rows } = await pool.query(sql, req.params.pname);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -73,9 +73,9 @@ exports.postPublishes = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -85,9 +85,9 @@ exports.deletePublishes = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -96,9 +96,9 @@ exports.getAllPublisher = async (_req, res) => {
 
     try {
         const { rows } = await pool.query(sql);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 
 }
@@ -107,9 +107,9 @@ exports.getPublisher = async (req, res) => {
     const sql = "SELECT * FROM PUBLISHER WHERE PNAME = $1;"
     try {
         const { rows } = await pool.query(sql, [req.params.pname]);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -121,9 +121,9 @@ exports.postPublisher = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 
 }
@@ -136,8 +136,8 @@ exports.deletePublisher = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }

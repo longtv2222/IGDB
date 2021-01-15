@@ -7,9 +7,9 @@ exports.getTeamEmployee = async (_req, res) => {
 
     try {
         const { rows } = await pool.query(sql);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -18,9 +18,9 @@ exports.getTeamEmployeeWithTName = async (_req, res) => {
 
     try {
         const { rows } = await pool.query(sql, [req.params.tname]);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -31,9 +31,9 @@ exports.postTeamEmploy = async (req, res) => {
     const params = [req.params.tname, req.body.playername, req.body.year, req.body.month, req.body.day]
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -44,9 +44,9 @@ exports.deleteTeamEmploy = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -56,9 +56,9 @@ exports.getTeam = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -66,9 +66,9 @@ exports.getAllTeam = async (_req, res) => {
     const sql = "SELECT * FROM TEAM;"
     try {
         await pool.query(sql);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -77,9 +77,9 @@ exports.postTeam = async (req, res) => {
     const params = [req.body.tname, req.body.description, req.body.year, req.body.month, req.body.day]
     try {
         await pool.query(sql);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -88,8 +88,8 @@ exports.deleteTeam = async (req, res) => {
     const params = [req.params.tname]
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }

@@ -4,9 +4,9 @@ exports.getOS = async (_req, res) => {
     const sql = "SELECT * FROM OPERATING_PLATFORM;"
     try {
         const { rows } = await pool.query(sql);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -17,7 +17,7 @@ exports.getOSByID = async (req, res) => {
         const { rows } = await pool.query(sql, params);
         res.json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -26,9 +26,9 @@ exports.postOSByID = async (req, res) => {
     const params = [req.params.v_id, req.body.platform]
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -38,9 +38,9 @@ exports.deleteOSByID = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -49,9 +49,9 @@ exports.getSimilarGame = async (req, res) => {
     const params = [req.params.v_id]
     try {
         const { rows } = await pool.query(sql, params);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -61,9 +61,9 @@ exports.postSimilarGame = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -71,9 +71,9 @@ exports.getAllReviews = async (_req, res) => {
     const sql = "SELECT * FROM REVIEW NATURAL JOIN PAID_USER;"
     try {
         const { rows } = await pool.query(sql);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -82,9 +82,9 @@ exports.getReviewsByUser = async (req, res) => {
     const params = [req.params.v_id];
     try {
         const { rows } = await pool.query(sql, params);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -93,9 +93,9 @@ exports.postReviewByUser = async (req, res) => {
     const params = [req.body.u_id, req.params.v_id, req.body.rating]
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -106,9 +106,9 @@ exports.deleteReviewByUser = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -116,9 +116,9 @@ exports.getCompetition = async (_req, res) => {
     const sql = "SELECT * FROM HAS;"
     try {
         const { rows } = await pool.query(sql);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -128,9 +128,9 @@ exports.getCompetitionByGame = async (req, res) => {
 
     try {
         const { rows } = await pool.query(sql, params);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -140,9 +140,9 @@ exports.postCompetitionByGame = async (req, res) => {
     const params = [req.params.v_id, req.body.league, req.body.genre]
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -152,9 +152,9 @@ exports.deleteCompetitionByGame = async (req, res) => {
     const params = [req.params.v_id, req.body.league];
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -162,9 +162,9 @@ exports.getAllGame = async (_req, res) => {
     const sql = "SELECT * FROM VIDEO_GAME;"
     try {
         const { rows } = await pool.query(sql);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -174,9 +174,9 @@ exports.getGame = async (req, res) => {
 
     try {
         const { rows } = await pool.query(sql, params);
-        res.json(rows);
+        res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -185,9 +185,9 @@ exports.deleteGame = async (req, res) => {
     const params = req.params.v_id;
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Deleted succefully' })
+        res.status(200).json({ message: 'Deleted succefully' })
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
@@ -199,7 +199,7 @@ exports.postGame = async (req, res) => {
 
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Inserted succefully' });
+        res.status(200).json({ message: 'Inserted succefully' });
     } catch (error) {
         res.json(error.stack);
     }
@@ -211,7 +211,7 @@ exports.updateStatus = async (req, res) => {
     const params = [req.body.rs, req.params.v_id]
     try {
         await pool.query(sql, params);
-        res.json({ message: 'Updated succefully' });
+        res.status(200).json({ message: 'Updated succefully' });
     } catch (error) {
         res.json(error.stack);
     }
