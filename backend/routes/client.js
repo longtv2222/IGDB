@@ -7,7 +7,7 @@ const router = require('express').Router();
  *    get:
  *      tags:
  *      - "client"
- *      description : Login into your account
+ *      summary : Login into your account
  *      parameters :
  *          - name : username
  *            in : query
@@ -38,8 +38,18 @@ const router = require('express').Router();
  *                      example:
  *                          message : "Login succesfully"   
  *                          token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoibG9uZyIsImlkIjoxMiwiaWF0IjoxNjEwNDE4NzY3fQ.eberfpuSHIuPdbr82krqBlOILR406ZZ8ZxfcD5wjiKg"
- *        500:
- *          description : Error occured   
+*        500:
+ *          description : Error occured 
+ *          responseBody :
+ *          content :
+ *              application/json:
+ *                  schema : 
+ *                      type : object
+ *                      properties :
+ *                          message :
+ *                              type : string
+ *                      example :
+ *                          message : "Login failed"   
  */
 router.get("/paid_user/login", clientController.paidUserLogin);
 
@@ -49,7 +59,7 @@ router.get("/paid_user/login", clientController.paidUserLogin);
  *    post:
  *      tags:
  *      - "client"
- *      description : Login into your account
+ *      summary : Signup for account
  *      parameters :
  *          - in : body
  *            name : user
@@ -69,8 +79,28 @@ router.get("/paid_user/login", clientController.paidUserLogin);
  *      responses :
  *        200:
  *          description : Created account succesfully   
+ *          responseBody :
+ *          content :
+ *              application/json:
+ *                  schema : 
+ *                      type : object
+ *                      properties :
+ *                          message :
+ *                              type : string
+ *                      example :
+ *                          message : "Signed up for account long succefully"
  *        500:
- *          description : Error occured      
+ *          description : Error occured 
+ *          responseBody :
+ *          content :
+ *              application/json:
+ *                  schema : 
+ *                      type : object
+ *                      properties :
+ *                          message :
+ *                              type : string
+ *                      example :
+ *                          message : "Sign up failed"      
  */
 router.post("/paid_user/signup", clientController.paidUserSignUp);
 
@@ -80,7 +110,7 @@ router.post("/paid_user/signup", clientController.paidUserSignUp);
  *    get:
  *      tags:
  *      - "client"
- *      description : Get paid user by id
+ *      summary : Get paid user by id
  *      parameters :
  *          - name : id
  *            in : path
@@ -105,7 +135,7 @@ router.get("/paid_user/:id", clientController.getPaidUserByID);
  *    get:
  *      tags:
  *      - "client"
- *      description : Get all paid user
+ *      summary : Get all paid user
  *      responses :
  *        200:
  *          description : Get all user succesfully
@@ -124,7 +154,7 @@ router.get("/paid_user", clientController.getAllPaidUser);
  *      - "client"
  *      security:
  *      - ApiKeyAuth: []
- *      description : Get paid user by id
+ *      summary : Delete paid user by id
  *      parameters :
  *          - name : token 
  *            in : header
@@ -143,8 +173,19 @@ router.get("/paid_user", clientController.getAllPaidUser);
  *        200:
  *          description : Delete user succesfully
  *        500:
- *          description : Error occured
- *          
+ *          description : Error occure
+ *        401:
+ *          description : Error occured 
+ *          responseBody :
+ *          content :
+ *              application/json:
+ *                  schema : 
+ *                      type : object
+ *                      properties :
+ *                          message :
+ *                              type : string
+ *                      example :
+ *                          message : "Authentication failed"           
  */
 router.delete("/paid_user/:id", clientController.deletePaidUserByID);
 
@@ -156,7 +197,7 @@ router.delete("/paid_user/:id", clientController.deletePaidUserByID);
  *      - "client"
  *      security:
  *      - ApiKeyAuth: []
- *      description : Update username by id
+ *      summary : Update username by id
  *      parameters :
  *          - name : id
  *            in : path
@@ -181,7 +222,17 @@ router.delete("/paid_user/:id", clientController.deletePaidUserByID);
  *        500:
  *          description : Error occured
  *        401:
- *          description : Authorization failed
+ *          description : Error occured 
+ *          responseBody :
+ *          content :
+ *              application/json:
+ *                  schema : 
+ *                      type : object
+ *                      properties :
+ *                          message :
+ *                              type : string
+ *                      example :
+ *                          message : "Authentication failed"  
  */
 router.patch("/paid_user/:id", clientController.updateUsername);
 

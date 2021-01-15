@@ -23,7 +23,7 @@ exports.paidUserLogin = async (req, res) => {
             })
         }
     } catch (error) {
-        res.status(500).json(error.stack);
+        res.status(500).json('Login failed');
     }
 }
 
@@ -36,7 +36,7 @@ exports.paidUserSignUp = async (req, res) => {
         const { rows } = await pool.query(sql, params)
         res.json({ message: 'Signed up for account ' + rows[0].user_name + ' succefully' })
     } catch (error) {
-        res.status(500).json(error.stack);
+        res.status(500).json('Sign up failed');
     }
 }
 

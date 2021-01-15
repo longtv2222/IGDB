@@ -6,7 +6,7 @@ exports.getADeveloper = async (req, res) => {
         const { rows } = await pool.query(sql, [req.params.dname]);
         res.status(200).json(rows);
     } catch (error) {
-        res.json(error.stack);
+        res.status(500).json(error.stack);
     }
 }
 
