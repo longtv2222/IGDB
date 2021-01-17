@@ -3,12 +3,13 @@ const bodyParser = require("body-parser")
 const authentication = require('./middleware/authentication')
 const mountRoutes = require('./routes/index.js')
 const { swaggerUI, swaggerDoc } = require('./middleware/documentation')
-
+const rateLimiter = require('./middleware/rateLimit')
 // Start server
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(rateLimiter) //Apply rate limit based on IP
 
 
 let HTTP_PORT = 8000
