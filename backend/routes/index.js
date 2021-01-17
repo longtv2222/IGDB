@@ -6,7 +6,7 @@ const playerRoutes = require('./player');
 const teamRoutes = require('./team');
 const competitionRoutes = require('./competition');
 const esportRoutes = require('./esport');
-
+const { swaggerUI, swaggerDoc } = require('../middleware/documentation')
 
 module.exports = (app) => {
     app.use('/client', clientRoutes);
@@ -17,4 +17,9 @@ module.exports = (app) => {
     app.use('/team', teamRoutes);
     app.use('/competition', competitionRoutes);
     app.use('/esport', esportRoutes)
+
+    const options = {
+        customCss: '.swagger-ui .topbar { display: none }',
+      };
+      app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerDoc, options)); //Display swagger ui documentation
 }
