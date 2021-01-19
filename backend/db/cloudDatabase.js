@@ -19,7 +19,7 @@ const pool = new Pool({
   port: 5432,
   ssl: { rejectUnauthorized: false },
   max: 20,
-  idleTimeoutMillis: 30000,
+  idleTimeoutMillis: 0,
   connectionTimeoutMillis: 2000,
 })
 
