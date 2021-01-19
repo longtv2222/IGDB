@@ -2,7 +2,7 @@
 
 IGDB is an acronym for International Game Database. This project provides a RESTful API services for users to do CRUD operations with JSON with given game data in the database. IGDB is considered as a 'Wikipedia' so that you can easily search information of everything that involves video games! 
 
-To check out the web app, please go to the following link : http://18.189.28.134:8000/
+To check out the web app, please go to the following link : http://18.220.7.212/
 
 ## Built With
 - [Node.js](https://nodejs.org/en/)
