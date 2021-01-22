@@ -60,22 +60,19 @@ router.get("/paid_user/login", clientController.paidUserLogin);
  *      tags:
  *      - "client"
  *      summary : Signup for account
- *      parameters :
- *          - in : body
- *            name : user
- *            description : The user to create.
- *            schema :
- *              type: object
- *              required:
- *              - username
- *              - password
- *              properties:
+ *      requestBody :
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type: object
+ *                      properties:
  *                  username:
  *                      type: string
- *                      example : "long"
  *                  password:
  *                      type: string
- *                      example : "22222"
+ *                  example:
+ *                      username : "long23"
+ *                      password : "Seeyou"
  *      responses :
  *        200:
  *          description : Created account succesfully   

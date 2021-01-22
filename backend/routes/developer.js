@@ -153,16 +153,16 @@ router.get("/:dname/dlocation_table/", developerController.getLocationWithDName)
  *            schema :
  *              type : string
  *              example : "Ubisoft"
- *          - name : developer
- *            in : body
- *            description : Developer
- *            schema :
- *              type : object
- *              required : location
- *              properties :
+ *      requestBody :
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
  *                  location :
  *                      type : string
- *                      example : "California, US"
+ *                  example : 
+ *                      location : "California, US"
  *      responses :
  *        200:
  *          description : Delete developer succesfully
@@ -250,7 +250,7 @@ router.get("/:dname/develops", developerController.getAllVideoGamesWithDName);
 
 /**
  * @swagger
- * /developer/{dname}/develops/{v_id} :
+ * /developer/{dname}/develops/ :
  *    post:
  *      tags:
  *      - "developer"
@@ -264,12 +264,16 @@ router.get("/:dname/develops", developerController.getAllVideoGamesWithDName);
  *            schema :
  *              type : string
  *              example : "Ubisoft"
- *          - name : v_id
- *            in : path
- *            description : Video games id
- *            schema :
- *              type : number
- *              example : 1
+ *      requestBody :
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  v_id :
+ *                      type : number
+ *                  example : 
+ *                      v_id : 1
  *      responses :
  *        200:
  *          description : Inserted video game for developer succesfully
@@ -288,7 +292,7 @@ router.get("/:dname/develops", developerController.getAllVideoGamesWithDName);
  *                      example :
  *                          message : "Authentication failed"           
  */
-router.post("/:dname/develops/:v_id", developerController.postADevelop);
+router.post("/:dname/develops/", developerController.postADevelop);
 
 
 /**

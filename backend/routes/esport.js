@@ -2,6 +2,7 @@ const router = require('express').Router();
 const esportController = require('../controller/esportController')
 
 
+
 /**
  * @swagger
  * /esport :
@@ -26,17 +27,16 @@ router.get("/", esportController.getAllEsport);
  *      security:
  *      - ApiKeyAuth: []
  *      summary : Insert an esport
- *      parameters :
- *          - name : esport
- *            in : body
- *            description : esport
- *            schema :
- *              type : object
- *              required : league
- *              properties :
+ *      requestBody :
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
  *                  league :
  *                      type : string
- *                      example : "LOL ESPORT"
+ *                  example : 
+ *                      league : "League of Legend Esport"
  *      responses :
  *        200:
  *          description : Insert esport succesfully
@@ -67,9 +67,9 @@ router.post("/", esportController.postAEsport);
  *      - ApiKeyAuth: []
  *      summary : Delete an esport
  *      parameters :
- *          - name : esport
+ *          - name : league
  *            in : path
- *            description : esport
+ *            description : the league
  *            schema :
  *              type : string
  *              example : "League of Legend Esport"
@@ -91,6 +91,6 @@ router.post("/", esportController.postAEsport);
  *                      example :
  *                          message : "Authentication failed"           
  */
-router.delete("/:league", esportController.deleteALeague);
+router.delete('/:league', esportController.deleteALeague);
 
 module.exports = router;
