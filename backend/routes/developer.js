@@ -32,17 +32,16 @@ router.get("/:dname", developerController.getADeveloper);
  *      security:
  *      - ApiKeyAuth: []
  *      summary : Insert a new developer
- *      parameters :
- *          - name : developer
- *            in : body
- *            description : Name of developer
- *            schema :
- *              type : object
- *              required : dname
- *              properties :
- *                  dname :
- *                      type : string
- *                      example : "Ubisoft"
+ *      requestBody :
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                          dname :
+ *                              type : string
+ *                      example : 
+ *                          dname : "Ubisoft"
  *      responses :
  *        200:
  *          description : Insert a new developer succesfully

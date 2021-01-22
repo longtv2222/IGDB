@@ -67,7 +67,7 @@ router.get("/paid_user/login", clientController.paidUserLogin);
  *            schema :
  *              type: object
  *              required:
- *              - userName
+ *              - username
  *              - password
  *              properties:
  *                  username:
@@ -156,13 +156,6 @@ router.get("/paid_user", clientController.getAllPaidUser);
  *      - ApiKeyAuth: []
  *      summary : Delete paid user by id
  *      parameters :
- *          - name : token 
- *            in : header
- *            description : paid user token.
- *            schema :
- *              type : string
- *              example : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoibG9uZyIsImlkIjoxMiwiaWF0IjoxNjEwNDE4NzY3fQ.eberfpuSHIuPdbr82krqBlOILR406ZZ8ZxfcD5wjiKg"
- * 
  *          - name : id
  *            in : path
  *            description : Paid user id

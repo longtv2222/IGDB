@@ -32,6 +32,7 @@ exports.paidUserLogin = async (req, res) => {
 exports.paidUserSignUp = async (req, res) => {
     const sql = 'INSERT INTO PAID_USER(USER_NAME, PASSWORD) VALUES  ($1, $2) RETURNING user_name;'
     const params = [req.body.username, md5(req.body.password)]
+
     try {
         const { rows } = await pool.query(sql, params)
         res.json({ message: 'Signed up for account ' + rows[0].user_name + ' succefully' })
