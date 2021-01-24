@@ -4,6 +4,7 @@ const authentication = require('./middleware/authentication')
 const mountRoutes = require('./routes/index.js')
 const { swaggerUI, swaggerDoc } = require('./middleware/documentation')
 const rateLimiter = require('./middleware/rateLimit')
+const helmet = require("helmet"); //Helmet for security
 // Start server
 const app = express()
 app.set('trust proxy', 1);  //Express is behind nginx proxy
@@ -11,7 +12,7 @@ app.disable('x-powered-by') //Security
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(rateLimiter) //Apply rate limit based on IP
-
+app.use(helmet());
 
 let HTTP_PORT = 8000
 app.listen(HTTP_PORT, () => {
