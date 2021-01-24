@@ -53,26 +53,25 @@ router.get("/:TName/employs", teamController.getTeamEmployeeWithTName);
  *            schema :
  *                  type : string
  *                  example : "TSM"
- * 
- *          - name : player
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - playername
- *              properties :
- *                  playername :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  playername : 
  *                      type : string
- *                      example : "Faker"
  *                  year :
  *                      type : number
- *                      example : 2021
  *                  month :
  *                      type : number
- *                      example : 2
  *                  day :
  *                      type : number
- *                      example : 22
+ *                  example :
+ *                      playername : "Faker"
+ *                      year : 2021
+ *                      month : 22
+ *                      day : 22
  *      responses :
  *        200:
  *          description : Succesfully
@@ -109,16 +108,16 @@ router.post("/:TName/employs", teamController.postTeamEmploy);
  *                  type : string
  *                  example : "TSM"
  * 
- *          - name : player
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - playername
- *              properties :
- *                  playername :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  playername : 
  *                      type : string
- *                      example : "Faker"
+ *                  example :
+ *                      playername : "Faker"
  *      responses :
  *        200:
  *          description : Succesfully
@@ -183,30 +182,29 @@ router.get("/", teamController.getAllTeam);
  *      - "team"
  *      security:
  *      - ApiKeyAuth: []
- *      summary : Post a team
- *      parameters :
- *          - name : team
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - tname
- *              properties :
- *                  tname :
+ *      summary : Post a team   
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  tname : 
  *                      type : string
- *                      example : "TSM"
  *                  description :
- *                      type : string   
- *                      example : "TSM is NA team"
+ *                      type : string
  *                  year :
  *                      type : number
- *                      example : 2015
- *                  month : 
+ *                  month :
  *                      type : number
- *                      example : 22
  *                  day :
  *                      type : number
- *                      example : 2               
+ *                  example :
+ *                      tname : "TSM"
+ *                      description : "TSN is a NA team"
+ *                      year : 2021
+ *                      month : 22
+ *                      day : 22          
  *      responses :
  *        200:
  *          description : Succesfully

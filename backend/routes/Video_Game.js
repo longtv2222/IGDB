@@ -47,17 +47,17 @@ router.get("/:v_id/operating_platform", Video_GameController.getOSByID);
  *            schema :
  *                  type : number
  *                  example : 1
- * 
- *          - name : os
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - platform
- *              properties :
- *                  playername :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  platform : 
  *                      type : string
- *                      example : "Window"
+ *                  example :
+ *                      platform : "Window"
+   
  *      responses :
  *        200:
  *          description : Succesfully
@@ -94,16 +94,16 @@ router.post("/:v_id/operating_platform", Video_GameController.postOSByID);
  *                  type : number
  *                  example : 1
  * 
- *          - name : os
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - platform
- *              properties :
- *                  playername :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  platform : 
  *                      type : string
- *                      example : "Window"
+ *                  example :
+ *                      platform : "Window"
  *      responses :
  *        200:
  *          description : Succesfully
@@ -162,16 +162,16 @@ router.get("/Similar_To/:v_id", Video_GameController.getSimilarGame);
  *                  type : number
  *                  example : 1
  * 
- *          - name : similar video game
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - sim_id
- *              properties :
- *                  sim_id :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  sim_id : 
  *                      type : number
- *                      example : 2
+ *                  example :
+ *                      platform : 2
  *      responses :
  *        200:
  *          description : Succesfully
@@ -244,22 +244,20 @@ router.get("/:v_id/Review", Video_GameController.getReviewsByUser);
  *            schema :
  *                  type : number
  *                  example : 1
- * 
- *          - name : review
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - u_id
- *              - rating
- *              properties :
- *                  u_id :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  u_id : 
  *                      type : number
- *                      example : 2
  *                  rating :
  *                      type : number
- *                      example : 5
  *                      description : Rating in scale of 5
+ *                  example :
+ *                      u_id : 1
+ *                      rating : 5
  *      responses :
  *        200:
  *          description : Succesfully
@@ -296,16 +294,16 @@ router.post("/:v_id/Review", Video_GameController.postReviewByUser);
  *                  type : number
  *                  example : 1
  * 
- *          - name : review
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - u_id
- *              properties :
- *                  u_id :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  u_id : 
  *                      type : number
- *                      example : 11
+ *                  example :
+ *                      u_id : 1
  *      responses :
  *        200:
  *          description : Succesfully
@@ -431,16 +429,16 @@ router.post("/:v_id/has", Video_GameController.postCompetitionByGame);
  *                  type : number
  *                  example : 1
  * 
- *          - name : similar video game
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - league
- *              properties :
- *                  league :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  league : 
  *                      type : string
- *                      example : "LOL ESPORT"
+ *                  example :
+ *                     league : "LOL ESPORT"
  *      responses :
  *        200:
  *          description : Succesfully
@@ -490,20 +488,19 @@ router.get("/", Video_GameController.getAllGame);
  *                  type : number
  *                  example : 1
  * 
- *          - name : similar video game
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - league
- *              - genre
- *              properties :
- *                  league :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  league : 
  *                      type : string
- *                      example : "LOL ESPORT"
  *                  genre :
  *                      type : string
- *                      example : "MOBA"
+ *                  example :
+ *                      league : "LOL ESPORT"
+ *                      genre : "MOBA"
  *      responses :
  *        200:
  *          description : Succesfully
@@ -568,26 +565,22 @@ router.delete("/:v_id", Video_GameController.deleteGame);
  *      security:
  *      - ApiKeyAuth: []
  *      summary : Insert a video game
- *      parameters :
- *          - name : similar video game
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - description
- *              - name
- *              - rs
- *              properties :
- *                  description :
- *                      type : string
- *                      example : "LOL ESPORT"
- *                  name :
- *                      type : string
- *                      example : "MOBA"
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  description : 
+ *                      type : number
+ *                  vname :
+ *                      type : number
  *                  rs :
  *                      type : number
- *                      example : 1
- *                      description : 1 if the game is released to public, 0 if it's not
+ *                  example :
+ *                      description : "LOL is a popular game"
+ *                      vname : "League of Legend"
+ *                      rs : 1
  *      responses :
  *        200:
  *          description : Succesfully
@@ -624,17 +617,16 @@ router.post("/", Video_GameController.postGame);
  *              type : number
  *              example : 1
  * 
- *          - name : similar video game
- *            in : body
- *            schema :
- *              type : object
- *              required :
- *              - rs
- *              properties :
- *                  rs :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  rs : 
  *                      type : number
- *                      example : 1
- *                      description : 1 if the game is released to public, 0 if it's not
+ *                  example :
+ *                      rs : 1
  *      responses :
  *        200:
  *          description : Succesfully

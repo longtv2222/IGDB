@@ -52,17 +52,16 @@ router.get("/:pname/plocation_table/", publisherController.getLocationWithPName)
  *            schema :
  *                  type : string
  *                  example : "Ubisoft"
- * 
- *          - name : esport
- *            in : body
- *            description : esport
- *            schema :
- *              type : object
- *              required : location
- *              properties :
- *                  location :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  location : 
  *                      type : string
- *                      example : "California, US"
+ *                  example :
+ *                      location : "California, US"
  *      responses :
  *        200:
  *          description : Succesfully
@@ -99,16 +98,16 @@ router.post("/:pname/plocation_table/", publisherController.postLocationWithPNam
  *                  type : string
  *                  example : "Ubisoft"
  * 
- *          - name : esport
- *            in : body
- *            description : esport
- *            schema :
- *              type : object
- *              required : location
- *              properties :
- *                  location :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  location : 
  *                      type : string
- *                      example : "California, US"
+ *                  example :
+ *                      location : "California, US"
  *      responses :
  *        200:
  *          description : Succesfully
@@ -180,16 +179,16 @@ router.get("/:pname/publishes", publisherController.getPublishes);
  *            schema :
  *                  type : string
  *                  example : "Ubisoft"
- * 
- *          - name : video_game
- *            in : body
- *            schema :
- *              type : object
- *              required : v_id
- *              properties :
- *                  v_id :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  v_id : 
  *                      type : number
- *                      example : 1
+ *                  example :
+ *                      v_id : 1
  *      responses :
  *        200:
  *          description : Succesfully
@@ -224,17 +223,17 @@ router.post("/:pname/publishes", publisherController.postPublishes);
  *            in : path
  *            schema :
  *                  type : string
- *                  example : "Ubisoft"
- * 
- *          - name : video_game
- *            in : body
- *            schema :
- *              type : object
- *              required : v_id
- *              properties :
- *                  v_id :
+ *                  example : "Ubisoft" 
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  location : 
  *                      type : number
- *                      example : 1
+ *                  example :
+ *                      v_id : 1
  *      responses :
  *        200:
  *          description : Succesfully
@@ -300,16 +299,17 @@ router.get("/:pname/", publisherController.getPublisher);
  *      security:
  *      - ApiKeyAuth: []
  *      summary : Insert a new publishers
- *      parameters :
- *          - name : video_game
- *            in : body
- *            schema :
- *              type : object
- *              required : pname
- *              properties :
- *                  pname :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
+ *                  pname : 
  *                      type : string
- *                      example : "Ubisoft"
+ *                  example :
+ *                      pname : "Ubisoft"
+ * 
  *      responses :
  *        200:
  *          description : Succesfully

@@ -85,21 +85,19 @@ router.delete("/:playername/participate/:league/:competitionname", playerControl
  *            schema :
  *              type : string
  *              example : "Faker"
- *          - name : league
- *            in : body
- *            description : name of league
- *            schema :
- *              type : object
- *              required : 
- *              - cname
- *              - league :
- *              properties :
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
  *                  cname : 
  *                      type : string
- *                      example : "NA LCS"
  *                  league : 
  *                      type : string
- *                      example : "LOL ESPORT"   
+ *                  example :
+ *                      cname : "NA LCS"
+ *                      example : "LOL ESPORT"  
  *      responses :
  *        200:
  *          description : Succesfully
@@ -202,35 +200,34 @@ router.delete("/:playername", playerController.deletePlayer);
  *      security:
  *      - ApiKeyAuth: []
  *      summary : Insert a new player
- *      parameters :
- *          - name : player info
- *            in : body
- *            description : information about player
- *            schema :
- *              type : object
- *              required : 
- *              - playername
- *              properties :
+ *      requestBody :
+ *          content:
+ *              application/json:
+ *                  schema :
+ *                      type : object
+ *                      properties :
  *                  playername :
  *                      type : string
- *                      example : "Faker"
  *                  age :
  *                      type : number
- *                      example : 22
  *                  nationality :
  *                      type : string
- *                      example : "Korean"
  *                  description :
  *                      type : string
- *                      example : "Faker is a Korean player."
  *                  player_flag :
  *                      type : number 
- *                      example : 1
  *                      description : 1 if player is in a professional team, 0 if not
  *                  org_less_flag :
  *                      type : number 
- *                      example : 0
  *                      description : 1 if player is not in a professional team, 0 if in
+ *                  example :
+ *                      playername : "Faker"
+ *                      age : 22
+ *                      nationality : "Korean"
+ *                      description : "Faker is a Korea player"
+ *                      player_flag : 1
+ *                      org_less_flag : 0
+ *          
  *      responses :
  *        200:
  *          description : Succesful
