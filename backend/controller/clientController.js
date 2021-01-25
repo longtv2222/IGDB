@@ -49,7 +49,6 @@ exports.getPaidUserByID = async (req, res) => {
             res.status(200).json({
                 id: rows[0].u_id,
                 username: rows[0].user_name,
-                ip : req.headers['x-real-ip']
             });
         else
             res.sendStatus(204);
