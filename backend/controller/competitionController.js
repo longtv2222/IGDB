@@ -2,7 +2,7 @@ const { pool } = require('../db/cloudDatabase')
 
 exports.getAllTimeTable = async (_req, res) => {
     try {
-        const { rows } = await pool.query('SELECT * FROM TIME_TABLE');
+        const { rows } = await pool.query('SELECT * FROM TIME_TABLE;');
         res.status(200).json(rows);
     } catch (error) {
         res.status(500).json(error.stack);

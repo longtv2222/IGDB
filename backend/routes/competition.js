@@ -8,7 +8,6 @@ const competitionController = require("../controller/competitionController")
  *      tags:
  *      - "competition"
  *      summary : Get all competition time table
- *      parameters :
  *      responses :
  *        200:
  *          description : Get competition time table succesfully
