@@ -22,7 +22,7 @@ To check out the website, please go to the following link : https://igdb.myigdb.
 ### Installation
 1. Clone the repository:
     ```git clone https://github.com/longtv2222/IGDB.git```
-2. cd into __backend__ folder and install necessary libraries:
+2. Using your favorite terminal, cd into __backend__ folder and install necessary libraries:
 
     ```npm install```
 
